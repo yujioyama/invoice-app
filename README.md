@@ -1,36 +1,103 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Invoice App - フルスタック請求書管理アプリ
 
-## Getting Started
+Next.js (フロントエンド) + Nest.js + PostgreSQL (バックエンド) で構築した請求書管理アプリケーション
 
-First, run the development server:
+## 機能
+
+- タスクごとの詳細管理（タスク名、Rate、Hours）
+- 合計金額自動計算
+- 作成日自動表示
+- インボイス名自動生成
+- PDF 出力（A4 サイズ対応）
+- PostgreSQL によるデータ永続化
+
+## セットアップ
+
+### 1. PostgreSQL の起動
+
+Docker を使用（推奨）:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+docker run --name invoice-postgres \
+  -e POSTGRES_PASSWORD=postgres \
+  -e POSTGRES_DB=invoice_db \
+  -p 5432:5432 -d postgres:15
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. バックエンドのセットアップ
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+cd backend
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# 依存パッケージのインストール
+npm install
 
-## Learn More
+# Prisma Clientの生成とマイグレーション
+npm run prisma:generate
+npm run prisma:push
 
-To learn more about Next.js, take a look at the following resources:
+# サーバー起動
+npm run start:dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+バックエンドは `http://localhost:3001` で起動します。
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 3. フロントエンドのセットアップ
 
-## Deploy on Vercel
+```bash
+# ルートディレクトリで実行
+npm install
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# 開発サーバー起動
+npm run dev
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+フロントエンドは `http://localhost:3000` で起動します。
+
+## 使い方
+
+1. `/invoices/new` でインボイス作成画面にアクセス
+2. タスクを追加して情報を入力
+3. "Preview Invoice" でプレビュー画面へ
+4. "Save & Continue" で保存して Detail 画面へ遷移
+5. Detail 画面で "Download PDF" をクリックして PDF 出力
+
+## データベース管理
+
+### Prisma Studio でデータを確認
+
+データベースの内容を GUI で確認・編集できます：
+
+```bash
+cd backend
+npx prisma studio
+```
+
+ブラウザで `http://localhost:5555` が開き、Invoice と Task テーブルのデータを確認できます。
+
+## API エンドポイント
+
+- `POST /invoices` - インボイス作成
+- `GET /invoices` - インボイス一覧取得
+- `GET /invoices/:id` - インボイス詳細取得
+- `PATCH /invoices/:id` - インボイス更新
+- `DELETE /invoices/:id` - インボイス削除
+
+詳細は [backend/README.md](backend/README.md) を参照してください。
+
+## 技術スタック
+
+### フロントエンド
+
+- Next.js 16
+- React 19
+- TypeScript
+- Tailwind CSS 4
+- html2pdf.js
+
+### バックエンド
+
+- Nest.js
+- Prisma ORM
+- PostgreSQL 15
+- TypeScript
