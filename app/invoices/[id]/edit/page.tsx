@@ -82,11 +82,11 @@ export default function EditInvoicePage({
     (id: number, field: keyof Task, value: string | number) => {
       setTasks((prevTasks) =>
         prevTasks.map((task) =>
-          task.id === id ? { ...task, [field]: value } : task
-        )
+          task.id === id ? { ...task, [field]: value } : task,
+        ),
       );
     },
-    []
+    [],
   );
 
   // タスク追加をメモ化
@@ -129,7 +129,7 @@ export default function EditInvoicePage({
   if (loading) {
     return (
       <div className="p-8">
-        <p className="text-[#000]">Loading invoice...</p>
+        <p className="text-black">Loading invoice...</p>
       </div>
     );
   }
@@ -138,14 +138,14 @@ export default function EditInvoicePage({
     <div className="min-h-screen p-8 bg-gray-50">
       <div className="max-w-[210mm] mx-auto">
         <div className="bg-white shadow-lg">
-          <h1 className="pt-11 pb-9 px-20 text-3xl font-bold tracking-widest bg-[#f6f5f4] font-tt-drugs text-[#000]">
+          <h1 className="pt-11 pb-9 px-20 text-3xl font-bold tracking-widest bg-[#f6f5f4] font-tt-drugs text-black">
             EDIT INVOICE
           </h1>
 
           <div className="px-20 py-7">
             {/* Invoice Name */}
             <div className="mb-6">
-              <label className="block mb-2 text-sm font-bold tracking-wide font-now text-[#000]">
+              <label className="block mb-2 text-sm font-bold tracking-wide font-now text-black">
                 INVOICE NAME
               </label>
               <input
@@ -153,7 +153,7 @@ export default function EditInvoicePage({
                 value={invoiceName}
                 onChange={(e) => setInvoiceName(e.target.value)}
                 placeholder="Enter invoice name..."
-                className="w-full px-3 py-2 text-sm border border-gray-200 rounded focus:outline-none focus:border-gray-400 font-tt-chocolates text-[#000]"
+                className="w-full px-3 py-2 text-sm border border-gray-200 rounded focus:outline-none focus:border-gray-400 font-tt-chocolates text-black"
               />
             </div>
 

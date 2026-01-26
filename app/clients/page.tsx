@@ -31,7 +31,7 @@ export default function InvoicesListPage() {
   if (loading) {
     return (
       <div className="min-h-screen p-8 bg-gray-50">
-        <p className="text-[#000]">Loading clients...</p>
+        <p className="text-black">Loading clients...</p>
       </div>
     );
   }
@@ -41,10 +41,10 @@ export default function InvoicesListPage() {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-widest text-[#000] font-tt-drugs mb-2">
+          <h1 className="text-3xl font-bold tracking-widest text-black font-tt-drugs mb-2">
             CLIENTS
           </h1>
-          <p className="text-sm text-[#000] font-tt-chocolates">
+          <p className="text-sm text-black font-tt-chocolates">
             Manage and view all your clients
           </p>
         </div>
@@ -65,16 +65,16 @@ export default function InvoicesListPage() {
             <table className="w-full">
               <thead>
                 <tr className="bg-[#f6f5f4] border-b border-gray-300">
-                  <th className="px-6 py-4 text-left font-bold tracking-wide font-now text-[#000]">
+                  <th className="px-6 py-4 text-left font-bold tracking-wide font-now text-black">
                     Name
                   </th>
-                  <th className="px-6 py-4 text-center font-bold tracking-wide font-now text-[#000]">
+                  <th className="px-6 py-4 text-center font-bold tracking-wide font-now text-black">
                     Email
                   </th>
-                  <th className="px-6 py-4 text-center font-bold tracking-wide font-now text-[#000]">
+                  <th className="px-6 py-4 text-center font-bold tracking-wide font-now text-black">
                     Phone
                   </th>
-                  <th className="px-6 py-4 text-center font-bold tracking-wide font-now text-[#000]">
+                  <th className="px-6 py-4 text-center font-bold tracking-wide font-now text-black">
                     Address
                   </th>
                 </tr>
@@ -85,10 +85,10 @@ export default function InvoicesListPage() {
                     key={client.id}
                     className="border-b border-gray-300 hover:bg-gray-50 font-tt-chocolates"
                   >
-                    <td className="px-6 py-4 text-[#000]">{client.name}</td>
-                    <td className="px-6 py-4 text-[#000]">{client.email}</td>
-                    <td className="px-6 py-4 text-[#000]">{client.phone}</td>
-                    <td className="px-6 py-4 text-[#000]">{client.address}</td>
+                    <td className="px-6 py-4 text-black">{client.name}</td>
+                    <td className="px-6 py-4 text-black">{client.email}</td>
+                    <td className="px-6 py-4 text-black">{client.phone}</td>
+                    <td className="px-6 py-4 text-black">{client.address}</td>
                   </tr>
                 ))}
               </tbody>
@@ -96,7 +96,7 @@ export default function InvoicesListPage() {
           </div>
         ) : (
           <div className="bg-white shadow-lg rounded p-8 text-center">
-            <p className="text-[#000] font-tt-chocolates mb-4">
+            <p className="text-black font-tt-chocolates mb-4">
               No clients found. Create your first client!
             </p>
             <button
