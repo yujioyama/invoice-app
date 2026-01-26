@@ -1,9 +1,8 @@
 import type { Task, Invoice, CreateInvoiceInput } from "@/shared/types/Invoice";
-import type { Client, CreateClientInput } from "@/shared/types/Client";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
-export type { Task, Invoice, Client };
+export type { Task, Invoice };
 
 export async function createInvoice(
   data: CreateInvoiceInput,

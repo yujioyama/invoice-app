@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { createClient, Client } from "@/lib/apiInvoices";
+import { createClient, Client } from "@/lib/apiClients";
 
 export default function NewInvoicePage() {
   const router = useRouter();
@@ -15,7 +15,6 @@ export default function NewInvoicePage() {
   });
   const [saving, setSaving] = useState(false);
 
-  // バリデーション
   const isValid = useMemo(() => {
     return client.name.trim() !== "" && client.address!.trim() !== "";
   }, [client]);
