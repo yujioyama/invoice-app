@@ -32,18 +32,12 @@ export default function NewInvoicePage() {
     setSaving(true);
     try {
       if (!user.id) throw new Error("No user information found");
-      const createdClient = await createClient({
+      await createClient({
         userId: user.id,
         ...client,
       });
 
-      // createdAtはCSRでのみ生成
-      const queryData = {
-        client: JSON.stringify(createdClient),
-        createdAt: new Date().toISOString(),
-      };
-      const queryString = new URLSearchParams(queryData).toString();
-      router.push(`/clients/${createdClient.id}?${queryString}`);
+      router.push(`/clients`);
     } catch (error) {
       console.error("Failed to save client:", error);
       alert("failed to save. Please make sure the backend server is running.");

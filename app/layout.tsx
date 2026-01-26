@@ -29,7 +29,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <div className="flex justify-center">
-          <Link href="/invoices" className="text-black py-4">
+          <Link href="/" className="text-black py-4">
             Invoice App
           </Link>
         </div>
