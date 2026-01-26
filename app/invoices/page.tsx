@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { getInvoices, Invoice } from "@/lib/api";
+import { getInvoices, Invoice } from "@/lib/apiInvoices";
 import { useEffect, useState } from "react";
 
 export default function InvoicesListPage() {

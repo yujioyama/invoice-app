@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { createClient, Client } from "@/lib/api";
+import { createClient, Client } from "@/lib/apiInvoices";
 
 export default function NewInvoicePage() {
   const router = useRouter();

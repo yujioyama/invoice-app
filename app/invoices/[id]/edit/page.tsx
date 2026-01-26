@@ -2,8 +2,8 @@
 
 import { useState, useCallback, useMemo, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
-import { getInvoiceById, updateInvoice } from "@/lib/api";
-import type { Invoice } from "@/lib/api";
+import { getInvoiceById, updateInvoice } from "@/lib/apiInvoices";
+import type { Invoice } from "@/lib/apiInvoices";
 import EditableTasksTable from "@/components/invoice/EditableTasksTable";
 import TotalSection from "@/components/invoice/TotalSection";
 

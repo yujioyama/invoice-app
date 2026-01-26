@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState, use } from "react";
 import { useRouter } from "next/navigation";
-import { getInvoiceById } from "@/lib/api";
-import type { Invoice } from "@/lib/api";
+import { getInvoiceById } from "@/lib/apiInvoices";
+import type { Invoice } from "@/lib/apiInvoices";
 import InvoiceDocument from "@/components/invoice/InvoiceDocument";
 
 interface Task {

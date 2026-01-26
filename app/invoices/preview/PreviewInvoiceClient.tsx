@@ -2,7 +2,7 @@
 
 import { useSearchParams, useRouter } from "next/navigation";
 import { useRef, useState } from "react";
-import { createInvoice } from "@/lib/api";
+import { createInvoice } from "@/lib/apiInvoices";
 import InvoiceDocument from "@/components/invoice/InvoiceDocument";
 
 interface Task {
@@ -25,7 +25,7 @@ export default function PreviewInvoiceClient() {
   const createdAt = searchParams.get("createdAt") || new Date().toISOString();
   const grandTotal = tasks.reduce(
     (sum: number, task: Task) => sum + task.rate * task.hours,
-    0
+    0,
   );
 
   // プレビューからAPIで保存して詳細画面へ遷移
@@ -47,7 +47,7 @@ export default function PreviewInvoiceClient() {
     } catch (error) {
       console.error("Failed to save invoice:", error);
       alert(
-        "保存に失敗しました。バックエンドサーバーが起動しているか確認してください。"
+        "保存に失敗しました。バックエンドサーバーが起動しているか確認してください。",
       );
     } finally {
       setSaving(false);
