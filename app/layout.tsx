@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Link from "next/link";
+import Header from "@/app/header";
 import "@/app/globals.css";
 
 const geistSans = Geist({
@@ -28,11 +28,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div className="flex justify-center">
-          <Link href="/" className="text-black py-4">
-            Invoice App
-          </Link>
-        </div>
+        <Header />
         {children}
       </body>
     </html>

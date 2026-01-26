@@ -129,6 +129,10 @@ body {
   overflow-wrap: break-word; /* ブラウザの互換性を向上させる */
 }
 
+button {
+  cursor: pointer;
+}
+
 @media print {
   /* PDF/印刷時は影を消して、フッターを常にページ最下部へ */
   #invoice-pdf {
