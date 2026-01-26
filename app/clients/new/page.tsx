@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { createClient, Client } from "@/lib/apiClients";
 
@@ -14,6 +14,15 @@ export default function NewInvoicePage() {
     phone: "",
   });
   const [saving, setSaving] = useState(false);
+  const [user, setUser] = useState<{ id?: string }>({});
+
+  // CSRのみでlocalStorageからuser情報を取得
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+      setUser(storedUser);
+    }
+  }, []);
 
   const isValid = useMemo(() => {
     return client.name.trim() !== "" && client.address!.trim() !== "";
@@ -22,13 +31,13 @@ export default function NewInvoicePage() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const user = JSON.parse(localStorage.getItem("user") || "{}");
       if (!user.id) throw new Error("No user information found");
       const createdClient = await createClient({
         userId: user.id,
         ...client,
       });
 
+      // createdAtはCSRでのみ生成
       const queryData = {
         client: JSON.stringify(createdClient),
         createdAt: new Date().toISOString(),

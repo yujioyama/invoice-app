@@ -3,7 +3,8 @@
 /* Custom Fonts */
 @font-face {
   font-family: "TT Drugs";
-  src: url("/fonts/TTDrugs-Regular.woff2") format("woff2"),
+  src:
+    url("/fonts/TTDrugs-Regular.woff2") format("woff2"),
     url("/fonts/TTDrugs-Regular.woff") format("woff");
   font-weight: 400;
   font-style: normal;
@@ -12,7 +13,8 @@
 
 @font-face {
   font-family: "TT Drugs";
-  src: url("/fonts/TTDrugs-Bold.woff2") format("woff2"),
+  src:
+    url("/fonts/TTDrugs-Bold.woff2") format("woff2"),
     url("/fonts/TTDrugs-Bold.woff") format("woff");
   font-weight: 700;
   font-style: normal;
@@ -21,7 +23,8 @@
 
 @font-face {
   font-family: "Now";
-  src: url("/fonts/Now-Regular.woff2") format("woff2"),
+  src:
+    url("/fonts/Now-Regular.woff2") format("woff2"),
     url("/fonts/Now-Regular.woff") format("woff");
   font-weight: 400;
   font-style: normal;
@@ -30,7 +33,8 @@
 
 @font-face {
   font-family: "Now";
-  src: url("/fonts/Now-Bold.woff2") format("woff2"),
+  src:
+    url("/fonts/Now-Bold.woff2") format("woff2"),
     url("/fonts/Now-Bold.woff") format("woff");
   font-weight: 700;
   font-style: normal;
@@ -39,7 +43,8 @@
 
 @font-face {
   font-family: "TT Chocolates";
-  src: url("/fonts/TTChocolates-Regular.woff2") format("woff2"),
+  src:
+    url("/fonts/TTChocolates-Regular.woff2") format("woff2"),
     url("/fonts/TTChocolates-Regular.woff") format("woff");
   font-weight: 400;
   font-style: normal;
@@ -48,7 +53,8 @@
 
 @font-face {
   font-family: "TT Chocolates";
-  src: url("/fonts/TTChocolates-Bold.woff2") format("woff2"),
+  src:
+    url("/fonts/TTChocolates-Bold.woff2") format("woff2"),
     url("/fonts/TTChocolates-Bold.woff") format("woff");
   font-weight: 700;
   font-style: normal;
@@ -57,7 +63,8 @@
 
 @font-face {
   font-family: "Eyesome Script";
-  src: url("/fonts/EyesomeScript.woff2") format("woff2"),
+  src:
+    url("/fonts/EyesomeScript.woff2") format("woff2"),
     url("/fonts/EyesomeScript.woff") format("woff");
   font-weight: 400;
   font-style: normal;
@@ -82,7 +89,7 @@
   --font-eyesome-script: "Eyesome Script", cursive;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
@@ -90,7 +97,7 @@
     --color-gray-500: #6b7280;
     --color-gray-300: #d1d5db;
   }
-}
+} */
 
 /* Force rgb/hex colors even when lab() is supported to keep html2canvas happy */
 @supports (color: lab(0% 0 0)) {
@@ -102,7 +109,7 @@
     --color-gray-300: #d1d5db;
   }
 
-  @media (prefers-color-scheme: dark) {
+  /* @media (prefers-color-scheme: dark) {
     :root {
       --background: #0a0a0a;
       --foreground: #ededed;
@@ -110,7 +117,7 @@
       --color-gray-500: #6b7280;
       --color-gray-300: #d1d5db;
     }
-  }
+  } */
 }
 
 body {
