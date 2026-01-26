@@ -2,6 +2,7 @@
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "./dist",
+    "rootDir": "../",
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
@@ -11,8 +12,7 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false,
-    "rootDir": "./src"
+    "noFallthroughCasesInSwitch": false
   },
   "include": ["src", "../shared/types"]
 }
