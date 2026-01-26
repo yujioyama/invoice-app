@@ -19,10 +19,15 @@ export async function GET(
   const url = `${origin}/invoices/${id}`;
   let browser: Browser | null = null;
   try {
+    // Launch Puppeteer (headless Chrome) with sandbox disabled for compatibility with most server environments (e.g., Vercel, Docker, some Linux servers).
+    // --no-sandbox and --disable-setuid-sandbox are required in many cloud/serverless environments where Chrome's sandbox cannot be used.
+    // Only use this in trusted environments, as disabling the sandbox reduces security.
     browser = await puppeteer.launch({
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
     const page = await browser.newPage();
+    // Wait until there are no more than 0 network connections for at least 500ms.
+    // This ensures the page and all its resources (images, fonts, API calls) are fully loaded before rendering the PDF.
     await page.goto(url, { waitUntil: "networkidle0" });
 
     await page.waitForSelector("#invoice-pdf", { timeout: 30_000 });
@@ -37,6 +42,7 @@ export async function GET(
       document.body.style.margin = "0";
     });
 
+    // TODO
     // PDF時の見た目を確実に揃える（print CSSが効かない環境でも適用される）
     await page.addStyleTag({
       content: `

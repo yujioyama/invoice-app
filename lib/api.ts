@@ -1,11 +1,12 @@
 import type { Task, Invoice, CreateInvoiceInput } from "@/shared/types/Invoice";
+import type { Client, CreateClientInput } from "@/shared/types/Client";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
-export type { Task, Invoice };
+export type { Task, Invoice, Client };
 
 export async function createInvoice(
-  data: CreateInvoiceInput
+  data: CreateInvoiceInput,
 ): Promise<Invoice> {
   const res = await fetch(`${API_BASE_URL}/invoices`, {
     method: "POST",
@@ -31,7 +32,7 @@ export async function getInvoiceById(id: string): Promise<Invoice | null> {
 
 export async function updateInvoice(
   id: string,
-  data: { name?: string; tasks?: Task[] }
+  data: { name?: string; tasks?: Task[] },
 ): Promise<Invoice> {
   const res = await fetch(`${API_BASE_URL}/invoices/${id}`, {
     method: "PATCH",
@@ -55,7 +56,7 @@ export async function register(email: string, name: string, password: string) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, name, password }),
   });
-  if (!res.ok) throw new Error("登録に失敗しました");
+  if (!res.ok) throw new Error("failed to register");
   return res.json();
 }
 
@@ -65,6 +66,6 @@ export async function login(email: string, password: string) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
   });
-  if (!res.ok) throw new Error("ログインに失敗しました");
+  if (!res.ok) throw new Error("failed to login");
   return res.json();
 }

@@ -16,6 +16,7 @@ model User {
   name      String
   password  String
   invoices  Invoice[]
+  clients   Client[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
@@ -25,6 +26,8 @@ model Invoice {
   name      String
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  clientId  String?
+  client    Client?   @relation(fields: [clientId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   tasks     Task[]
@@ -37,4 +40,17 @@ model Task {
   hours     Float
   invoiceId String
   invoice   Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+}
+
+model Client {
+  id        String   @id @default(cuid())
+  name      String
+  email     String?  @unique
+  phone     String?
+  address   String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  invoices  Invoice[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

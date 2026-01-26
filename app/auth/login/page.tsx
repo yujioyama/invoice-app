@@ -18,7 +18,7 @@ export default function LoginPage() {
     try {
       const user = await login(email, password);
       localStorage.setItem("user", JSON.stringify(user));
-      router.push("/invoices");
+      router.push("/dashboard");
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message || "ログインに失敗しました");
