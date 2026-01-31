@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { login } from "@/lib/apiInvoices";
+import { login } from "@/lib/apiAuth";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -16,8 +16,7 @@ export default function LoginPage() {
     setError("");
     setLoading(true);
     try {
-      const user = await login(email, password);
-      localStorage.setItem("user", JSON.stringify(user));
+      await login(email, password);
       router.push("/dashboard");
     } catch (err: unknown) {
       if (err instanceof Error) {

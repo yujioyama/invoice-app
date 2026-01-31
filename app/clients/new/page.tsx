@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { createClient, Client } from "@/lib/apiClients";
+import { getMe } from "@/lib/apiAuth";
 
 export default function NewInvoicePage() {
   const router = useRouter();
@@ -16,12 +17,14 @@ export default function NewInvoicePage() {
   const [saving, setSaving] = useState(false);
   const [user, setUser] = useState<{ id?: string }>({});
 
-  // CSRのみでlocalStorageからuser情報を取得
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
-      setUser(storedUser);
+    async function fetchUser() {
+      const data = await getMe();
+      if (data?.user) {
+        setUser(data.user);
+      }
     }
+    fetchUser();
   }, []);
 
   const isValid = useMemo(() => {

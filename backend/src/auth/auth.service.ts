@@ -7,10 +7,22 @@ import { PrismaService } from "../prisma/prisma.service";
 import { RegisterDto } from "./dto/register.dto";
 import { LoginDto } from "./dto/login.dto";
 import * as bcrypt from "bcryptjs";
+import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
 export class AuthService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private jwtService: JwtService,
+  ) {}
+
+  private generateJwt(user: { id: string; email: string; name: string }) {
+    return this.jwtService.sign({
+      sub: user.id,
+      email: user.email,
+      name: user.name,
+    });
+  }
 
   async register(dto: RegisterDto) {
     const exists = await this.prisma.user.findUnique({
@@ -22,8 +34,8 @@ export class AuthService {
       data: { email: dto.email, name: dto.name, password: hash },
       select: { id: true, email: true, name: true },
     });
-    // 本来はJWTを返すが、まずはユーザー情報のみ返却
-    return { id: user.id, email: user.email, name: user.name };
+    const token = this.generateJwt(user);
+    return { token, user: { id: user.id, email: user.email, name: user.name } };
   }
 
   async login(dto: LoginDto) {
@@ -34,7 +46,7 @@ export class AuthService {
     if (!user) throw new UnauthorizedException("Invalid credentials");
     const valid = await bcrypt.compare(dto.password, user.password);
     if (!valid) throw new UnauthorizedException("Invalid credentials");
-    // 本来はJWTを返すが、まずはユーザー情報のみ返却
-    return { id: user.id, email: user.email, name: user.name };
+    const token = this.generateJwt(user);
+    return { token, user: { id: user.id, email: user.email, name: user.name } };
   }
 }

@@ -8,6 +8,7 @@ export async function createClient(data: CreateClientInput): Promise<Client> {
   const res = await fetch(`${API_BASE_URL}/clients`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify(data),
   });
   if (!res.ok) throw new Error("Failed to create client");
@@ -15,13 +16,17 @@ export async function createClient(data: CreateClientInput): Promise<Client> {
 }
 
 export async function getClients(): Promise<Client[]> {
-  const res = await fetch(`${API_BASE_URL}/clients`);
+  const res = await fetch(`${API_BASE_URL}/clients`, {
+    credentials: "include",
+  });
   if (!res.ok) throw new Error("Failed to fetch clients");
   return res.json();
 }
 
 export async function getClientById(id: string): Promise<Client | null> {
-  const res = await fetch(`${API_BASE_URL}/clients/${id}`);
+  const res = await fetch(`${API_BASE_URL}/clients/${id}`, {
+    credentials: "include",
+  });
   if (res.status === 404) return null;
   if (!res.ok) throw new Error("Failed to fetch client");
   return res.json();
@@ -34,6 +39,7 @@ export async function updateClient(
   const res = await fetch(`${API_BASE_URL}/clients/${id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify(data),
   });
   if (!res.ok) throw new Error("Failed to update client");

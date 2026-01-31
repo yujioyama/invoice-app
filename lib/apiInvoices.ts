@@ -11,19 +11,24 @@ export async function createInvoice(
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
+    credentials: "include",
   });
   if (!res.ok) throw new Error("Failed to create invoice");
   return res.json();
 }
 
 export async function getInvoices(): Promise<Invoice[]> {
-  const res = await fetch(`${API_BASE_URL}/invoices`);
+  const res = await fetch(`${API_BASE_URL}/invoices`, {
+    credentials: "include",
+  });
   if (!res.ok) throw new Error("Failed to fetch invoices");
   return res.json();
 }
 
 export async function getInvoiceById(id: string): Promise<Invoice | null> {
-  const res = await fetch(`${API_BASE_URL}/invoices/${id}`);
+  const res = await fetch(`${API_BASE_URL}/invoices/${id}`, {
+    credentials: "include",
+  });
   if (res.status === 404) return null;
   if (!res.ok) throw new Error("Failed to fetch invoice");
   return res.json();
@@ -37,6 +42,7 @@ export async function updateInvoice(
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
+    credentials: "include",
   });
   if (!res.ok) throw new Error("Failed to update invoice");
   return res.json();
@@ -45,26 +51,7 @@ export async function updateInvoice(
 export async function deleteInvoice(id: string): Promise<void> {
   const res = await fetch(`${API_BASE_URL}/invoices/${id}`, {
     method: "DELETE",
+    credentials: "include",
   });
   if (!res.ok) throw new Error("Failed to delete invoice");
-}
-
-export async function register(email: string, name: string, password: string) {
-  const res = await fetch(`${API_BASE_URL}/auth/register`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, name, password }),
-  });
-  if (!res.ok) throw new Error("failed to register");
-  return res.json();
-}
-
-export async function login(email: string, password: string) {
-  const res = await fetch(`${API_BASE_URL}/auth/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
-  });
-  if (!res.ok) throw new Error("failed to login");
-  return res.json();
 }

@@ -1,8 +1,9 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { createInvoice } from "@/lib/apiInvoices";
+import { getMe } from "@/lib/apiAuth";
 import InvoiceDocument from "@/components/invoice/InvoiceDocument";
 
 interface Task {
@@ -15,9 +16,20 @@ export default function PreviewInvoiceClient() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [saving, setSaving] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
 
   // PDF出力対象の内容を参照
   const invoiceRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    async function fetchUser() {
+      const data = await getMe();
+      if (data?.user?.id) {
+        setUserId(data.user.id);
+      }
+    }
+    fetchUser();
+  }, []);
 
   // URLクエリから各種パラメータを取得
   const tasks = JSON.parse(searchParams.get("tasks") || "[]");
@@ -32,11 +44,10 @@ export default function PreviewInvoiceClient() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const user = JSON.parse(localStorage.getItem("user") || "{}");
-      if (!user.id) throw new Error("ユーザー情報が見つかりません");
+      if (!userId) throw new Error("ユーザー情報が見つかりません");
       const invoice = await createInvoice({
         name: invoiceName,
-        userId: user.id,
+        userId: userId,
         tasks: tasks.map((t: Task) => ({
           name: t.name,
           rate: t.rate,
