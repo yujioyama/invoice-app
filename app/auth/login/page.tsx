@@ -20,9 +20,9 @@ export default function LoginPage() {
       router.push("/dashboard");
     } catch (err: unknown) {
       if (err instanceof Error) {
-        setError(err.message || "ログインに失敗しました");
+        setError(err.message || "Login failed");
       } else {
-        setError("ログインに失敗しました");
+        setError("Login failed");
       }
     } finally {
       setLoading(false);
@@ -35,9 +35,9 @@ export default function LoginPage() {
         onSubmit={handleSubmit}
         className="bg-white p-8 rounded shadow-md w-full max-w-md"
       >
-        <h1 className="text-2xl font-bold mb-6 text-center">ログイン</h1>
+        <h1 className="text-2xl font-bold mb-6 text-center">Login</h1>
         <div className="mb-4">
-          <label className="block mb-1 font-bold">メールアドレス</label>
+          <label className="block mb-1 font-bold">Email</label>
           <input
             type="email"
             value={email}
@@ -47,7 +47,7 @@ export default function LoginPage() {
           />
         </div>
         <div className="mb-6">
-          <label className="block mb-1 font-bold">パスワード</label>
+          <label className="block mb-1 font-bold">Password</label>
           <input
             type="password"
             value={password}
@@ -62,7 +62,7 @@ export default function LoginPage() {
           className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 rounded disabled:bg-gray-300"
           disabled={loading}
         >
-          {loading ? "ログイン中..." : "ログイン"}
+          {loading ? "Logging in..." : "Login"}
         </button>
       </form>
     </div>
