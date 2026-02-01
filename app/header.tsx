@@ -13,6 +13,8 @@ export default function Header() {
   const pathname = usePathname();
 
   useEffect(() => {
+    if (pathname === "/auth/login") return;
+
     async function fetchUser() {
       const data = await getMe();
 
