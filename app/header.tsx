@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { getMe } from "@/lib/apiAuth";
 import { usePathname } from "next/navigation";
 import { logout } from "@/lib/apiAuth";
+import toast from "react-hot-toast";
 
 export default function Header() {
   const router = useRouter();
@@ -39,6 +40,7 @@ export default function Header() {
       await logout();
       setUser({});
       router.push("/auth/login");
+      toast.success("Logged out successfully");
     } catch (err: unknown) {
       console.error("Logout failed", err);
     }
