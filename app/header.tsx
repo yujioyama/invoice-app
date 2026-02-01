@@ -51,18 +51,12 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-4xl items-center justify-between px-4 sm:px-8">
-        <button
-          onClick={handleHeaderClick}
-          className="brand"
-        >
+        <button onClick={handleHeaderClick} className="brand">
           Invoice App
         </button>
-      <button
-        onClick={handleLogoutClick}
-        className="btn btn-primary"
-      >
-        Logout
-      </button>
+        <button onClick={handleLogoutClick} className="btn btn-primary">
+          Logout
+        </button>
       </div>
     </header>
   );

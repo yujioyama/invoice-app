@@ -75,41 +75,43 @@ export default function InvoicesListPage() {
             {clients && clients.length > 0 ? (
               <div className="overflow-x-auto">
                 <table className="table">
-              <thead>
-                <tr className="bg-[#f6f5f4] border-b border-gray-300">
-                  <th>Name</th>
-                  <th className="text-center">Email</th>
-                  <th className="text-center">Phone</th>
-                  <th className="text-center">Address</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {clients.map((client) => (
-                  <tr
-                    key={client.id}
-                    className="border-b border-gray-300 hover:bg-gray-50 font-tt-chocolates"
-                  >
-                    <td>{client.name}</td>
-                    <td className="text-right">{client.email}</td>
-                    <td className="text-right">{client.phone}</td>
-                    <td className="text-right">{client.address}</td>
-                    <td className="text-right">
-                      <button
-                        onClick={() => handleDeleteClient(client.id)}
-                        className="btn btn-danger"
+                  <thead>
+                    <tr className="bg-[#f6f5f4] border-b border-gray-300">
+                      <th>Name</th>
+                      <th className="text-center">Email</th>
+                      <th className="text-center">Phone</th>
+                      <th className="text-center">Address</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {clients.map((client) => (
+                      <tr
+                        key={client.id}
+                        className="border-b border-gray-300 hover:bg-gray-50 font-tt-chocolates"
                       >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
+                        <td>{client.name}</td>
+                        <td className="text-right">{client.email}</td>
+                        <td className="text-right">{client.phone}</td>
+                        <td className="text-right">{client.address}</td>
+                        <td className="text-right">
+                          <button
+                            onClick={() => handleDeleteClient(client.id)}
+                            className="btn btn-danger"
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
                 </table>
               </div>
             ) : (
               <div className="text-center py-10">
-                <p className="text-slate-700 mb-4">No clients found. Create your first client!</p>
+                <p className="text-slate-700 mb-4">
+                  No clients found. Create your first client!
+                </p>
                 <button onClick={handleNewClient} className="btn btn-primary">
                   Create Client
                 </button>

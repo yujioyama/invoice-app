@@ -12,21 +12,35 @@ export default function Dashboard() {
 
           <div className="card-body">
             <div className="grid gap-4 sm:grid-cols-2">
-              <Link href="/clients" className="card block p-5 hover:bg-slate-50 transition">
+              <Link
+                href="/clients"
+                className="card block p-5 hover:bg-slate-50 transition"
+              >
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="text-sm font-semibold text-slate-900">Clients</div>
-                    <div className="mt-1 text-sm text-slate-600">View and manage clients</div>
+                    <div className="text-sm font-semibold text-slate-900">
+                      Clients
+                    </div>
+                    <div className="mt-1 text-sm text-slate-600">
+                      View and manage clients
+                    </div>
                   </div>
                   <div className="text-2xl">👥</div>
                 </div>
               </Link>
 
-              <Link href="/invoices" className="card block p-5 hover:bg-slate-50 transition">
+              <Link
+                href="/invoices"
+                className="card block p-5 hover:bg-slate-50 transition"
+              >
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="text-sm font-semibold text-slate-900">Invoices</div>
-                    <div className="mt-1 text-sm text-slate-600">Create and track invoices</div>
+                    <div className="text-sm font-semibold text-slate-900">
+                      Invoices
+                    </div>
+                    <div className="mt-1 text-sm text-slate-600">
+                      Create and track invoices
+                    </div>
                   </div>
                   <div className="text-2xl">🧾</div>
                 </div>
