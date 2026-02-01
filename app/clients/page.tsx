@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { getClients, Client } from "@/lib/apiClients";
 import { useEffect, useState } from "react";
+import { deleteClient } from "@/lib/apiClients";
 
 export default function InvoicesListPage() {
   const router = useRouter();
@@ -11,6 +12,18 @@ export default function InvoicesListPage() {
 
   const handleNewClient = () => {
     router.push("/clients/new");
+  };
+
+  const handleDeleteClient = async (id: string) => {
+    try {
+      await deleteClient(id);
+      setClients(
+        (prevClients) =>
+          prevClients?.filter((client) => client.id !== id) || null,
+      );
+    } catch (error) {
+      console.error("Failed to delete client:", error);
+    }
   };
 
   useEffect(() => {
@@ -77,6 +90,7 @@ export default function InvoicesListPage() {
                   <th className="px-6 py-4 text-center font-bold tracking-wide font-now text-black">
                     Address
                   </th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -86,9 +100,23 @@ export default function InvoicesListPage() {
                     className="border-b border-gray-300 hover:bg-gray-50 font-tt-chocolates"
                   >
                     <td className="px-6 py-4 text-black">{client.name}</td>
-                    <td className="px-6 py-4 text-black">{client.email}</td>
-                    <td className="px-6 py-4 text-black">{client.phone}</td>
-                    <td className="px-6 py-4 text-black">{client.address}</td>
+                    <td className="px-6 py-4 text-black text-right">
+                      {client.email}
+                    </td>
+                    <td className="px-6 py-4 text-black text-right">
+                      {client.phone}
+                    </td>
+                    <td className="px-6 py-4 text-black text-right">
+                      {client.address}
+                    </td>
+                    <td className="px-6 py-4 text-black text-right">
+                      <button
+                        onClick={() => handleDeleteClient(client.id)}
+                        className="px-6 py-2 text-white bg-red-500 rounded hover:bg-red-600 font-now tracking-wide cursor-pointer"
+                      >
+                        delete
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>

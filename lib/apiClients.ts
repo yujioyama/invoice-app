@@ -49,6 +49,7 @@ export async function updateClient(
 export async function deleteClient(id: string): Promise<void> {
   const res = await fetch(`${API_BASE_URL}/clients/${id}`, {
     method: "DELETE",
+    credentials: "include",
   });
   if (!res.ok) throw new Error("Failed to delete client");
 }
