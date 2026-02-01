@@ -26,7 +26,7 @@ const InvoiceDocument = forwardRef<HTMLDivElement, InvoiceDocumentProps>(
       <div
         ref={ref}
         id="invoice-pdf"
-        className="bg-white max-w-[210mm] mx-auto shadow-lg font-sans text-[#000000]"
+        className="bg-white max-w-[210mm] mx-auto shadow-lg font-now text-[#000000]"
       >
         <InvoiceHeader />
 
@@ -41,7 +41,7 @@ const InvoiceDocument = forwardRef<HTMLDivElement, InvoiceDocumentProps>(
         <InvoiceFooter />
       </div>
     );
-  }
+  },
 );
 
 InvoiceDocument.displayName = "InvoiceDocument";

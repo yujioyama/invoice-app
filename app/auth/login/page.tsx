@@ -30,36 +30,35 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-8 rounded shadow-md w-full max-w-md"
-      >
-        <h1 className="text-2xl font-bold mb-6 text-center">Login</h1>
+    <div className="page flex items-center justify-center">
+      <form onSubmit={handleSubmit} className="card w-full max-w-md p-8">
+        <h1 className="text-2xl font-bold mb-6 text-center text-slate-900">
+          Login
+        </h1>
         <div className="mb-4">
-          <label className="block mb-1 font-bold">Email</label>
+          <label className="label">Email</label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full border px-3 py-2 rounded"
+            className="input"
             required
           />
         </div>
         <div className="mb-6">
-          <label className="block mb-1 font-bold">Password</label>
+          <label className="label">Password</label>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full border px-3 py-2 rounded"
+            className="input"
             required
           />
         </div>
-        {error && <div className="mb-4 text-red-500 text-sm">{error}</div>}
+        {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
         <button
           type="submit"
-          className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 rounded disabled:bg-gray-300"
+          className="btn btn-primary w-full"
           disabled={loading}
         >
           {loading ? "Logging in..." : "Login"}

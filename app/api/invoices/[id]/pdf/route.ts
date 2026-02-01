@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET(
   req: NextRequest,
-  context: { params: Promise<{ id: string }> }
+  context: { params: Promise<{ id: string }> },
 ) {
   const params = await context.params;
   const id = params.id;
@@ -59,7 +59,7 @@ export async function GET(
     });
 
     // フォント読み込み完了を待つ
-    await page.evaluate(() => (document as any).fonts?.ready);
+    await page.evaluate(() => document.fonts?.ready ?? Promise.resolve());
 
     await page.emulateMediaType("print");
 
@@ -81,7 +81,7 @@ export async function GET(
       },
     });
   } catch {
-    return new NextResponse("PDF生成に失敗しました", { status: 500 });
+    return new NextResponse("Failed to generate PDF", { status: 500 });
   } finally {
     if (browser) await browser.close();
   }

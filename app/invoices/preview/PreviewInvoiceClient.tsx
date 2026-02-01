@@ -44,7 +44,7 @@ export default function PreviewInvoiceClient() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      if (!userId) throw new Error("ユーザー情報が見つかりません");
+      if (!userId) throw new Error("User session not found");
       const invoice = await createInvoice({
         name: invoiceName,
         userId: userId,
@@ -57,29 +57,26 @@ export default function PreviewInvoiceClient() {
       router.push(`/invoices/${invoice.id}`);
     } catch (error) {
       console.error("Failed to save invoice:", error);
-      alert(
-        "保存に失敗しました。バックエンドサーバーが起動しているか確認してください。",
-      );
+      alert("Failed to save. Please make sure the backend server is running.");
     } finally {
       setSaving(false);
     }
   };
 
   return (
-    <div className="min-h-screen p-8 bg-gray-50">
-      <div className="max-w-[210mm] mx-auto mb-8">
-        {/* 操作ボタン */}
-        <div className="flex gap-4 mb-4">
+    <div className="page">
+      <div className="mx-auto w-full max-w-[210mm] mb-6">
+        <div className="flex flex-wrap gap-3">
           <button
             onClick={() => router.push("/invoices/new")}
-            className="px-6 py-2 text-white bg-gray-500 rounded hover:bg-gray-600 cursor-pointer"
+            className="btn btn-ghost"
           >
             Back to Edit
           </button>
           <button
             onClick={handleSave}
             disabled={saving}
-            className="px-6 py-2 text-white bg-blue-500 rounded hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer"
+            className="btn btn-primary"
           >
             {saving ? "Saving..." : "Save & Continue"}
           </button>

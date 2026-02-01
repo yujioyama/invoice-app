@@ -49,53 +49,38 @@ export default function InvoicesListPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen p-8 bg-gray-50">
-        <p className="text-black">Loading clients...</p>
+      <div className="page">
+        <div className="container">
+          <p className="text-slate-700">Loading clients...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen p-8 bg-gray-50">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-widest text-black font-tt-drugs mb-2">
-            CLIENTS
-          </h1>
-          <p className="text-sm text-black font-tt-chocolates">
-            Manage and view all your clients
-          </p>
-        </div>
+    <div className="page">
+      <div className="container">
+        <div className="card">
+          <div className="card-header flex items-center justify-between gap-4">
+            <div>
+              <h1 className="title">Clients</h1>
+              <p className="subtitle">Manage and view all your clients</p>
+            </div>
+            <button onClick={handleNewClient} className="btn btn-primary">
+              + New Client
+            </button>
+          </div>
 
-        {/* New Client Button */}
-        <div className="mb-6">
-          <button
-            onClick={handleNewClient}
-            className="px-6 py-2 text-white bg-blue-500 rounded hover:bg-blue-600 font-now tracking-wide cursor-pointer"
-          >
-            + New Client
-          </button>
-        </div>
-
-        {/* Clients List */}
-        {clients && clients.length > 0 ? (
-          <div className="bg-white shadow-lg rounded overflow-hidden">
-            <table className="w-full">
+          <div className="card-body">
+            {clients && clients.length > 0 ? (
+              <div className="overflow-x-auto">
+                <table className="table">
               <thead>
                 <tr className="bg-[#f6f5f4] border-b border-gray-300">
-                  <th className="px-6 py-4 text-left font-bold tracking-wide font-now text-black">
-                    Name
-                  </th>
-                  <th className="px-6 py-4 text-center font-bold tracking-wide font-now text-black">
-                    Email
-                  </th>
-                  <th className="px-6 py-4 text-center font-bold tracking-wide font-now text-black">
-                    Phone
-                  </th>
-                  <th className="px-6 py-4 text-center font-bold tracking-wide font-now text-black">
-                    Address
-                  </th>
+                  <th>Name</th>
+                  <th className="text-center">Email</th>
+                  <th className="text-center">Phone</th>
+                  <th className="text-center">Address</th>
                   <th></th>
                 </tr>
               </thead>
@@ -105,42 +90,33 @@ export default function InvoicesListPage() {
                     key={client.id}
                     className="border-b border-gray-300 hover:bg-gray-50 font-tt-chocolates"
                   >
-                    <td className="px-6 py-4 text-black">{client.name}</td>
-                    <td className="px-6 py-4 text-black text-right">
-                      {client.email}
-                    </td>
-                    <td className="px-6 py-4 text-black text-right">
-                      {client.phone}
-                    </td>
-                    <td className="px-6 py-4 text-black text-right">
-                      {client.address}
-                    </td>
-                    <td className="px-6 py-4 text-black text-right">
+                    <td>{client.name}</td>
+                    <td className="text-right">{client.email}</td>
+                    <td className="text-right">{client.phone}</td>
+                    <td className="text-right">{client.address}</td>
+                    <td className="text-right">
                       <button
                         onClick={() => handleDeleteClient(client.id)}
-                        className="px-6 py-2 text-white bg-red-500 rounded hover:bg-red-600 font-now tracking-wide cursor-pointer"
+                        className="btn btn-danger"
                       >
-                        delete
+                        Delete
                       </button>
                     </td>
                   </tr>
                 ))}
               </tbody>
-            </table>
+                </table>
+              </div>
+            ) : (
+              <div className="text-center py-10">
+                <p className="text-slate-700 mb-4">No clients found. Create your first client!</p>
+                <button onClick={handleNewClient} className="btn btn-primary">
+                  Create Client
+                </button>
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="bg-white shadow-lg rounded p-8 text-center">
-            <p className="text-black font-tt-chocolates mb-4">
-              No clients found. Create your first client!
-            </p>
-            <button
-              onClick={handleNewClient}
-              className="px-6 py-2 text-white bg-blue-500 rounded hover:bg-blue-600 font-now tracking-wide cursor-pointer"
-            >
-              Create Client
-            </button>
-          </div>
-        )}
+        </div>
       </div>
     </div>
   );

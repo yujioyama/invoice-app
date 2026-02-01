@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
-import type { CreateClientInput, Client } from "@shared/types/Client";
+import type { CreateClientInput } from "@shared/types/Client";
 
 export type CreateClientDto = CreateClientInput;
 

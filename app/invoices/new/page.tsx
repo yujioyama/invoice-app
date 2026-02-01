@@ -34,11 +34,11 @@ export default function NewInvoicePage() {
     (id: number, field: keyof Task, value: string | number) => {
       setTasks((prevTasks) =>
         prevTasks.map((task) =>
-          task.id === id ? { ...task, [field]: value } : task
-        )
+          task.id === id ? { ...task, [field]: value } : task,
+        ),
       );
     },
-    []
+    [],
   );
 
   // タスク追加をメモ化
@@ -72,25 +72,26 @@ export default function NewInvoicePage() {
   }, [invoiceName, tasks, isValid, router]);
 
   return (
-    <div className="min-h-screen p-8 bg-gray-50">
-      <div className="max-w-[210mm] mx-auto">
-        <div className="bg-white shadow-lg">
-          <h1 className="pt-11 pb-9 px-20 text-3xl font-bold tracking-widest bg-[#f6f5f4] font-tt-drugs text-black">
-            CREATE INVOICE
-          </h1>
+    <div className="page">
+      <div className="mx-auto w-full max-w-[210mm]">
+        <div className="card">
+          <div className="card-header">
+            <h1 className="title">Create invoice</h1>
+            <p className="subtitle">
+              Build your invoice and preview it before saving.
+            </p>
+          </div>
 
-          <div className="px-20 py-7">
+          <div className="card-body">
             {/* Invoice Name */}
             <div className="mb-6">
-              <label className="block mb-2 text-sm font-bold tracking-wide font-now text-black">
-                INVOICE NAME
-              </label>
+              <label className="label">Invoice name</label>
               <input
                 type="text"
                 value={invoiceName}
                 onChange={(e) => setInvoiceName(e.target.value)}
                 placeholder="Enter invoice name..."
-                className="w-full px-3 py-2 text-sm border border-gray-200 rounded focus:outline-none focus:border-gray-400 font-tt-chocolates text-black"
+                className="input"
               />
             </div>
 
@@ -103,10 +104,7 @@ export default function NewInvoicePage() {
 
             {/* Add Task Button */}
             <div className="mb-6">
-              <button
-                onClick={addNewTask}
-                className="text-sm text-blue-600 hover:text-blue-800 font-now tracking-wide cursor-pointer"
-              >
+              <button onClick={addNewTask} className="btn btn-link">
                 + Add Task
               </button>
             </div>
@@ -119,7 +117,7 @@ export default function NewInvoicePage() {
               <button
                 onClick={handlePreview}
                 disabled={!isValid}
-                className="px-6 py-2 text-white bg-blue-500 rounded hover:bg-blue-600 font-now tracking-wide disabled:bg-gray-300 disabled:cursor-not-allowed cursor-pointer"
+                className="btn btn-primary"
                 title={
                   !isValid
                     ? "Please fill in all task names and hours"
@@ -130,7 +128,7 @@ export default function NewInvoicePage() {
               </button>
               <button
                 onClick={() => router.push("/invoices")}
-                className="px-6 py-2 text-white bg-blue-500 rounded hover:bg-blue-600 cursor-pointer"
+                className="btn btn-ghost"
               >
                 Invoices List
               </button>

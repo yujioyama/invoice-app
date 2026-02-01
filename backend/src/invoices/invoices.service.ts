@@ -1,10 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
-import type {
-  CreateInvoiceInput,
-  Invoice,
-  Task,
-} from "../../../shared/types/Invoice";
+import type { CreateInvoiceInput } from "../../../shared/types/Invoice";
 
 export type CreateInvoiceDto = CreateInvoiceInput;
 

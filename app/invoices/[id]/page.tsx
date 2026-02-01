@@ -54,32 +54,41 @@ export default function InvoiceDetailPage({
       URL.revokeObjectURL(objectUrl);
     } catch (error) {
       console.error(error);
-      alert("PDFのダウンロードに失敗しました。");
+      alert("Failed to download the PDF.");
     }
   };
 
   if (loading) {
     return (
-      <div className="p-8">
-        <h1 className="mb-4 text-2xl font-bold">Loading...</h1>
-        <p className="text-gray-600">インボイスを読み込んでいます...</p>
+      <div className="page">
+        <div className="container">
+          <p className="text-slate-700">Loading invoice...</p>
+        </div>
       </div>
     );
   }
 
   if (!invoice) {
     return (
-      <div className="p-8">
-        <h1 className="mb-4 text-2xl font-bold">Invoice Not Found</h1>
-        <p className="mb-6 text-gray-600">
-          インボイスデータが見つかりませんでした。バックエンドサーバーが起動しているか確認してください。
-        </p>
-        <button
-          onClick={() => router.push("/invoices/new")}
-          className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
-        >
-          Create New Invoice
-        </button>
+      <div className="page">
+        <div className="container">
+          <div className="card">
+            <div className="card-header">
+              <h1 className="title">Invoice not found</h1>
+              <p className="subtitle">
+                Please make sure the backend server is running.
+              </p>
+            </div>
+            <div className="card-body">
+              <button
+                onClick={() => router.push("/invoices/new")}
+                className="btn btn-primary"
+              >
+                Create New Invoice
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -88,24 +97,21 @@ export default function InvoiceDetailPage({
   const grandTotal = tasks.reduce((sum, t) => sum + t.rate * t.hours, 0);
 
   return (
-    <div className="min-h-screen p-8 bg-gray-50">
-      <div className="max-w-[210mm] mx-auto mb-8">
-        <div className="flex gap-4 mb-4">
+    <div className="page">
+      <div className="mx-auto w-full max-w-[210mm]">
+        <div className="mb-6 flex flex-wrap gap-3">
           <button
             onClick={() => router.push(`/invoices/${resolvedParams.id}/edit`)}
-            className="px-6 py-2 text-white bg-gray-500 rounded hover:bg-gray-600 cursor-pointer"
+            className="btn btn-secondary"
           >
             Edit Invoice
           </button>
-          <button
-            onClick={downloadPDF}
-            className="px-6 py-2 text-white bg-blue-500 rounded hover:bg-blue-600 cursor-pointer"
-          >
+          <button onClick={downloadPDF} className="btn btn-primary">
             Download PDF
           </button>
           <button
             onClick={() => router.push("/invoices")}
-            className="px-6 py-2 text-white bg-blue-500 rounded hover:bg-blue-600 cursor-pointer"
+            className="btn btn-ghost"
           >
             Invoices List
           </button>

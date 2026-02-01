@@ -1,8 +1,37 @@
 @import "tailwindcss";
 
-/* Custom Fonts */
+/* Custom fonts were previously loaded from /public/fonts.
+   The referenced font files are currently missing, which causes 404s.
+   For now we standardize on Geist (Next.js font loader). */
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --color-blue-500: #3b82f6;
+  --color-gray-500: #6b7280;
+  --color-gray-300: #d1d5db;
+
+  /* App theme accents */
+  --app-bg-1: #f8fafc;
+  --app-bg-2: #eef2ff;
+  --app-ink: #0f172a;
+  --app-card: rgba(255, 255, 255, 0.92);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-tt-drugs: var(--font-geist-sans);
+  --font-now: var(--font-geist-sans);
+  --font-tt-chocolates: var(--font-geist-sans);
+  --font-eyesome-script: ui-serif, Georgia, serif;
+}
+
+/* Local fonts (restored in /public/fonts). */
 @font-face {
-  font-family: "TT Drugs";
+  font-family: "TTDrugs";
   src:
     url("/fonts/TTDrugs-Regular.woff2") format("woff2"),
     url("/fonts/TTDrugs-Regular.woff") format("woff");
@@ -12,7 +41,7 @@
 }
 
 @font-face {
-  font-family: "TT Drugs";
+  font-family: "TTDrugs";
   src:
     url("/fonts/TTDrugs-Bold.woff2") format("woff2"),
     url("/fonts/TTDrugs-Bold.woff") format("woff");
@@ -42,7 +71,7 @@
 }
 
 @font-face {
-  font-family: "TT Chocolates";
+  font-family: "TTChocolates";
   src:
     url("/fonts/TTChocolates-Regular.woff2") format("woff2"),
     url("/fonts/TTChocolates-Regular.woff") format("woff");
@@ -52,7 +81,7 @@
 }
 
 @font-face {
-  font-family: "TT Chocolates";
+  font-family: "TTChocolates";
   src:
     url("/fonts/TTChocolates-Bold.woff2") format("woff2"),
     url("/fonts/TTChocolates-Bold.woff") format("woff");
@@ -62,7 +91,7 @@
 }
 
 @font-face {
-  font-family: "Eyesome Script";
+  font-family: "EyesomeScript";
   src:
     url("/fonts/EyesomeScript.woff2") format("woff2"),
     url("/fonts/EyesomeScript.woff") format("woff");
@@ -71,22 +100,31 @@
   font-display: swap;
 }
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --color-blue-500: #3b82f6;
-  --color-gray-500: #6b7280;
-  --color-gray-300: #d1d5db;
+/* Invoice-only font mapping (keeps the rest of the app on Geist). */
+#invoice-pdf {
+  --font-tt-drugs: "TTDrugs", var(--font-geist-sans);
+  --font-now: "Now", var(--font-geist-sans);
+  --font-tt-chocolates: "TTChocolates", var(--font-geist-sans);
+  --font-eyesome-script: "EyesomeScript", ui-serif, Georgia, serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-tt-drugs: "TT Drugs", sans-serif;
-  --font-now: "Now", sans-serif;
-  --font-eyesome-script: "Eyesome Script", cursive;
+/* Ensure these font utility classes work even without Tailwind theme generation */
+@layer utilities {
+  .font-tt-drugs {
+    font-family: var(--font-tt-drugs);
+  }
+
+  .font-now {
+    font-family: var(--font-now);
+  }
+
+  .font-tt-chocolates {
+    font-family: var(--font-tt-chocolates);
+  }
+
+  .font-eyesome-script {
+    font-family: var(--font-eyesome-script);
+  }
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -121,9 +159,25 @@
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background:
+    radial-gradient(
+      1200px 800px at 12% 10%,
+      rgba(59, 130, 246, 0.14),
+      transparent 55%
+    ),
+    radial-gradient(
+      1000px 600px at 88% 20%,
+      rgba(99, 102, 241, 0.12),
+      transparent 60%
+    ),
+    linear-gradient(
+      180deg,
+      var(--app-bg-2) 0%,
+      var(--app-bg-1) 45%,
+      #ffffff 100%
+    );
+  color: var(--app-ink);
+  font-family: var(--font-sans);
   word-wrap: break-word; /* 長い単語を折り返す */
   white-space: normal; /* 折り返しを許可する */
   overflow-wrap: break-word; /* ブラウザの互換性を向上させる */
@@ -131,6 +185,112 @@ body {
 
 button {
   cursor: pointer;
+}
+
+@layer components {
+  .page {
+    @apply min-h-[100svh] px-4 py-6 sm:px-8 sm:py-10;
+  }
+
+  .container {
+    @apply mx-auto w-full max-w-4xl;
+  }
+
+  .card {
+    @apply rounded-2xl bg-white shadow-md shadow-slate-200/60 ring-1 ring-black/5;
+    background: var(--app-card);
+    backdrop-filter: blur(10px);
+  }
+
+  .card-header {
+    @apply border-b border-slate-200/70 px-6 py-5;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.7) 0%,
+      rgba(248, 250, 252, 0.85) 100%
+    );
+  }
+
+  .card-body {
+    @apply px-6 py-6;
+  }
+
+  .title {
+    @apply text-2xl font-bold tracking-tight text-slate-900;
+    font-family: var(--font-display), var(--font-sans);
+    letter-spacing: -0.02em;
+  }
+
+  .subtitle {
+    @apply mt-1 text-sm text-slate-600;
+  }
+
+  .btn {
+    @apply inline-flex h-10 items-center justify-center rounded-lg px-4 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+    @apply shadow-sm ring-1 ring-black/5;
+  }
+
+  .btn-primary {
+    @apply text-white focus:ring-blue-500;
+    @apply bg-gradient-to-b from-blue-600 to-blue-700 hover:from-blue-600 hover:to-blue-800;
+  }
+
+  .btn-danger {
+    @apply text-white focus:ring-red-500;
+    @apply bg-gradient-to-b from-red-600 to-red-700 hover:from-red-600 hover:to-red-800;
+  }
+
+  .btn-secondary {
+    @apply text-white focus:ring-slate-400;
+    @apply bg-gradient-to-b from-slate-900 to-slate-800 hover:from-slate-900 hover:to-slate-700;
+  }
+
+  .btn-ghost {
+    @apply bg-white/40 text-slate-700 hover:bg-white/70 focus:ring-slate-300;
+  }
+
+  .btn-link {
+    @apply h-auto px-0 text-sm font-semibold text-blue-700 hover:text-blue-900 hover:underline focus:ring-blue-500;
+  }
+
+  .brand {
+    @apply text-lg font-extrabold tracking-tight text-slate-900 hover:text-slate-700;
+    font-family: var(--font-display), var(--font-sans);
+    letter-spacing: -0.02em;
+  }
+
+  .link-card {
+    @apply block rounded-xl bg-white/60 p-5 ring-1 ring-black/5 transition hover:bg-white/80 hover:shadow-md hover:shadow-slate-200/60;
+    backdrop-filter: blur(10px);
+  }
+
+  .input {
+    @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20;
+  }
+
+  .label {
+    @apply mb-2 block text-sm font-semibold text-slate-800;
+  }
+
+  .table {
+    @apply w-full;
+  }
+
+  .table thead tr {
+    @apply border-b border-slate-200 bg-slate-50;
+  }
+
+  .table th {
+    @apply px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-700;
+  }
+
+  .table td {
+    @apply px-6 py-4 text-sm text-slate-800;
+  }
+
+  .table tbody tr {
+    @apply border-b border-slate-100 hover:bg-slate-50;
+  }
 }
 
 @media print {

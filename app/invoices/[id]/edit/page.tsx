@@ -3,7 +3,6 @@
 import { useState, useCallback, useMemo, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 import { getInvoiceById, updateInvoice } from "@/lib/apiInvoices";
-import type { Invoice } from "@/lib/apiInvoices";
 import EditableTasksTable from "@/components/invoice/EditableTasksTable";
 import TotalSection from "@/components/invoice/TotalSection";
 
@@ -32,7 +31,7 @@ export default function EditInvoicePage({
       try {
         const invoice = await getInvoiceById(resolvedParams.id);
         if (!invoice) {
-          alert("インボイスが見つかりません。");
+          alert("Invoice not found.");
           router.push("/invoices");
           return;
         }
@@ -55,7 +54,7 @@ export default function EditInvoicePage({
         setTasks(formattedTasks);
       } catch (error) {
         console.error("Failed to load invoice:", error);
-        alert("インボイスの読み込みに失敗しました。");
+        alert("Failed to load invoice.");
         router.push("/invoices");
       } finally {
         setLoading(false);
@@ -122,38 +121,39 @@ export default function EditInvoicePage({
       router.push(`/invoices/${resolvedParams.id}`);
     } catch (error) {
       console.error("Failed to save invoice:", error);
-      alert("保存に失敗しました。");
+      alert("Failed to save.");
     }
   }, [isValid, invoiceName, tasks, resolvedParams.id, router]);
 
   if (loading) {
     return (
-      <div className="p-8">
-        <p className="text-black">Loading invoice...</p>
+      <div className="page">
+        <div className="container">
+          <p className="text-slate-700">Loading invoice...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen p-8 bg-gray-50">
-      <div className="max-w-[210mm] mx-auto">
-        <div className="bg-white shadow-lg">
-          <h1 className="pt-11 pb-9 px-20 text-3xl font-bold tracking-widest bg-[#f6f5f4] font-tt-drugs text-black">
-            EDIT INVOICE
-          </h1>
+    <div className="page">
+      <div className="mx-auto w-full max-w-[210mm]">
+        <div className="card">
+          <div className="card-header">
+            <h1 className="title">Edit invoice</h1>
+            <p className="subtitle">Update invoice details and tasks.</p>
+          </div>
 
-          <div className="px-20 py-7">
+          <div className="card-body">
             {/* Invoice Name */}
             <div className="mb-6">
-              <label className="block mb-2 text-sm font-bold tracking-wide font-now text-black">
-                INVOICE NAME
-              </label>
+              <label className="label">Invoice name</label>
               <input
                 type="text"
                 value={invoiceName}
                 onChange={(e) => setInvoiceName(e.target.value)}
                 placeholder="Enter invoice name..."
-                className="w-full px-3 py-2 text-sm border border-gray-200 rounded focus:outline-none focus:border-gray-400 font-tt-chocolates text-black"
+                className="input"
               />
             </div>
 
@@ -166,10 +166,7 @@ export default function EditInvoicePage({
 
             {/* Add Task Button */}
             <div className="mb-6">
-              <button
-                onClick={addNewTask}
-                className="text-sm text-blue-600 hover:text-blue-800 font-now tracking-wide cursor-pointer"
-              >
+              <button onClick={addNewTask} className="btn btn-link">
                 + Add Task
               </button>
             </div>
@@ -181,14 +178,14 @@ export default function EditInvoicePage({
             <div className="flex gap-4 pb-9">
               <button
                 onClick={() => router.push(`/invoices/${resolvedParams.id}`)}
-                className="px-6 py-2 text-white bg-gray-500 rounded hover:bg-gray-600 font-now tracking-wide cursor-pointer"
+                className="btn btn-ghost"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSave}
                 disabled={!isValid}
-                className="px-6 py-2 text-white bg-blue-500 rounded hover:bg-blue-600 font-now tracking-wide disabled:bg-gray-300 disabled:cursor-not-allowed cursor-pointer"
+                className="btn btn-primary"
                 title={!isValid ? "Please fill in all fields" : "Save changes"}
               >
                 Save Changes
