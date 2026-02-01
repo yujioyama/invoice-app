@@ -49,11 +49,10 @@ export default function Header() {
   };
 
   return (
-    <header className="cursor-pointer flex items-center justify-between px-8">
+    <header className="cursor-pointer flex items-center justify-between px-4 sm:px-8">
       <button onClick={handleHeaderClick} className="py-4 text-2xl font-bold">
         Invoice App
       </button>
-      <div className="flex-1" />
       <button
         onClick={handleLogoutClick}
         className="px-6 h-10 text-white bg-blue-500 rounded hover:bg-blue-600 font-now tracking-wide cursor-pointer"
