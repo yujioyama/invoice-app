@@ -13,6 +13,12 @@ import { LoginDto } from "./dto/login.dto";
 import { Response } from "express";
 import { JwtAuthGuard } from "./jwt-auth.guard";
 
+const COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax" as const,
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+};
 @Controller("auth")
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -20,30 +26,27 @@ export class AuthController {
   @Post("register")
   async register(@Body() dto: RegisterDto, @Res() res: Response) {
     const { token, user } = await this.authService.register(dto);
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
+    res.cookie("token", token, COOKIE_OPTIONS);
     return res.json({ user });
   }
 
   @Post("login")
   async login(@Body() dto: LoginDto, @Res() res: Response) {
     const { token, user } = await this.authService.login(dto);
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
+    res.cookie("token", token, COOKIE_OPTIONS);
     return res.json({ user });
+  }
+
+  @Post("logout")
+  async logout(@Res() res: Response) {
+    res.clearCookie("token", COOKIE_OPTIONS);
+    return res.json({ message: "Logged out" });
   }
 
   @Get("me")
   @UseGuards(JwtAuthGuard)
   async getMe(@Request() req) {
+    console.log("req.user:", req.user);
     return { user: req.user };
   }
 }
