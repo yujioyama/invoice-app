@@ -25,7 +25,25 @@ export async function GET(
     browser = await puppeteer.launch({
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
+
     const page = await browser.newPage();
+
+    // 認証クッキーをPuppeteerに渡す
+    const cookieHeader = req.headers.get("cookie");
+    if (cookieHeader) {
+      // cookieHeader例: "token=xxxx; other=yyy"
+      const cookies = cookieHeader.split(";").map((c) => {
+        const [name, ...rest] = c.trim().split("=");
+        return {
+          name,
+          value: rest.join("="),
+          domain: new URL(origin).hostname,
+          path: "/",
+        };
+      });
+      await page.setCookie(...cookies);
+    }
+
     // Wait until there are no more than 0 network connections for at least 500ms.
     // This ensures the page and all its resources (images, fonts, API calls) are fully loaded before rendering the PDF.
     await page.goto(url, { waitUntil: "networkidle0" });
