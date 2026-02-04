@@ -61,7 +61,8 @@ export default function EditInvoicePage({
       }
     }
     loadInvoice();
-  }, [resolvedParams.id, router]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resolvedParams.id]);
 
   // Grand Totalをメモ化
   const grandTotal = useMemo(() => {

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useCallback, useMemo, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import EditableTasksTable from "@/components/invoice/EditableTasksTable";
 import TotalSection from "@/components/invoice/TotalSection";
 
@@ -14,10 +14,32 @@ type Task = {
 
 export default function NewInvoicePage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [invoiceName, setInvoiceName] = useState("My First Invoice");
   const [tasks, setTasks] = useState<Task[]>([
     { id: 1, name: "", rate: 27, hours: 0 },
   ]);
+
+  // URLクエリパラメータから初期値を復元
+  useEffect(() => {
+    const nameFromQuery = searchParams.get("name");
+    const tasksFromQuery = searchParams.get("tasks");
+
+    if (nameFromQuery && nameFromQuery !== invoiceName) {
+      setInvoiceName(nameFromQuery);
+    }
+
+    if (tasksFromQuery) {
+      try {
+        const parsedTasks = JSON.parse(tasksFromQuery);
+        if (JSON.stringify(parsedTasks) !== JSON.stringify(tasks)) {
+          setTasks(parsedTasks);
+        }
+      } catch (error) {
+        console.error("Failed to parse tasks from query:", error);
+      }
+    }
+  }, [searchParams]);
 
   // Grand Totalをメモ化
   const grandTotal = useMemo(() => {

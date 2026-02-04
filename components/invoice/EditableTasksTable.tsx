@@ -62,7 +62,7 @@ export default function EditableTasksTable({
               <td className="py-3 text-center">
                 <input
                   type="number"
-                  value={task.hours}
+                  value={task.hours === 0 ? "" : task.hours}
                   onChange={(e) =>
                     onTaskChange(task.id, "hours", Number(e.target.value))
                   }

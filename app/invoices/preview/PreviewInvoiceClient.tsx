@@ -63,14 +63,21 @@ export default function PreviewInvoiceClient() {
     }
   };
 
+  const handleBackToEdit = () => {
+    const queryData = {
+      name: invoiceName,
+      createdAt: createdAt,
+      tasks: JSON.stringify(tasks),
+    };
+    const queryString = new URLSearchParams(queryData).toString();
+    router.push(`/invoices/new?${queryString}`);
+  };
+
   return (
     <div className="page">
       <div className="mx-auto w-full max-w-[210mm] mb-6">
         <div className="flex flex-wrap gap-3">
-          <button
-            onClick={() => router.push("/invoices/new")}
-            className="btn btn-ghost"
-          >
+          <button onClick={handleBackToEdit} className="btn btn-ghost">
             Back to Edit
           </button>
           <button

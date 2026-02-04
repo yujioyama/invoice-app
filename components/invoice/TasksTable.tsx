@@ -14,7 +14,12 @@ export default function TasksTable({ tasks }: TasksTableProps) {
       <table className="w-full">
         <thead>
           <tr className="text-base border-t border-b border-gray-300 font-now">
-            <th className="py-3 font-bold tracking-wide text-left" style={{ width: 350, minWidth: 200, maxWidth: 400 }}>TASK</th>
+            <th
+              className="py-3 font-bold tracking-wide text-left"
+              style={{ width: 350, minWidth: 200, maxWidth: 400 }}
+            >
+              TASK
+            </th>
             <th className="py-3 font-bold tracking-wide text-center">RATE</th>
             <th className="py-3 font-bold tracking-wide text-center">HOURS</th>
             <th className="py-3 font-bold tracking-wide text-right">TOTAL</th>
@@ -26,7 +31,10 @@ export default function TasksTable({ tasks }: TasksTableProps) {
               key={index}
               className="border-b border-gray-300 font-tt-chocolates"
             >
-              <td className="py-3 text-sm whitespace-normal break-words" style={{ width: 350, minWidth: 200, maxWidth: 400 }}>
+              <td
+                className="py-3 text-sm whitespace-normal break-words"
+                style={{ width: 350, minWidth: 200, maxWidth: 400 }}
+              >
                 {task.name}
               </td>
               <td className="py-3 text-sm text-center">${task.rate}/hr</td>
