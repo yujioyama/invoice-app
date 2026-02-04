@@ -4,7 +4,7 @@ interface TotalSectionProps {
 
 export default function TotalSection({ total }: TotalSectionProps) {
   return (
-    <div className="mb-9">
+    <div className="mb-8">
       <p className="text-base font-bold font-now text-black">
         TOTAL DUE(AUD) <span className="float-right">${total.toFixed(2)}</span>
       </p>
