@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import { getInvoices, Invoice } from "@/lib/apiInvoices";
 import { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
+import { deleteInvoice } from "@/lib/apiInvoices";
 
 export default function InvoicesListPage() {
   const router = useRouter();
@@ -15,6 +17,24 @@ export default function InvoicesListPage() {
 
   const handleNewInvoice = () => {
     router.push("/invoices/new");
+  };
+
+  const handleDeleteInvoice = async (id: string) => {
+    const invoiceName =
+      invoices?.find((invoice) => invoice.id === id)?.name || "";
+    try {
+      await deleteInvoice(id);
+      setInvoices(
+        (prevInvoices) =>
+          prevInvoices?.filter((invoice) => invoice.id !== id) || null,
+      );
+      toast.success(
+        `Invoice${invoiceName ? ` "${invoiceName}"` : ""} has been deleted.`,
+      );
+    } catch (error) {
+      console.error("Failed to delete invoice:", error);
+      toast.error("Failed to delete invoice");
+    }
   };
 
   useEffect(() => {
@@ -60,51 +80,61 @@ export default function InvoicesListPage() {
             {invoices && invoices.length > 0 ? (
               <div className="overflow-x-auto">
                 <table className="table">
-              <thead>
-                <tr className="bg-[#f6f5f4] border-b border-gray-300">
-                  <th>Invoice</th>
-                  <th className="text-center">Tasks</th>
-                  <th className="text-center">Created</th>
-                  <th className="text-center">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {invoices.map((invoice) => (
-                  <tr
-                    key={invoice.id}
-                    className="border-b border-gray-300 hover:bg-gray-50 font-tt-chocolates"
-                  >
-                    <td>{invoice.name}</td>
-                    <td className="text-center">
-                      {invoice.tasks?.length || 0}
-                    </td>
-                    <td className="text-center">
-                      {invoice.createdAt &&
-                        new Date(invoice.createdAt).toLocaleDateString(
-                          "en-GB",
-                          {
-                            day: "numeric",
-                            month: "short",
-                            year: "numeric",
-                          },
-                        )}
-                    </td>
-                    <td className="text-center">
-                      <button
-                        onClick={() => handleDetail(invoice.id)}
-                        className="btn btn-ghost"
+                  <thead>
+                    <tr className="bg-[#f6f5f4] border-b border-gray-300">
+                      <th>Invoice</th>
+                      <th className="text-center">Tasks</th>
+                      <th className="text-center">Created</th>
+                      <th className="text-center">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {invoices.map((invoice) => (
+                      <tr
+                        key={invoice.id}
+                        className="border-b border-gray-300 hover:bg-gray-50 font-tt-chocolates"
                       >
-                        View
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
+                        <td>{invoice.name}</td>
+                        <td className="text-center">
+                          {invoice.tasks?.length || 0}
+                        </td>
+                        <td className="text-center">
+                          {invoice.createdAt &&
+                            new Date(invoice.createdAt).toLocaleDateString(
+                              "en-GB",
+                              {
+                                day: "numeric",
+                                month: "short",
+                                year: "numeric",
+                              },
+                            )}
+                        </td>
+                        <td className="text-center">
+                          <div className="flex justify-center">
+                            <button
+                              onClick={() => handleDetail(invoice.id)}
+                              className="btn btn-ghost"
+                            >
+                              View
+                            </button>
+                            <button
+                              onClick={() => handleDeleteInvoice(invoice.id)}
+                              className="btn btn-danger ml-2"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
                 </table>
               </div>
             ) : (
               <div className="text-center py-10">
-                <p className="text-slate-700 mb-4">No invoices found. Create your first invoice!</p>
+                <p className="text-slate-700 mb-4">
+                  No invoices found. Create your first invoice!
+                </p>
                 <button onClick={handleNewInvoice} className="btn btn-primary">
                   Create Invoice
                 </button>
