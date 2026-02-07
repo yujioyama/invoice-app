@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 
 export default function Header() {
   const router = useRouter();
-  const [user, setUser] = useState<{ id?: string }>({});
+  const [user, setUser] = useState<{ id?: string; name?: string }>({});
 
   const pathname = usePathname();
   const noAuthPages = useMemo(
@@ -63,9 +63,16 @@ export default function Header() {
         <button onClick={handleHeaderClick} className="brand">
           Invoice App
         </button>
-        <button onClick={handleLogoutClick} className="btn btn-primary">
-          Logout
-        </button>
+        <div className="flex items-center gap-4">
+          {user.name && (
+            <span className="text-slate-700 font-medium">
+              Hello, {user.name}
+            </span>
+          )}
+          <button onClick={handleLogoutClick} className="btn btn-primary">
+            Logout
+          </button>
+        </div>
       </div>
     </header>
   );
