@@ -3,7 +3,9 @@
 import { useEffect, useRef, useState, use } from "react";
 import { useRouter } from "next/navigation";
 import { getInvoiceById } from "@/lib/apiInvoices";
+import { getClientById } from "@/lib/apiClients";
 import type { Invoice } from "@/lib/apiInvoices";
+import type { Client } from "@/lib/apiClients";
 import InvoiceDocument from "@/components/invoice/InvoiceDocument";
 
 interface Task {
@@ -21,6 +23,7 @@ export default function InvoiceDetailPage({
   const router = useRouter();
   const [invoice, setInvoice] = useState<Invoice | null>(null);
   const [loading, setLoading] = useState(true);
+  const [client, setClient] = useState<Client | null>(null);
   const invoiceRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -29,6 +32,10 @@ export default function InvoiceDetailPage({
       try {
         const data = await getInvoiceById(resolvedParams.id);
         setInvoice(data);
+        if (data !== null && data.clientId) {
+          const clientData = await getClientById(data.clientId);
+          setClient(clientData);
+        }
       } catch (error) {
         console.error("Failed to load invoice:", error);
       } finally {
@@ -124,6 +131,7 @@ export default function InvoiceDetailPage({
         createdAt={invoice.createdAt}
         tasks={tasks}
         grandTotal={grandTotal}
+        client={client}
       />
     </div>
   );

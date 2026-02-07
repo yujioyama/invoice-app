@@ -1,22 +1,32 @@
+import { Client } from "@/shared/types/Client";
+
 interface InvoiceInfoProps {
   invoiceName: string;
   createdAt: string;
+  client: Client | null;
 }
 
 export default function InvoiceInfo({
   invoiceName,
   createdAt,
+  client,
 }: InvoiceInfoProps) {
   return (
     <div className="flex justify-between mb-8">
       <div>
         <h2 className="mb-3 text-lg tracking-wide font-now">BILLED TO:</h2>
         <p className="text-sm tracking-wider font-tt-chocolates">
-          Sushi Factory (Australia) Pty Ltd
-          <br />
-          1A Lenton Place North Rocks NSW 2151
-          <br />
-          Australia
+          {client ? (
+            <>
+              {client.name}
+              <br />
+              {client.address}
+              <br />
+              {client.country}
+            </>
+          ) : (
+            "Sushi Factory (Australia) Pty Ltd"
+          )}
         </p>
       </div>
       <div className="text-right">

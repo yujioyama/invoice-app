@@ -13,6 +13,7 @@ export default function NewInvoicePage() {
     email: "",
     address: "",
     phone: "",
+    country: "",
   });
   const [saving, setSaving] = useState(false);
   const [user, setUser] = useState<{ id?: string }>({});
@@ -82,6 +83,19 @@ export default function NewInvoicePage() {
                   setClient({ ...client, address: e.target.value })
                 }
                 placeholder="Enter client address..."
+                className="input"
+              />
+            </div>
+            {/* Country */}
+            <div className="mb-6">
+              <label className="label">Country</label>
+              <input
+                type="text"
+                value={client.country}
+                onChange={(e) =>
+                  setClient({ ...client, country: e.target.value })
+                }
+                placeholder="Enter client country..."
                 className="input"
               />
             </div>

@@ -9,6 +9,7 @@ export interface UpdateClientDto {
   email?: string;
   phone?: string;
   address?: string;
+  country?: string;
 }
 
 @Injectable()
@@ -27,6 +28,7 @@ export class ClientsService {
         email: data.email,
         phone: data.phone,
         address: data.address,
+        country: data.country,
       },
     });
   }
@@ -52,6 +54,7 @@ export class ClientsService {
         address: data.address,
         email: data.email,
         phone: data.phone,
+        country: data.country,
       },
     });
   }

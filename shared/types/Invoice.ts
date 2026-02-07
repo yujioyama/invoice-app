@@ -10,6 +10,7 @@ export type Invoice = {
   createdAt: string;
   updatedAt: string;
   tasks: Task[];
+  clientId: string;
 };
 
 export type CreateInvoiceInput = {

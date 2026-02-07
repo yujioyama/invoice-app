@@ -4,6 +4,7 @@ export type Client = {
   email?: string;
   phone?: string;
   address: string;
+  country: string;
 };
 
 export type CreateClientInput = {
@@ -12,4 +13,5 @@ export type CreateClientInput = {
   email?: string;
   phone?: string;
   address: string;
+  country: string;
 };

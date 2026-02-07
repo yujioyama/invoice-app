@@ -22,14 +22,14 @@ export class InvoicesService {
           create: data.tasks,
         },
       },
-      include: { tasks: true },
+      include: { tasks: true, client: true },
     });
   }
 
   async findAll(userId: string) {
     return this.prisma.invoice.findMany({
       where: { userId },
-      include: { tasks: true },
+      include: { tasks: true, client: true },
       orderBy: { createdAt: "desc" },
     });
   }
@@ -37,7 +37,7 @@ export class InvoicesService {
   async findOne(id: string) {
     return this.prisma.invoice.findUnique({
       where: { id },
-      include: { tasks: true },
+      include: { tasks: true, client: true },
     });
   }
 
@@ -53,7 +53,7 @@ export class InvoicesService {
           create: data.tasks || [],
         },
       },
-      include: { tasks: true },
+      include: { tasks: true, client: true },
     });
   }
 
