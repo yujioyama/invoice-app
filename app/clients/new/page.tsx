@@ -20,6 +20,7 @@ export default function NewInvoicePage() {
   useEffect(() => {
     async function fetchUser() {
       const data = await getMe();
+      console.log("Fetched user data:", data);
       if (data?.user) {
         setUser(data.user);
       }
@@ -35,6 +36,7 @@ export default function NewInvoicePage() {
     setSaving(true);
     try {
       if (!user.id) throw new Error("No user information found");
+      console.log("Fetched user data:", user);
       await createClient({
         userId: user.id,
         ...client,

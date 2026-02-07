@@ -16,6 +16,10 @@ export class ClientsService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: CreateClientDto) {
+    if (!data.userId) {
+      throw new Error("userId is required");
+    }
+
     return this.prisma.client.create({
       data: {
         name: data.name,
@@ -27,8 +31,9 @@ export class ClientsService {
     });
   }
 
-  async findAll() {
+  async findAll(userId: string) {
     return this.prisma.client.findMany({
+      where: { userId },
       orderBy: { createdAt: "desc" },
     });
   }

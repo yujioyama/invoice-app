@@ -63,6 +63,12 @@ export default function LoginPage() {
         >
           {loading ? "Logging in..." : "Login"}
         </button>
+        <a
+          href="/auth/register"
+          className="mt-4 block text-center text-blue-600 hover:underline"
+        >
+          Don&apos;t have an account? Register
+        </a>
       </form>
     </div>
   );

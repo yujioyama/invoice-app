@@ -1,5 +1,14 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
+export async function verifyEmail(token: string) {
+  const res = await fetch(`${API_BASE_URL}/auth/verifyEmail?token=${token}`, {
+    method: "GET",
+    credentials: "include",
+  });
+  if (!res.ok) throw new Error("failed to verify email");
+  return res.json();
+}
+
 export async function register(email: string, name: string, password: string) {
   const res = await fetch(`${API_BASE_URL}/auth/register`, {
     method: "POST",

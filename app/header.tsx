@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { getMe } from "@/lib/apiAuth";
 import { usePathname } from "next/navigation";
 import { logout } from "@/lib/apiAuth";
@@ -11,9 +11,18 @@ export default function Header() {
   const [user, setUser] = useState<{ id?: string }>({});
 
   const pathname = usePathname();
+  const noAuthPages = useMemo(
+    () => [
+      "/auth/login",
+      "/auth/verifyEmail",
+      "/auth/emailSent",
+      "/auth/register",
+    ],
+    [],
+  );
 
   useEffect(() => {
-    if (pathname === "/auth/login") return;
+    if (noAuthPages.includes(pathname)) return;
 
     async function fetchUser() {
       const data = await getMe();
@@ -25,9 +34,9 @@ export default function Header() {
       }
     }
     fetchUser();
-  }, [pathname]);
+  }, [pathname, noAuthPages]);
 
-  if (pathname === "/auth/login") return;
+  if (noAuthPages.includes(pathname)) return null;
 
   const handleHeaderClick = () => {
     if (user.id) {

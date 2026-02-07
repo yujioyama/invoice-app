@@ -1,4 +1,5 @@
 import {
+  Query,
   Body,
   Controller,
   Post,
@@ -28,6 +29,11 @@ export class AuthController {
     const { token, user } = await this.authService.register(dto);
     res.cookie("token", token, COOKIE_OPTIONS);
     return res.json({ user });
+  }
+
+  @Get("verifyEmail")
+  async verifyEmail(@Query("token") token: string) {
+    return this.authService.verifyEmail(token);
   }
 
   @Post("login")

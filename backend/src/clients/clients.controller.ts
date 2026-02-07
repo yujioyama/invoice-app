@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Request,
 } from "@nestjs/common";
 import {
   ClientsService,
@@ -21,8 +22,10 @@ export class ClientsController {
   constructor(private readonly clientsService: ClientsService) {}
 
   @Post()
-  create(@Body() createClientDto: CreateClientDto) {
-    return this.clientsService.create(createClientDto);
+  create(@Body() createClientDto: CreateClientDto, @Request() req) {
+    return this.clientsService.create({
+      ...createClientDto,
+    });
   }
 
   @Get(":id")
@@ -31,8 +34,8 @@ export class ClientsController {
   }
 
   @Get()
-  findAll() {
-    return this.clientsService.findAll();
+  findAll(@Request() req) {
+    return this.clientsService.findAll(req.user.id);
   }
 
   @Patch(":id")

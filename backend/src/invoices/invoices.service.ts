@@ -26,8 +26,9 @@ export class InvoicesService {
     });
   }
 
-  async findAll() {
+  async findAll(userId: string) {
     return this.prisma.invoice.findMany({
+      where: { userId },
       include: { tasks: true },
       orderBy: { createdAt: "desc" },
     });

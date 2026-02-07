@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Request,
 } from "@nestjs/common";
 import {
   InvoicesService,
@@ -31,8 +32,9 @@ export class InvoicesController {
   }
 
   @Get()
-  findAll() {
-    return this.invoicesService.findAll();
+  findAll(@Request() req: any) {
+    const userId = req.user.id;
+    return this.invoicesService.findAll(userId);
   }
 
   @Patch(":id")
