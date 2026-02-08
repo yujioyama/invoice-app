@@ -10,11 +10,12 @@ export type Invoice = {
   createdAt: string;
   updatedAt: string;
   tasks: Task[];
-  clientId: string;
+  clientId?: string | null;
 };
 
 export type CreateInvoiceInput = {
   name: string;
   userId: string;
   tasks: Task[];
+  clientId?: string | null;
 };

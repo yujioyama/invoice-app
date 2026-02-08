@@ -4,8 +4,10 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useRef, useState, useEffect } from "react";
 import { createInvoice } from "@/lib/apiInvoices";
 import { getMyDetails } from "@/lib/apiAuth";
+import { getClientById } from "@/lib/apiClients";
 import InvoiceDocument from "@/components/invoice/InvoiceDocument";
 import type { User } from "@/shared/types/User";
+import type { Client } from "@/lib/apiClients";
 import type { BankAccount } from "@/shared/types/BankAccount";
 
 interface Task {
@@ -18,6 +20,7 @@ export default function PreviewInvoiceClient() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [saving, setSaving] = useState(false);
+  const [client, setClient] = useState<Client | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [bankAccount, setBankAccount] = useState<BankAccount | null>(null);
@@ -40,10 +43,28 @@ export default function PreviewInvoiceClient() {
   const tasks = JSON.parse(searchParams.get("tasks") || "[]");
   const invoiceName = searchParams.get("name") || "Untitled Invoice";
   const createdAt = searchParams.get("createdAt") || new Date().toISOString();
+  const clientId = searchParams.get("clientId") || "";
   const grandTotal = tasks.reduce(
     (sum: number, task: Task) => sum + task.rate * task.hours,
     0,
   );
+
+  useEffect(() => {
+    async function fetchClient() {
+      if (!clientId) {
+        setClient(null);
+        return;
+      }
+      try {
+        const data = await getClientById(clientId);
+        setClient(data);
+      } catch (error) {
+        console.error("Failed to fetch client:", error);
+        setClient(null);
+      }
+    }
+    fetchClient();
+  }, [clientId]);
 
   // プレビューからAPIで保存して詳細画面へ遷移
   const handleSave = async () => {
@@ -53,6 +74,7 @@ export default function PreviewInvoiceClient() {
       const invoice = await createInvoice({
         name: invoiceName,
         userId: userId,
+        clientId: clientId || null,
         tasks: tasks.map((t: Task) => ({
           name: t.name,
           rate: t.rate,
@@ -71,6 +93,7 @@ export default function PreviewInvoiceClient() {
   const handleBackToEdit = () => {
     const queryData = {
       name: invoiceName,
+      clientId: clientId,
       createdAt: createdAt,
       tasks: JSON.stringify(tasks),
     };
@@ -102,7 +125,7 @@ export default function PreviewInvoiceClient() {
         createdAt={createdAt}
         tasks={tasks}
         grandTotal={grandTotal}
-        client={null}
+        client={client}
         user={user}
         bankAccount={bankAccount}
       />

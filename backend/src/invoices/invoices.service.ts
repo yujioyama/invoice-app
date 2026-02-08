@@ -14,10 +14,12 @@ export class InvoicesService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: CreateInvoiceDto) {
+    const clientId = data.clientId ?? undefined;
     return this.prisma.invoice.create({
       data: {
         name: data.name,
         userId: data.userId,
+        ...(clientId ? { clientId } : {}),
         tasks: {
           create: data.tasks,
         },

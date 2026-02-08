@@ -4,6 +4,8 @@ import { useState, useCallback, useMemo, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import EditableTasksTable from "@/components/invoice/EditableTasksTable";
 import TotalSection from "@/components/invoice/TotalSection";
+import { getClients } from "@/lib/apiClients";
+import type { Client } from "@/lib/apiClients";
 
 type Task = {
   id: number;
@@ -12,34 +14,45 @@ type Task = {
   hours: number;
 };
 
-export default function NewInvoicePage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const [invoiceName, setInvoiceName] = useState("My First Invoice");
-  const [tasks, setTasks] = useState<Task[]>([
-    { id: 1, name: "", rate: 27, hours: 0 },
-  ]);
-
-  // URLクエリパラメータから初期値を復元
-  useEffect(() => {
-    const nameFromQuery = searchParams.get("name");
-    const tasksFromQuery = searchParams.get("tasks");
-
-    if (nameFromQuery && nameFromQuery !== invoiceName) {
-      setInvoiceName(nameFromQuery);
+function parseInitialTasks(value: string | null): Task[] {
+  if (!value) return [{ id: 1, name: "", rate: 27, hours: 0 }];
+  try {
+    const parsed = JSON.parse(value);
+    if (!Array.isArray(parsed) || parsed.length === 0) {
+      return [{ id: 1, name: "", rate: 27, hours: 0 }];
     }
+    return parsed;
+  } catch {
+    return [{ id: 1, name: "", rate: 27, hours: 0 }];
+  }
+}
 
-    if (tasksFromQuery) {
+function NewInvoiceForm({
+  initialInvoiceName,
+  initialTasks,
+  initialClientId,
+}: {
+  initialInvoiceName: string;
+  initialTasks: Task[];
+  initialClientId: string;
+}) {
+  const router = useRouter();
+  const [invoiceName, setInvoiceName] = useState(initialInvoiceName);
+  const [clients, setClients] = useState<Client[]>([]);
+  const [clientId, setClientId] = useState<string>(initialClientId);
+  const [tasks, setTasks] = useState<Task[]>(initialTasks);
+
+  useEffect(() => {
+    async function fetchClients() {
       try {
-        const parsedTasks = JSON.parse(tasksFromQuery);
-        if (JSON.stringify(parsedTasks) !== JSON.stringify(tasks)) {
-          setTasks(parsedTasks);
-        }
+        const data = await getClients();
+        setClients(data);
       } catch (error) {
-        console.error("Failed to parse tasks from query:", error);
+        console.error("Failed to fetch clients:", error);
       }
     }
-  }, [searchParams]);
+    fetchClients();
+  }, []);
 
   // Grand Totalをメモ化
   const grandTotal = useMemo(() => {
@@ -48,8 +61,10 @@ export default function NewInvoicePage() {
 
   // バリデーション
   const isValid = useMemo(() => {
-    return tasks.every((task) => task.name.trim() && task.hours > 0);
-  }, [tasks]);
+    return (
+      !!clientId && tasks.every((task) => task.name.trim() && task.hours > 0)
+    );
+  }, [tasks, clientId]);
 
   // タスク変更ハンドラーをメモ化
   const handleInputChange = useCallback(
@@ -80,18 +95,21 @@ export default function NewInvoicePage() {
   // プレビュー遷移
   const handlePreview = useCallback(() => {
     if (!isValid) {
-      alert("Please fill in all task names and hours before previewing.");
+      alert(
+        "Please select a client and fill in all task names and hours before previewing.",
+      );
       return;
     }
 
     const queryData = {
       name: invoiceName,
+      clientId: clientId,
       createdAt: new Date().toISOString(),
       tasks: JSON.stringify(tasks),
     };
     const queryString = new URLSearchParams(queryData).toString();
     router.push(`/invoices/preview?${queryString}`);
-  }, [invoiceName, tasks, isValid, router]);
+  }, [invoiceName, tasks, clientId, isValid, router]);
 
   return (
     <div className="page">
@@ -115,6 +133,23 @@ export default function NewInvoicePage() {
                 placeholder="Enter invoice name..."
                 className="input"
               />
+            </div>
+
+            {/* Client */}
+            <div className="mb-6">
+              <label className="label">Client</label>
+              <select
+                value={clientId}
+                onChange={(e) => setClientId(e.target.value)}
+                className="input"
+              >
+                <option value="">Select a client...</option>
+                {clients.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {/* Tasks Table */}
@@ -142,7 +177,7 @@ export default function NewInvoicePage() {
                 className="btn btn-primary"
                 title={
                   !isValid
-                    ? "Please fill in all task names and hours"
+                    ? "Please select a client and fill in all task names and hours"
                     : "Preview invoice"
                 }
               >
@@ -159,5 +194,21 @@ export default function NewInvoicePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function NewInvoicePage() {
+  const searchParams = useSearchParams();
+  const initialInvoiceName = searchParams.get("name") || "";
+  const initialTasks = parseInitialTasks(searchParams.get("tasks"));
+  const initialClientId = searchParams.get("clientId") || "";
+
+  return (
+    <NewInvoiceForm
+      key={searchParams.toString()}
+      initialInvoiceName={initialInvoiceName}
+      initialTasks={initialTasks}
+      initialClientId={initialClientId}
+    />
   );
 }
