@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import { getMyDetails } from "@/lib/apiAuth";
 import { updateMyDetails } from "@/lib/apiAuth";
 import type { BankAccount } from "@/shared/types/BankAccount";
+import type { User } from "@/shared/types/User";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
 
 const emptyBankAccount: BankAccount = {
   id: "",
@@ -23,8 +23,7 @@ const emptyBankAccount: BankAccount = {
 };
 
 export default function ProfileEditPage() {
-  const router = useRouter();
-  const [user, setUser] = useState<any>({});
+  const [user, setUser] = useState<Partial<User>>({});
   const [bankAccount, setBankAccount] = useState<
     BankAccount | typeof emptyBankAccount
   >(emptyBankAccount);
@@ -47,9 +46,30 @@ export default function ProfileEditPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await updateMyDetails({ ...user, bankAccount });
+      await updateMyDetails({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        phone: user.phone,
+        countryCode: user.countryCode,
+        street: user.street,
+        city: user.city,
+        state: user.state,
+        country: user.country,
+        postalCode: user.postalCode,
+        bankAccount: {
+          id: bankAccount?.id || undefined,
+          bank: bankAccount?.bank,
+          accountName: bankAccount?.accountName,
+          branchCode: bankAccount?.branchCode,
+          accountNumber: bankAccount?.accountNumber,
+          swiftBic: bankAccount?.swiftBic,
+          branchAddress: bankAccount?.branchAddress,
+          currency: bankAccount?.currency,
+          intermediaryBank: bankAccount?.intermediaryBank,
+        },
+      });
       toast.success("Profile updated");
-    } catch (error) {
+    } catch {
       toast.error("Failed to update profile");
     }
   };
@@ -71,6 +91,15 @@ export default function ProfileEditPage() {
             value={user.phone || ""}
             placeholder="Phone"
             onChange={(e) => setUser({ ...user, phone: e.target.value })}
+          />
+        </div>
+        <div>
+          <label className="block mb-1 font-medium">Country Code</label>
+          <input
+            className="input w-full"
+            value={user.countryCode || ""}
+            placeholder="+81"
+            onChange={(e) => setUser({ ...user, countryCode: e.target.value })}
           />
         </div>
         <div>

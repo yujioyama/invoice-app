@@ -3,8 +3,10 @@
 import { useSearchParams, useRouter } from "next/navigation";
 import { useRef, useState, useEffect } from "react";
 import { createInvoice } from "@/lib/apiInvoices";
-import { getMe } from "@/lib/apiAuth";
+import { getMyDetails } from "@/lib/apiAuth";
 import InvoiceDocument from "@/components/invoice/InvoiceDocument";
+import type { User } from "@/shared/types/User";
+import type { BankAccount } from "@/shared/types/BankAccount";
 
 interface Task {
   name: string;
@@ -17,16 +19,19 @@ export default function PreviewInvoiceClient() {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [bankAccount, setBankAccount] = useState<BankAccount | null>(null);
 
   // PDF出力対象の内容を参照
   const invoiceRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     async function fetchUser() {
-      const data = await getMe();
-      if (data?.user?.id) {
-        setUserId(data.user.id);
-      }
+      const data = await getMyDetails();
+      const fetchedUser = data?.user ?? null;
+      setUser(fetchedUser);
+      setUserId(fetchedUser?.id ?? null);
+      setBankAccount(fetchedUser?.bankAccounts?.[0] ?? null);
     }
     fetchUser();
   }, []);
@@ -97,7 +102,9 @@ export default function PreviewInvoiceClient() {
         createdAt={createdAt}
         tasks={tasks}
         grandTotal={grandTotal}
-        bankAccount={null}
+        client={null}
+        user={user}
+        bankAccount={bankAccount}
       />
     </div>
   );

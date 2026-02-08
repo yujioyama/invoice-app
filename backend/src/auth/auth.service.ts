@@ -120,34 +120,116 @@ export class AuthService {
     });
   }
 
-  async updateUserDetails(userId: string, data: any) {
-    const { bankAccount, ...userData } = data;
+  async updateUserDetails(
+    userId: string,
+    data: {
+      firstName?: string | null;
+      lastName?: string | null;
+      phone?: string | null;
+      countryCode?: string | null;
+      street?: string | null;
+      city?: string | null;
+      state?: string | null;
+      country?: string | null;
+      postalCode?: string | null;
+      bankAccount?: {
+        id?: string;
+        bank?: string;
+        accountName?: string;
+        branchCode?: string;
+        accountNumber?: string;
+        swiftBic?: string;
+        branchAddress?: string | null;
+        currency?: string;
+        intermediaryBank?: string | null;
+      };
+      bankAccounts?: unknown;
+    },
+  ) {
+    const {
+      bankAccount,
+      firstName,
+      lastName,
+      phone,
+      countryCode,
+      street,
+      city,
+      state,
+      country,
+      postalCode,
+    } = data;
 
-    delete userData.bankAccounts;
+    const userUpdateData: {
+      firstName?: string | null;
+      lastName?: string | null;
+      phone?: string | null;
+      countryCode?: string | null;
+      street?: string | null;
+      city?: string | null;
+      state?: string | null;
+      country?: string | null;
+      postalCode?: string | null;
+    } = {};
 
-    // Update user details
+    if (firstName !== undefined) userUpdateData.firstName = firstName;
+    if (lastName !== undefined) userUpdateData.lastName = lastName;
+    if (phone !== undefined) userUpdateData.phone = phone;
+    if (countryCode !== undefined) userUpdateData.countryCode = countryCode;
+    if (street !== undefined) userUpdateData.street = street;
+    if (city !== undefined) userUpdateData.city = city;
+    if (state !== undefined) userUpdateData.state = state;
+    if (country !== undefined) userUpdateData.country = country;
+    if (postalCode !== undefined) userUpdateData.postalCode = postalCode;
+
     const updatedUser = await this.prisma.user.update({
       where: { id: userId },
-      data: userData,
+      data: userUpdateData,
     });
 
-    // If bank account data is provided, update or create bank account record
     if (bankAccount) {
-      if (bankAccount.id) {
-        // update existing
+      const bankAccountId =
+        typeof bankAccount.id === "string" && bankAccount.id.trim() !== ""
+          ? bankAccount.id
+          : null;
+
+      if (bankAccountId) {
         await this.prisma.bankAccount.update({
-          where: { id: bankAccount.id },
+          where: { id: bankAccountId },
           data: {
-            ...bankAccount,
-            userId: userId,
+            bank: bankAccount.bank,
+            accountName: bankAccount.accountName,
+            branchCode: bankAccount.branchCode,
+            accountNumber: bankAccount.accountNumber,
+            swiftBic: bankAccount.swiftBic,
+            branchAddress: bankAccount.branchAddress,
+            currency: bankAccount.currency,
+            intermediaryBank: bankAccount.intermediaryBank,
           },
         });
       } else {
-        // create new
+        const missing: string[] = [];
+        if (!bankAccount.bank) missing.push("bank");
+        if (!bankAccount.accountName) missing.push("accountName");
+        if (!bankAccount.branchCode) missing.push("branchCode");
+        if (!bankAccount.accountNumber) missing.push("accountNumber");
+        if (!bankAccount.swiftBic) missing.push("swiftBic");
+        if (missing.length > 0) {
+          throw new BadRequestException(
+            `Missing required bankAccount fields: ${missing.join(", ")}`,
+          );
+        }
+
         await this.prisma.bankAccount.create({
           data: {
-            ...bankAccount,
-            userId: userId,
+            user: { connect: { id: userId } },
+            bank: bankAccount.bank,
+            accountName: bankAccount.accountName,
+            branchCode: bankAccount.branchCode,
+            accountNumber: bankAccount.accountNumber,
+            swiftBic: bankAccount.swiftBic,
+            branchAddress: bankAccount.branchAddress,
+            currency: bankAccount.currency,
+            intermediaryBank: bankAccount.intermediaryBank,
           },
         });
       }

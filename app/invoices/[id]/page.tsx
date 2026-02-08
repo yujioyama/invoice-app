@@ -8,7 +8,8 @@ import type { Invoice } from "@/lib/apiInvoices";
 import type { Client } from "@/lib/apiClients";
 import InvoiceDocument from "@/components/invoice/InvoiceDocument";
 import { BankAccount } from "@/shared/types/BankAccount";
-import { getMyBankAccount } from "@/lib/apiBankAccounts";
+import { getMyDetails } from "@/lib/apiAuth";
+import type { User } from "@/shared/types/User";
 
 interface Task {
   name: string;
@@ -27,19 +28,23 @@ export default function InvoiceDetailPage({
   const [loading, setLoading] = useState(true);
   const [client, setClient] = useState<Client | null>(null);
   const [bankAccount, setBankAccount] = useState<BankAccount | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const invoiceRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     async function loadInvoice() {
       setLoading(true);
       try {
-        const [invoiceData, bankAccountRes] = await Promise.all([
+        const [invoiceData, userRes] = await Promise.all([
           getInvoiceById(resolvedParams.id),
-          getMyBankAccount(),
+          getMyDetails(),
         ]);
 
         setInvoice(invoiceData);
-        setBankAccount(bankAccountRes?.bankAccount ?? null);
+        // bankAccountはuserRes.user.bankAccountsの1件目を利用
+        const firstBankAccount = userRes?.user?.bankAccounts?.[0] ?? null;
+        setBankAccount(firstBankAccount);
+        setUser(userRes?.user || null);
 
         if (invoiceData?.clientId) {
           const clientData = await getClientById(invoiceData.clientId);
@@ -143,6 +148,7 @@ export default function InvoiceDetailPage({
         tasks={tasks}
         grandTotal={grandTotal}
         client={client}
+        user={user}
         bankAccount={bankAccount}
       />
     </div>

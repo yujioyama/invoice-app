@@ -58,7 +58,10 @@ export async function getMyDetails() {
 
 export async function updateMyDetails(data: {
   name?: string;
+  firstName?: string;
+  lastName?: string | null;
   phone?: string;
+  countryCode?: string;
   street?: string;
   city?: string;
   state?: string;

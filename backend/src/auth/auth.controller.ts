@@ -56,14 +56,6 @@ export class AuthController {
     return { user: req.user };
   }
 
-  @Get("me/bank-account")
-  @UseGuards(JwtAuthGuard)
-  async getMyBankAccount(@Request() req) {
-    const bankAccount = await this.authService.getLatestBankAccount(
-      req.user.id,
-    );
-    return { bankAccount };
-  }
 
   @Get("me/details")
   @UseGuards(JwtAuthGuard)
