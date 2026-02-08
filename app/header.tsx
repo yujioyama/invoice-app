@@ -60,9 +60,19 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-4xl items-center justify-between px-4 sm:px-8">
-        <button onClick={handleHeaderClick} className="brand">
-          Invoice App
-        </button>
+        <div className="flex items-center gap-4">
+          <button onClick={handleHeaderClick} className="brand">
+            Invoice App
+          </button>
+          {/* Dashboardに戻るボタン */}
+          <button
+            onClick={() => router.push("/dashboard")}
+            className="btn btn-secondary"
+            style={{ letterSpacing: "0.02em" }}
+          >
+            Back to Dashboard
+          </button>
+        </div>
         <div className="flex items-center gap-4">
           {user.name && (
             <div className="relative group">
