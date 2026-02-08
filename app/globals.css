@@ -147,16 +147,6 @@
     --color-gray-500: #6b7280;
     --color-gray-300: #d1d5db;
   }
-
-  /* @media (prefers-color-scheme: dark) {
-    :root {
-      --background: #0a0a0a;
-      --foreground: #ededed;
-      --color-blue-500: #3b82f6;
-      --color-gray-500: #6b7280;
-      --color-gray-300: #d1d5db;
-    }
-  } */
 }
 
 body {
@@ -182,6 +172,7 @@ body {
   word-wrap: break-word; /* 長い単語を折り返す */
   white-space: normal; /* 折り返しを許可する */
   overflow-wrap: break-word; /* ブラウザの互換性を向上させる */
+  letter-spacing: 0.04em;
 }
 
 button {
