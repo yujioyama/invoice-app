@@ -65,9 +65,41 @@ export default function Header() {
         </button>
         <div className="flex items-center gap-4">
           {user.name && (
-            <span className="text-slate-700 font-medium">
-              Hello, {user.name}
-            </span>
+            <div className="relative group">
+              <button
+                className="flex items-center gap-2 text-slate-700 font-medium hover:underline focus:outline-none"
+                title="Edit Profile"
+                tabIndex={0}
+              >
+                <span>Hello, {user.name}</span>
+              </button>
+              <div className="absolute right-0 top-full w-40 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 hover:opacity-100 hover:pointer-events-auto focus-within:opacity-100 focus-within:pointer-events-auto pointer-events-none group-hover:pointer-events-auto group-focus-within:pointer-events-auto transition-opacity z-10">
+                <button
+                  className="w-full gap-1 flex text-left px-4 py-2 hover:bg-slate-100 text-sm bg-white border rounded shadow-lg"
+                  onClick={() => router.push("/profile/edit")}
+                >
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M3 17.25V14.75C3 14.3358 3.33579 14 3.75 14H16.25C16.6642 14 17 14.3358 17 14.75V17.25C17 17.6642 16.6642 18 16.25 18H3.75C3.33579 18 3 17.6642 3 17.25Z"
+                      stroke="#555"
+                      strokeWidth="1.2"
+                    />
+                    <path
+                      d="M14.5 3.5L16.5 5.5M7 13L14.5 5.5M7 13L5 13L5 11L12.5 3.5L14.5 5.5L7 13Z"
+                      stroke="#555"
+                      strokeWidth="1.2"
+                    />
+                  </svg>
+                  プロフィール編集
+                </button>
+              </div>
+            </div>
           )}
           <button onClick={handleLogoutClick} className="btn btn-primary">
             Logout

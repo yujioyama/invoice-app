@@ -103,4 +103,56 @@ export class AuthService {
       user: { id: user.id, email: user.email, name: user.name },
     };
   }
+
+  async getLatestBankAccount(userId: string) {
+    return this.prisma.bankAccount.findFirst({
+      where: { userId },
+      orderBy: { createdAt: "desc" },
+    });
+  }
+
+  async getUserById(userId: string) {
+    return this.prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        bankAccounts: true,
+      },
+    });
+  }
+
+  async updateUserDetails(userId: string, data: any) {
+    const { bankAccount, ...userData } = data;
+
+    delete userData.bankAccounts;
+
+    // Update user details
+    const updatedUser = await this.prisma.user.update({
+      where: { id: userId },
+      data: userData,
+    });
+
+    // If bank account data is provided, update or create bank account record
+    if (bankAccount) {
+      if (bankAccount.id) {
+        // update existing
+        await this.prisma.bankAccount.update({
+          where: { id: bankAccount.id },
+          data: {
+            ...bankAccount,
+            userId: userId,
+          },
+        });
+      } else {
+        // create new
+        await this.prisma.bankAccount.create({
+          data: {
+            ...bankAccount,
+            userId: userId,
+          },
+        });
+      }
+    }
+
+    return updatedUser;
+  }
 }

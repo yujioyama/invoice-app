@@ -47,3 +47,42 @@ export async function getMe() {
   if (!res.ok) return null;
   return res.json();
 }
+
+export async function getMyDetails() {
+  const res = await fetch(`${API_BASE_URL}/auth/me/details`, {
+    credentials: "include",
+  });
+  if (!res.ok) return null;
+  return res.json();
+}
+
+export async function updateMyDetails(data: {
+  name?: string;
+  phone?: string;
+  street?: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  postalCode?: string;
+  // bank account fields
+  bankAccount?: {
+    id?: string;
+    accountName?: string;
+    branchCode?: string;
+    accountNumber?: string;
+    swiftBic?: string;
+    bank?: string;
+    branchAddress?: string;
+    currency?: string;
+    intermediaryBank?: string;
+  };
+}) {
+  const res = await fetch(`${API_BASE_URL}/auth/me/details`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+    credentials: "include",
+  });
+  if (!res.ok) throw new Error("failed to update details");
+  return res.json();
+}

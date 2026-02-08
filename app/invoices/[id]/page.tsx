@@ -7,6 +7,8 @@ import { getClientById } from "@/lib/apiClients";
 import type { Invoice } from "@/lib/apiInvoices";
 import type { Client } from "@/lib/apiClients";
 import InvoiceDocument from "@/components/invoice/InvoiceDocument";
+import { BankAccount } from "@/shared/types/BankAccount";
+import { getMyBankAccount } from "@/lib/apiBankAccounts";
 
 interface Task {
   name: string;
@@ -24,17 +26,26 @@ export default function InvoiceDetailPage({
   const [invoice, setInvoice] = useState<Invoice | null>(null);
   const [loading, setLoading] = useState(true);
   const [client, setClient] = useState<Client | null>(null);
+  const [bankAccount, setBankAccount] = useState<BankAccount | null>(null);
   const invoiceRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     async function loadInvoice() {
       setLoading(true);
       try {
-        const data = await getInvoiceById(resolvedParams.id);
-        setInvoice(data);
-        if (data !== null && data.clientId) {
-          const clientData = await getClientById(data.clientId);
+        const [invoiceData, bankAccountRes] = await Promise.all([
+          getInvoiceById(resolvedParams.id),
+          getMyBankAccount(),
+        ]);
+
+        setInvoice(invoiceData);
+        setBankAccount(bankAccountRes?.bankAccount ?? null);
+
+        if (invoiceData?.clientId) {
+          const clientData = await getClientById(invoiceData.clientId);
           setClient(clientData);
+        } else {
+          setClient(null);
         }
       } catch (error) {
         console.error("Failed to load invoice:", error);
@@ -132,6 +143,7 @@ export default function InvoiceDetailPage({
         tasks={tasks}
         grandTotal={grandTotal}
         client={client}
+        bankAccount={bankAccount}
       />
     </div>
   );

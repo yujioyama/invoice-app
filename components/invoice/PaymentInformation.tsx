@@ -1,4 +1,12 @@
-export default function PaymentInformation() {
+import { BankAccount } from "@/shared/types/BankAccount";
+
+type PaymentInformationProps = {
+  bankAccount: BankAccount;
+};
+
+export default function PaymentInformation({
+  bankAccount,
+}: PaymentInformationProps) {
   return (
     <div className="mb-8">
       <h3 className="mb-4 text-base tracking-wide font-now">
@@ -7,39 +15,40 @@ export default function PaymentInformation() {
       <div className="text-sm font-tt-chocolates space-y-0.5">
         <div className="grid grid-cols-[140px_1fr]">
           <span>Bank:</span>
-          <span>SBI SUMISHIN NET BANK, LTD. Tokyo</span>
+          <span>{bankAccount.bank}</span>
         </div>
         <div className="grid grid-cols-[140px_1fr]">
           <span>Account Name:</span>
-          <span>Oyama Yuji</span>
+          <span>{bankAccount.accountName}</span>
         </div>
         <div className="grid grid-cols-[140px_1fr]">
           <span>Branch Code:</span>
-          <span>107</span>
+          <span>{bankAccount.branchCode}</span>
         </div>
         <div className="grid grid-cols-[140px_1fr]">
           <span>Account Number:</span>
-          <span>9191871</span>
+          <span>{bankAccount.accountNumber}</span>
         </div>
         <div className="grid grid-cols-[140px_1fr]">
           <span>SWIFT/BIC:</span>
-          <span>NTSSJPJT</span>
+          <span>{bankAccount.swiftBic}</span>
         </div>
-        <div className="grid grid-cols-[140px_1fr]">
-          <span>Branch / Address:</span>
-          <span>
-            107 / Sumitomo Fudosan Roppongi Grand Tower, 2-1, Roppongi 3-chome,
-            Minato-ku, Tokyo, Japan
-          </span>
-        </div>
+        {bankAccount.branchAddress && (
+          <div className="grid grid-cols-[140px_1fr]">
+            <span>Branch / Address:</span>
+            <span>{bankAccount.branchAddress}</span>
+          </div>
+        )}
         <div className="grid grid-cols-[140px_1fr]">
           <span>Currency:</span>
-          <span>AUD</span>
+          <span>{bankAccount.currency}</span>
         </div>
-        <div className="grid grid-cols-[140px_1fr]">
-          <span>Intermediary Bank:</span>
-          <span>UBS SWITZERLAND AG (SWIFT/BIC: UBSWCHZH80A)</span>
-        </div>
+        {bankAccount.intermediaryBank && (
+          <div className="grid grid-cols-[140px_1fr]">
+            <span>Intermediary Bank:</span>
+            <span>{bankAccount.intermediaryBank}</span>
+          </div>
+        )}
       </div>
     </div>
   );

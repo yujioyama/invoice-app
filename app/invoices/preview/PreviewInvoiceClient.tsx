@@ -97,6 +97,7 @@ export default function PreviewInvoiceClient() {
         createdAt={createdAt}
         tasks={tasks}
         grandTotal={grandTotal}
+        bankAccount={null}
       />
     </div>
   );

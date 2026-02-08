@@ -5,6 +5,7 @@ import {
   Post,
   Res,
   Get,
+  Patch,
   UseGuards,
   Request,
 } from "@nestjs/common";
@@ -53,5 +54,31 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   async getMe(@Request() req) {
     return { user: req.user };
+  }
+
+  @Get("me/bank-account")
+  @UseGuards(JwtAuthGuard)
+  async getMyBankAccount(@Request() req) {
+    const bankAccount = await this.authService.getLatestBankAccount(
+      req.user.id,
+    );
+    return { bankAccount };
+  }
+
+  @Get("me/details")
+  @UseGuards(JwtAuthGuard)
+  async getMyDetails(@Request() req) {
+    const user = await this.authService.getUserById(req.user.id);
+    return { user };
+  }
+
+  @Patch("me/details")
+  @UseGuards(JwtAuthGuard)
+  async updateMyDetails(@Request() req, @Body() data: any) {
+    const updatedUser = await this.authService.updateUserDetails(
+      req.user.id,
+      data,
+    );
+    return { user: updatedUser };
   }
 }
