@@ -3,6 +3,8 @@
 import { useState, useCallback, useMemo, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 import { getInvoiceById, updateInvoice } from "@/lib/apiInvoices";
+import { getClients } from "@/lib/apiClients";
+import type { Client } from "@/lib/apiClients";
 import EditableTasksTable from "@/components/invoice/EditableTasksTable";
 import TotalSection from "@/components/invoice/TotalSection";
 
@@ -22,6 +24,8 @@ export default function EditInvoicePage({
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [invoiceName, setInvoiceName] = useState("");
+  const [clientId, setClientId] = useState<string>("");
+  const [clients, setClients] = useState<Client[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
 
   // 既存データの読み込み
@@ -36,7 +40,9 @@ export default function EditInvoicePage({
           return;
         }
         setInvoiceName(invoice.name);
-
+        setClientId(invoice.clientId || "");
+        const clientsData = await getClients();
+        setClients(clientsData);
         // DBから取得したタスクをローカル用フォーマットに変換
         const formattedTasks = (
           invoice.tasks as Array<{
@@ -73,9 +79,10 @@ export default function EditInvoicePage({
   const isValid = useMemo(() => {
     return (
       invoiceName.trim() &&
+      !!clientId &&
       tasks.every((task) => task.name.trim() && task.hours > 0)
     );
-  }, [invoiceName, tasks]);
+  }, [invoiceName, tasks, clientId]);
 
   // タスク変更ハンドラーをメモ化
   const handleInputChange = useCallback(
@@ -118,13 +125,14 @@ export default function EditInvoicePage({
           rate: t.rate,
           hours: t.hours,
         })),
+        clientId: clientId || null,
       });
       router.push(`/invoices/${resolvedParams.id}`);
     } catch (error) {
       console.error("Failed to save invoice:", error);
       alert("Failed to save.");
     }
-  }, [isValid, invoiceName, tasks, resolvedParams.id, router]);
+  }, [isValid, invoiceName, tasks, clientId, resolvedParams.id, router]);
 
   if (loading) {
     return (
@@ -156,6 +164,23 @@ export default function EditInvoicePage({
                 placeholder="Enter invoice name..."
                 className="input"
               />
+            </div>
+
+            {/* Client */}
+            <div className="mb-6">
+              <label className="label">Client</label>
+              <select
+                value={clientId}
+                onChange={(e) => setClientId(e.target.value)}
+                className="input"
+              >
+                <option value="">Select a client...</option>
+                {clients.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {/* Tasks Table */}

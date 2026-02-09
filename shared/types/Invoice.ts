@@ -1,3 +1,5 @@
+import type { Client } from "./Client";
+
 export type Task = {
   name: string;
   rate: number;
@@ -11,6 +13,7 @@ export type Invoice = {
   updatedAt: string;
   tasks: Task[];
   clientId?: string | null;
+  client?: Client | null;
 };
 
 export type CreateInvoiceInput = {

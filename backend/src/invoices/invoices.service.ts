@@ -7,6 +7,7 @@ export type CreateInvoiceDto = CreateInvoiceInput;
 export interface UpdateInvoiceDto {
   name?: string;
   tasks?: Array<{ id?: string; name: string; rate: number; hours: number }>;
+  clientId?: string | null;
 }
 
 @Injectable()
@@ -51,6 +52,7 @@ export class InvoicesService {
       where: { id },
       data: {
         name: data.name,
+        clientId: data.clientId ?? undefined,
         tasks: {
           create: data.tasks || [],
         },

@@ -82,6 +82,7 @@ export default function InvoicesListPage() {
                 <table className="table">
                   <thead>
                     <tr className="bg-[#f6f5f4] border-b border-gray-300">
+                      <th>Client</th>
                       <th>Invoice</th>
                       <th className="text-center">Tasks</th>
                       <th className="text-center">Created</th>
@@ -94,6 +95,7 @@ export default function InvoicesListPage() {
                         key={invoice.id}
                         className="border-b border-gray-300 hover:bg-gray-50 font-tt-chocolates"
                       >
+                        <td>{invoice.client?.name || "—"}</td>
                         <td>{invoice.name}</td>
                         <td className="text-center">
                           {invoice.tasks?.length || 0}
