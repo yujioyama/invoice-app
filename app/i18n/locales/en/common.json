@@ -1,0 +1,174 @@
+{
+  "app": {
+    "name": "Invoice App"
+  },
+  "nav": {
+    "backToDashboard": "Back to Dashboard",
+    "logout": "Logout",
+    "profileEdit": "Edit Profile",
+    "hello": "Hello, {{name}}"
+  },
+  "language": {
+    "toggle": "日本語",
+    "switchTitle": "Switch language"
+  },
+  "common": {
+    "loading": "Loading..."
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Choose what you want to manage.",
+    "clients": "Clients",
+    "clientsDesc": "View and manage clients",
+    "invoices": "Invoices",
+    "invoicesDesc": "Create and track invoices"
+  },
+  "invoices": {
+    "loading": "Loading invoices...",
+    "title": "Invoices",
+    "subtitle": "Manage and view all your invoices",
+    "new": "+ New Invoice",
+    "client": "Client",
+    "invoice": "Invoice",
+    "tasks": "Tasks",
+    "created": "Created",
+    "action": "Action",
+    "view": "View",
+    "delete": "Delete",
+    "none": "—",
+    "empty": "No invoices found. Create your first invoice!",
+    "create": "Create Invoice",
+    "list": "Invoices List",
+    "deleted": "Invoice{{name}} has been deleted.",
+    "deleteFailed": "Failed to delete invoice",
+    "loadFailed": "Failed to load invoices"
+  },
+  "clients": {
+    "loading": "Loading clients...",
+    "title": "Clients",
+    "subtitle": "Manage and view all your clients",
+    "new": "+ New Client",
+    "name": "Name",
+    "namePlaceholder": "Enter client name...",
+    "email": "Email",
+    "emailPlaceholder": "Enter client email...",
+    "phone": "Phone",
+    "phonePlaceholder": "Enter client phone...",
+    "address": "Address",
+    "addressPlaceholder": "Enter client address...",
+    "country": "Country",
+    "countryPlaceholder": "Enter client country...",
+    "action": "Action",
+    "delete": "Delete",
+    "empty": "No clients found. Create your first client!",
+    "create": "Create Client",
+    "list": "Clients List",
+    "saving": "Saving...",
+    "saveContinue": "Save & Continue",
+    "saveFailedWithBackend": "Failed to save. Please make sure the backend server is running.",
+    "deleted": "Client{{name}} has been deleted.",
+    "deleteFailed": "Failed to delete client",
+    "loadFailed": "Failed to load clients"
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "email": "Email",
+      "password": "Password",
+      "submitting": "Logging in...",
+      "submit": "Login",
+      "registerLink": "Don't have an account? Register",
+      "failed": "Login failed"
+    },
+    "register": {
+      "title": "Create account",
+      "email": "Email",
+      "name": "Name",
+      "password": "Password",
+      "confirmPassword": "Confirm password",
+      "submitting": "Creating...",
+      "submit": "Create account",
+      "passwordMismatch": "Passwords do not match",
+      "failed": "Registration failed",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password"
+    },
+    "verifyEmail": {
+      "invalidLink": "Invalid verification link.",
+      "failed": "Email verification failed. Please try again.",
+      "title": "Email Verified!",
+      "message": "Your email address has been successfully verified. You can now log in and start using your account.",
+      "goToLogin": "Go to Login"
+    },
+    "emailSent": {
+      "title": "Verification Email Sent",
+      "message": "We have sent a verification link to your email address. Please check your inbox and click the link to complete your registration.",
+      "hint": "If you do not receive the email, please check your spam folder or try registering again."
+    }
+  },
+  "invoiceDetail": {
+    "loading": "Loading invoice...",
+    "edit": "Edit Invoice",
+    "download": "Download PDF",
+    "downloadFailed": "Failed to download the PDF.",
+    "notFoundTitle": "Invoice not found",
+    "notFoundSubtitle": "Please make sure the backend server is running.",
+    "createNew": "Create New Invoice",
+    "loadFailed": "Failed to load invoice"
+  },
+  "invoiceEdit": {
+    "title": "Edit invoice",
+    "subtitle": "Update invoice details and tasks.",
+    "cancel": "Cancel",
+    "saveChanges": "Save Changes",
+    "fillAllFields": "Please fill in all fields.",
+    "invoiceNotFound": "Invoice not found.",
+    "loadFailed": "Failed to load invoice.",
+    "saveFailed": "Failed to save."
+  },
+  "invoicePreview": {
+    "untitled": "Untitled Invoice",
+    "backToEdit": "Back to Edit",
+    "saving": "Saving...",
+    "saveContinue": "Save & Continue",
+    "userSessionNotFound": "User session not found",
+    "saveFailedWithBackend": "Failed to save. Please make sure the backend server is running."
+  },
+  "invoiceForm": {
+    "createTitle": "Create invoice",
+    "createSubtitle": "Build your invoice and preview it before saving.",
+    "invoiceName": "Invoice name",
+    "invoiceNamePlaceholder": "Enter invoice name...",
+    "client": "Client",
+    "clientPlaceholder": "Select a client...",
+    "addTask": "+ Add Task",
+    "preview": "Preview Invoice",
+    "previewTitle": "Preview invoice",
+    "previewDisabledTitle": "Please select a client and fill in all task names and hours",
+    "previewAlert": "Please select a client and fill in all task names and hours before previewing."
+  },
+  "profile": {
+    "editTitle": "Edit Profile",
+    "save": "Save Changes",
+    "updated": "Profile updated",
+    "updateFailed": "Failed to update profile",
+    "name": "Name",
+    "countryCode": "Country Code",
+    "countryCodePlaceholder": "Select country code...",
+    "phone": "Phone",
+    "street": "Street",
+    "city": "City",
+    "state": "State",
+    "country": "Country",
+    "postalCode": "Postal Code",
+    "bankAccount": "Bank Account",
+    "bank": "Bank",
+    "accountName": "Account Name",
+    "branchCode": "Branch Code",
+    "accountNumber": "Account Number",
+    "swiftBic": "SWIFT/BIC",
+    "branchAddress": "Branch Address",
+    "currency": "Currency",
+    "intermediaryBank": "Intermediary Bank"
+  }
+}

@@ -1,0 +1,174 @@
+{
+  "app": {
+    "name": "請求書アプリ"
+  },
+  "nav": {
+    "backToDashboard": "ダッシュボードへ戻る",
+    "logout": "ログアウト",
+    "profileEdit": "プロフィール編集",
+    "hello": "こんにちは、{{name}}"
+  },
+  "language": {
+    "toggle": "EN",
+    "switchTitle": "言語を切り替え"
+  },
+  "common": {
+    "loading": "読み込み中..."
+  },
+  "dashboard": {
+    "title": "ダッシュボード",
+    "subtitle": "管理したい項目を選択してください。",
+    "clients": "クライアント",
+    "clientsDesc": "クライアントの一覧・管理",
+    "invoices": "請求書",
+    "invoicesDesc": "請求書の作成と管理"
+  },
+  "invoices": {
+    "loading": "請求書を読み込み中...",
+    "title": "請求書",
+    "subtitle": "請求書の一覧・管理",
+    "new": "+ 新規請求書",
+    "client": "クライアント",
+    "invoice": "請求書名",
+    "tasks": "タスク",
+    "created": "作成日",
+    "action": "操作",
+    "view": "表示",
+    "delete": "削除",
+    "none": "—",
+    "empty": "請求書がありません。最初の請求書を作成しましょう！",
+    "create": "請求書を作成",
+    "list": "請求書一覧",
+    "deleted": "請求書{{name}}を削除しました。",
+    "deleteFailed": "請求書の削除に失敗しました",
+    "loadFailed": "請求書の読み込みに失敗しました"
+  },
+  "clients": {
+    "loading": "クライアントを読み込み中...",
+    "title": "クライアント",
+    "subtitle": "クライアントの一覧・管理",
+    "new": "+ 新規クライアント",
+    "name": "名前",
+    "namePlaceholder": "クライアント名を入力...",
+    "email": "メール",
+    "emailPlaceholder": "メールアドレスを入力...",
+    "phone": "電話",
+    "phonePlaceholder": "電話番号を入力...",
+    "address": "住所",
+    "addressPlaceholder": "住所を入力...",
+    "country": "国",
+    "countryPlaceholder": "国を入力...",
+    "action": "操作",
+    "delete": "削除",
+    "empty": "クライアントがありません。最初のクライアントを作成しましょう！",
+    "create": "クライアントを作成",
+    "list": "クライアント一覧",
+    "saving": "保存中...",
+    "saveContinue": "保存して続行",
+    "saveFailedWithBackend": "保存に失敗しました。バックエンドサーバーが起動しているか確認してください。",
+    "deleted": "クライアント{{name}}を削除しました。",
+    "deleteFailed": "クライアントの削除に失敗しました",
+    "loadFailed": "クライアントの読み込みに失敗しました"
+  },
+  "auth": {
+    "login": {
+      "title": "ログイン",
+      "email": "メール",
+      "password": "パスワード",
+      "submitting": "ログイン中...",
+      "submit": "ログイン",
+      "registerLink": "アカウントをお持ちでない場合は登録",
+      "failed": "ログインに失敗しました"
+    },
+    "register": {
+      "title": "アカウント作成",
+      "email": "メール",
+      "name": "名前",
+      "password": "パスワード",
+      "confirmPassword": "パスワード（確認）",
+      "submitting": "作成中...",
+      "submit": "アカウントを作成",
+      "passwordMismatch": "パスワードが一致しません",
+      "failed": "登録に失敗しました",
+      "showPassword": "パスワードを表示",
+      "hidePassword": "パスワードを非表示"
+    },
+    "verifyEmail": {
+      "invalidLink": "確認リンクが無効です。",
+      "failed": "メール認証に失敗しました。もう一度お試しください。",
+      "title": "メール認証が完了しました",
+      "message": "メールアドレスの認証が完了しました。ログインしてご利用を開始できます。",
+      "goToLogin": "ログインへ"
+    },
+    "emailSent": {
+      "title": "確認メールを送信しました",
+      "message": "メールアドレス宛に確認リンクを送信しました。受信箱をご確認のうえ、リンクをクリックして登録を完了してください。",
+      "hint": "メールが届かない場合は迷惑メールフォルダをご確認いただくか、再度登録をお試しください。"
+    }
+  },
+  "invoiceDetail": {
+    "loading": "請求書を読み込み中...",
+    "edit": "請求書を編集",
+    "download": "PDFをダウンロード",
+    "downloadFailed": "PDFのダウンロードに失敗しました。",
+    "notFoundTitle": "請求書が見つかりません",
+    "notFoundSubtitle": "バックエンドサーバーが起動しているか確認してください。",
+    "createNew": "新規請求書を作成",
+    "loadFailed": "請求書の読み込みに失敗しました"
+  },
+  "invoiceEdit": {
+    "title": "請求書を編集",
+    "subtitle": "請求書の情報とタスクを更新します。",
+    "cancel": "キャンセル",
+    "saveChanges": "変更を保存",
+    "fillAllFields": "未入力の項目があります。",
+    "invoiceNotFound": "請求書が見つかりません。",
+    "loadFailed": "請求書の読み込みに失敗しました。",
+    "saveFailed": "保存に失敗しました。"
+  },
+  "invoicePreview": {
+    "untitled": "無題の請求書",
+    "backToEdit": "編集に戻る",
+    "saving": "保存中...",
+    "saveContinue": "保存して続行",
+    "userSessionNotFound": "セッションが見つかりません",
+    "saveFailedWithBackend": "保存に失敗しました。バックエンドサーバーが起動しているか確認してください。"
+  },
+  "invoiceForm": {
+    "createTitle": "請求書を作成",
+    "createSubtitle": "保存前にプレビューを確認できます。",
+    "invoiceName": "請求書名",
+    "invoiceNamePlaceholder": "請求書名を入力...",
+    "client": "クライアント",
+    "clientPlaceholder": "クライアントを選択...",
+    "addTask": "+ タスク追加",
+    "preview": "プレビュー",
+    "previewTitle": "プレビュー",
+    "previewDisabledTitle": "クライアント選択とタスク入力が必要です",
+    "previewAlert": "プレビュー前に、クライアントを選択して全てのタスク名と時間を入力してください。"
+  },
+  "profile": {
+    "editTitle": "プロフィール編集",
+    "save": "変更を保存",
+    "updated": "プロフィールを更新しました",
+    "updateFailed": "プロフィールの更新に失敗しました",
+    "name": "名前",
+    "countryCode": "国番号",
+    "countryCodePlaceholder": "国番号を選択...",
+    "phone": "電話番号",
+    "street": "番地・通り",
+    "city": "市区町村",
+    "state": "都道府県/州",
+    "country": "国",
+    "postalCode": "郵便番号",
+    "bankAccount": "銀行口座",
+    "bank": "銀行名",
+    "accountName": "口座名義",
+    "branchCode": "支店コード",
+    "accountNumber": "口座番号",
+    "swiftBic": "SWIFT/BIC",
+    "branchAddress": "支店住所",
+    "currency": "通貨",
+    "intermediaryBank": "中継銀行"
+  }
+}

@@ -1,13 +1,18 @@
+"use client";
+
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
 
 export default function Dashboard() {
+  const { t } = useTranslation();
+
   return (
     <main className="page">
       <div className="container">
         <div className="card">
           <div className="card-header">
-            <h1 className="title">Dashboard</h1>
-            <p className="subtitle">Choose what you want to manage.</p>
+            <h1 className="title">{t("dashboard.title")}</h1>
+            <p className="subtitle">{t("dashboard.subtitle")}</p>
           </div>
 
           <div className="card-body">
@@ -19,10 +24,10 @@ export default function Dashboard() {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="text-sm font-semibold text-slate-900">
-                      Clients
+                      {t("dashboard.clients")}
                     </div>
                     <div className="mt-1 text-sm text-slate-600">
-                      View and manage clients
+                      {t("dashboard.clientsDesc")}
                     </div>
                   </div>
                   <div className="text-2xl">👥</div>
@@ -36,10 +41,10 @@ export default function Dashboard() {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="text-sm font-semibold text-slate-900">
-                      Invoices
+                      {t("dashboard.invoices")}
                     </div>
                     <div className="mt-1 text-sm text-slate-600">
-                      Create and track invoices
+                      {t("dashboard.invoicesDesc")}
                     </div>
                   </div>
                   <div className="text-2xl">🧾</div>

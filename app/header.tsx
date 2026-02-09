@@ -5,8 +5,10 @@ import { getMe } from "@/lib/apiAuth";
 import { usePathname } from "next/navigation";
 import { logout } from "@/lib/apiAuth";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 export default function Header() {
+  const { t, i18n } = useTranslation();
   const router = useRouter();
   const [user, setUser] = useState<{ id?: string; name?: string }>({});
 
@@ -51,10 +53,16 @@ export default function Header() {
       await logout();
       setUser({});
       router.push("/auth/login");
-      toast.success("Logged out successfully");
+      toast.success(t("nav.logout"));
     } catch (err: unknown) {
       console.error("Logout failed", err);
     }
+  };
+
+  const toggleLanguage = async () => {
+    const nextLang = i18n.language === "ja" ? "en" : "ja";
+    await i18n.changeLanguage(nextLang);
+    localStorage.setItem("lang", nextLang);
   };
 
   return (
@@ -62,26 +70,32 @@ export default function Header() {
       <div className="mx-auto flex h-16 max-w-4xl items-center justify-between px-4 sm:px-8">
         <div className="flex items-center gap-4">
           <button onClick={handleHeaderClick} className="brand">
-            Invoice App
+            {t("app.name")}
           </button>
           {/* Dashboardに戻るボタン */}
           <button
             onClick={() => router.push("/dashboard")}
             className="btn btn-secondary"
-            style={{ letterSpacing: "0.02em" }}
           >
-            Back to Dashboard
+            {t("nav.backToDashboard")}
           </button>
         </div>
         <div className="flex items-center gap-4">
+          <button
+            onClick={toggleLanguage}
+            className="btn btn-ghost"
+            title={t("language.switchTitle")}
+          >
+            {t("language.toggle")}
+          </button>
           {user.name && (
             <div className="relative group">
               <button
                 className="flex items-center gap-2 text-slate-700 font-medium hover:underline focus:outline-none"
-                title="Edit Profile"
+                title={t("nav.profileEdit")}
                 tabIndex={0}
               >
-                <span>Hello, {user.name}</span>
+                <span>{t("nav.hello", { name: user.name })}</span>
               </button>
               <div className="absolute right-0 top-full w-40 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 hover:opacity-100 hover:pointer-events-auto focus-within:opacity-100 focus-within:pointer-events-auto pointer-events-none group-hover:pointer-events-auto group-focus-within:pointer-events-auto transition-opacity z-10">
                 <button
@@ -106,13 +120,13 @@ export default function Header() {
                       strokeWidth="1.2"
                     />
                   </svg>
-                  プロフィール編集
+                  {t("nav.profileEdit")}
                 </button>
               </div>
             </div>
           )}
           <button onClick={handleLogoutClick} className="btn btn-primary">
-            Logout
+            {t("nav.logout")}
           </button>
         </div>
       </div>

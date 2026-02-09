@@ -9,6 +9,7 @@ import InvoiceDocument from "@/components/invoice/InvoiceDocument";
 import type { User } from "@/shared/types/User";
 import type { Client } from "@/lib/apiClients";
 import type { BankAccount } from "@/shared/types/BankAccount";
+import { useTranslation } from "react-i18next";
 
 interface Task {
   name: string;
@@ -17,6 +18,7 @@ interface Task {
 }
 
 export default function PreviewInvoiceClient() {
+  const { t } = useTranslation();
   const searchParams = useSearchParams();
   const router = useRouter();
   const [saving, setSaving] = useState(false);
@@ -41,7 +43,7 @@ export default function PreviewInvoiceClient() {
 
   // URLクエリから各種パラメータを取得
   const tasks = JSON.parse(searchParams.get("tasks") || "[]");
-  const invoiceName = searchParams.get("name") || "Untitled Invoice";
+  const invoiceName = searchParams.get("name") || t("invoicePreview.untitled");
   const createdAt = searchParams.get("createdAt") || new Date().toISOString();
   const clientId = searchParams.get("clientId") || "";
   const grandTotal = tasks.reduce(
@@ -70,7 +72,7 @@ export default function PreviewInvoiceClient() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      if (!userId) throw new Error("User session not found");
+      if (!userId) throw new Error(t("invoicePreview.userSessionNotFound"));
       const invoice = await createInvoice({
         name: invoiceName,
         userId: userId,
@@ -84,7 +86,7 @@ export default function PreviewInvoiceClient() {
       router.push(`/invoices/${invoice.id}`);
     } catch (error) {
       console.error("Failed to save invoice:", error);
-      alert("Failed to save. Please make sure the backend server is running.");
+      alert(t("invoicePreview.saveFailedWithBackend"));
     } finally {
       setSaving(false);
     }
@@ -106,14 +108,16 @@ export default function PreviewInvoiceClient() {
       <div className="mx-auto w-full max-w-[210mm] mb-6">
         <div className="flex flex-wrap gap-3">
           <button onClick={handleBackToEdit} className="btn btn-ghost">
-            Back to Edit
+            {t("invoicePreview.backToEdit")}
           </button>
           <button
             onClick={handleSave}
             disabled={saving}
             className="btn btn-primary"
           >
-            {saving ? "Saving..." : "Save & Continue"}
+            {saving
+              ? t("invoicePreview.saving")
+              : t("invoicePreview.saveContinue")}
           </button>
         </div>
       </div>

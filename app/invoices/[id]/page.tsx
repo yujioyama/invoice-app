@@ -10,6 +10,7 @@ import InvoiceDocument from "@/components/invoice/InvoiceDocument";
 import { BankAccount } from "@/shared/types/BankAccount";
 import { getMyDetails } from "@/lib/apiAuth";
 import type { User } from "@/shared/types/User";
+import { useTranslation } from "react-i18next";
 
 interface Task {
   name: string;
@@ -22,6 +23,7 @@ export default function InvoiceDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const { t } = useTranslation();
   const resolvedParams = use(params);
   const router = useRouter();
   const [invoice, setInvoice] = useState<Invoice | null>(null);
@@ -77,7 +79,7 @@ export default function InvoiceDetailPage({
       URL.revokeObjectURL(objectUrl);
     } catch (error) {
       console.error(error);
-      alert("Failed to download the PDF.");
+      alert(t("invoiceDetail.downloadFailed"));
     }
   };
 
@@ -85,7 +87,7 @@ export default function InvoiceDetailPage({
     return (
       <div className="page">
         <div className="container">
-          <p className="text-slate-700">Loading invoice...</p>
+          <p className="text-slate-700">{t("invoiceDetail.loading")}</p>
         </div>
       </div>
     );
@@ -97,17 +99,15 @@ export default function InvoiceDetailPage({
         <div className="container">
           <div className="card">
             <div className="card-header">
-              <h1 className="title">Invoice not found</h1>
-              <p className="subtitle">
-                Please make sure the backend server is running.
-              </p>
+              <h1 className="title">{t("invoiceDetail.notFoundTitle")}</h1>
+              <p className="subtitle">{t("invoiceDetail.notFoundSubtitle")}</p>
             </div>
             <div className="card-body">
               <button
                 onClick={() => router.push("/invoices/new")}
                 className="btn btn-primary"
               >
-                Create New Invoice
+                {t("invoiceDetail.createNew")}
               </button>
             </div>
           </div>
@@ -127,16 +127,16 @@ export default function InvoiceDetailPage({
             onClick={() => router.push(`/invoices/${resolvedParams.id}/edit`)}
             className="btn btn-secondary"
           >
-            Edit Invoice
+            {t("invoiceDetail.edit")}
           </button>
           <button onClick={downloadPDF} className="btn btn-primary">
-            Download PDF
+            {t("invoiceDetail.download")}
           </button>
           <button
             onClick={() => router.push("/invoices")}
             className="btn btn-ghost"
           >
-            Invoices List
+            {t("invoices.list")}
           </button>
         </div>
       </div>

@@ -6,6 +6,7 @@ import EditableTasksTable from "@/components/invoice/EditableTasksTable";
 import TotalSection from "@/components/invoice/TotalSection";
 import { getClients } from "@/lib/apiClients";
 import type { Client } from "@/lib/apiClients";
+import { useTranslation } from "react-i18next";
 
 type Task = {
   id: number;
@@ -36,6 +37,7 @@ function NewInvoiceForm({
   initialTasks: Task[];
   initialClientId: string;
 }) {
+  const { t } = useTranslation();
   const router = useRouter();
   const [invoiceName, setInvoiceName] = useState(initialInvoiceName);
   const [clients, setClients] = useState<Client[]>([]);
@@ -95,9 +97,7 @@ function NewInvoiceForm({
   // プレビュー遷移
   const handlePreview = useCallback(() => {
     if (!isValid) {
-      alert(
-        "Please select a client and fill in all task names and hours before previewing.",
-      );
+      alert(t("invoiceForm.previewAlert"));
       return;
     }
 
@@ -109,41 +109,39 @@ function NewInvoiceForm({
     };
     const queryString = new URLSearchParams(queryData).toString();
     router.push(`/invoices/preview?${queryString}`);
-  }, [invoiceName, tasks, clientId, isValid, router]);
+  }, [invoiceName, tasks, clientId, isValid, router, t]);
 
   return (
     <div className="page">
       <div className="mx-auto w-full max-w-[210mm]">
         <div className="card">
           <div className="card-header">
-            <h1 className="title">Create invoice</h1>
-            <p className="subtitle">
-              Build your invoice and preview it before saving.
-            </p>
+            <h1 className="title">{t("invoiceForm.createTitle")}</h1>
+            <p className="subtitle">{t("invoiceForm.createSubtitle")}</p>
           </div>
 
           <div className="card-body">
             {/* Invoice Name */}
             <div className="mb-6">
-              <label className="label">Invoice name</label>
+              <label className="label">{t("invoiceForm.invoiceName")}</label>
               <input
                 type="text"
                 value={invoiceName}
                 onChange={(e) => setInvoiceName(e.target.value)}
-                placeholder="Enter invoice name..."
+                placeholder={t("invoiceForm.invoiceNamePlaceholder")}
                 className="input"
               />
             </div>
 
             {/* Client */}
             <div className="mb-6">
-              <label className="label">Client</label>
+              <label className="label">{t("invoiceForm.client")}</label>
               <select
                 value={clientId}
                 onChange={(e) => setClientId(e.target.value)}
                 className="input"
               >
-                <option value="">Select a client...</option>
+                <option value="">{t("invoiceForm.clientPlaceholder")}</option>
                 {clients.map((c) => (
                   <option key={c.id} value={c.id}>
                     {c.name}
@@ -162,7 +160,7 @@ function NewInvoiceForm({
             {/* Add Task Button */}
             <div className="mb-6">
               <button onClick={addNewTask} className="btn btn-link">
-                + Add Task
+                {t("invoiceForm.addTask")}
               </button>
             </div>
 
@@ -177,17 +175,17 @@ function NewInvoiceForm({
                 className="btn btn-primary"
                 title={
                   !isValid
-                    ? "Please select a client and fill in all task names and hours"
-                    : "Preview invoice"
+                    ? t("invoiceForm.previewDisabledTitle")
+                    : t("invoiceForm.previewTitle")
                 }
               >
-                Preview Invoice
+                {t("invoiceForm.preview")}
               </button>
               <button
                 onClick={() => router.push("/invoices")}
                 className="btn btn-ghost"
               >
-                Invoices List
+                {t("invoices.list")}
               </button>
             </div>
           </div>

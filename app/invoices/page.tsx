@@ -5,8 +5,10 @@ import { getInvoices, Invoice } from "@/lib/apiInvoices";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { deleteInvoice } from "@/lib/apiInvoices";
+import { useTranslation } from "react-i18next";
 
 export default function InvoicesListPage() {
+  const { t } = useTranslation();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [invoices, setInvoices] = useState<Invoice[] | null>(null);
@@ -29,11 +31,13 @@ export default function InvoicesListPage() {
           prevInvoices?.filter((invoice) => invoice.id !== id) || null,
       );
       toast.success(
-        `Invoice${invoiceName ? ` "${invoiceName}"` : ""} has been deleted.`,
+        t("invoices.deleted", {
+          name: invoiceName ? ` "${invoiceName}"` : "",
+        }),
       );
     } catch (error) {
       console.error("Failed to delete invoice:", error);
-      toast.error("Failed to delete invoice");
+      toast.error(t("invoices.deleteFailed"));
     }
   };
 
@@ -45,6 +49,7 @@ export default function InvoicesListPage() {
         setInvoices(data);
       } catch (error) {
         console.error("Failed to load invoices:", error);
+        toast.error(t("invoices.loadFailed"));
       } finally {
         setLoading(false);
       }
@@ -56,7 +61,7 @@ export default function InvoicesListPage() {
     return (
       <div className="page">
         <div className="container">
-          <p className="text-slate-700">Loading invoices...</p>
+          <p className="text-slate-700">{t("invoices.loading")}</p>
         </div>
       </div>
     );
@@ -68,11 +73,11 @@ export default function InvoicesListPage() {
         <div className="card">
           <div className="card-header flex items-center justify-between gap-4">
             <div>
-              <h1 className="title">Invoices</h1>
-              <p className="subtitle">Manage and view all your invoices</p>
+              <h1 className="title">{t("invoices.title")}</h1>
+              <p className="subtitle">{t("invoices.subtitle")}</p>
             </div>
             <button onClick={handleNewInvoice} className="btn btn-primary">
-              + New Invoice
+              {t("invoices.new")}
             </button>
           </div>
 
@@ -82,11 +87,11 @@ export default function InvoicesListPage() {
                 <table className="table">
                   <thead>
                     <tr className="bg-[#f6f5f4] border-b border-gray-300">
-                      <th>Client</th>
-                      <th>Invoice</th>
-                      <th className="text-center">Tasks</th>
-                      <th className="text-center">Created</th>
-                      <th className="text-center">Action</th>
+                      <th>{t("invoices.client")}</th>
+                      <th>{t("invoices.invoice")}</th>
+                      <th className="text-center">{t("invoices.tasks")}</th>
+                      <th className="text-center">{t("invoices.created")}</th>
+                      <th className="text-center">{t("invoices.action")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -95,7 +100,7 @@ export default function InvoicesListPage() {
                         key={invoice.id}
                         className="border-b border-gray-300 hover:bg-gray-50 font-tt-chocolates"
                       >
-                        <td>{invoice.client?.name || "—"}</td>
+                        <td>{invoice.client?.name || t("invoices.none")}</td>
                         <td>{invoice.name}</td>
                         <td className="text-center">
                           {invoice.tasks?.length || 0}
@@ -117,13 +122,13 @@ export default function InvoicesListPage() {
                               onClick={() => handleDetail(invoice.id)}
                               className="btn btn-ghost"
                             >
-                              View
+                              {t("invoices.view")}
                             </button>
                             <button
                               onClick={() => handleDeleteInvoice(invoice.id)}
                               className="btn btn-danger ml-2"
                             >
-                              Delete
+                              {t("invoices.delete")}
                             </button>
                           </div>
                         </td>
@@ -134,11 +139,9 @@ export default function InvoicesListPage() {
               </div>
             ) : (
               <div className="text-center py-10">
-                <p className="text-slate-700 mb-4">
-                  No invoices found. Create your first invoice!
-                </p>
+                <p className="text-slate-700 mb-4">{t("invoices.empty")}</p>
                 <button onClick={handleNewInvoice} className="btn btn-primary">
-                  Create Invoice
+                  {t("invoices.create")}
                 </button>
               </div>
             )}

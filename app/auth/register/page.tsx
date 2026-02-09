@@ -3,8 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { register } from "@/lib/apiAuth";
+import { useTranslation } from "react-i18next";
 
 export default function RegisterPage() {
+  const { t } = useTranslation();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -19,7 +21,7 @@ export default function RegisterPage() {
     e.preventDefault();
     setError("");
     if (password !== confirm) {
-      setError("Passwords do not match");
+      setError(t("auth.register.passwordMismatch"));
       return;
     }
     setLoading(true);
@@ -28,9 +30,9 @@ export default function RegisterPage() {
       router.push("/auth/emailSent");
     } catch (err: unknown) {
       if (err instanceof Error) {
-        setError(err.message || "Registration failed");
+        setError(err.message || t("auth.register.failed"));
       } else {
-        setError("Registration failed");
+        setError(t("auth.register.failed"));
       }
     } finally {
       setLoading(false);
@@ -41,10 +43,10 @@ export default function RegisterPage() {
     <div className="page flex items-center justify-center">
       <form onSubmit={handleSubmit} className="card w-full max-w-md p-8">
         <h1 className="text-2xl font-bold mb-6 text-center text-slate-900">
-          Create account
+          {t("auth.register.title")}
         </h1>
         <div className="mb-4">
-          <label className="label">Email</label>
+          <label className="label">{t("auth.register.email")}</label>
           <input
             type="email"
             value={email}
@@ -54,7 +56,7 @@ export default function RegisterPage() {
           />
         </div>
         <div className="mb-4">
-          <label className="label">Name</label>
+          <label className="label">{t("auth.register.name")}</label>
           <input
             type="text"
             value={name}
@@ -64,7 +66,7 @@ export default function RegisterPage() {
           />
         </div>
         <div className="mb-4">
-          <label className="label">Password</label>
+          <label className="label">{t("auth.register.password")}</label>
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
@@ -78,7 +80,11 @@ export default function RegisterPage() {
               tabIndex={-1}
               className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500"
               onClick={() => setShowPassword((v) => !v)}
-              aria-label={showPassword ? "Hide password" : "Show password"}
+              aria-label={
+                showPassword
+                  ? t("auth.register.hidePassword")
+                  : t("auth.register.showPassword")
+              }
             >
               {showPassword ? (
                 <svg
@@ -127,7 +133,7 @@ export default function RegisterPage() {
           </div>
         </div>
         <div className="mb-6">
-          <label className="label">Confirm password</label>
+          <label className="label">{t("auth.register.confirmPassword")}</label>
           <div className="relative">
             <input
               type={showConfirm ? "text" : "password"}
@@ -141,7 +147,11 @@ export default function RegisterPage() {
               tabIndex={-1}
               className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500"
               onClick={() => setShowConfirm((v) => !v)}
-              aria-label={showConfirm ? "Hide password" : "Show password"}
+              aria-label={
+                showConfirm
+                  ? t("auth.register.hidePassword")
+                  : t("auth.register.showPassword")
+              }
             >
               {showConfirm ? (
                 <svg
@@ -195,7 +205,7 @@ export default function RegisterPage() {
           className="btn btn-primary w-full"
           disabled={loading}
         >
-          {loading ? "Creating..." : "Create account"}
+          {loading ? t("auth.register.submitting") : t("auth.register.submit")}
         </button>
       </form>
     </div>

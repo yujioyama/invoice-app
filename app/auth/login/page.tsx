@@ -3,8 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { login } from "@/lib/apiAuth";
+import { useTranslation } from "react-i18next";
 
 export default function LoginPage() {
+  const { t } = useTranslation();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,9 +22,9 @@ export default function LoginPage() {
       router.push("/dashboard");
     } catch (err: unknown) {
       if (err instanceof Error) {
-        setError(err.message || "Login failed");
+        setError(err.message || t("auth.login.failed"));
       } else {
-        setError("Login failed");
+        setError(t("auth.login.failed"));
       }
     } finally {
       setLoading(false);
@@ -33,10 +35,10 @@ export default function LoginPage() {
     <div className="page flex items-center justify-center">
       <form onSubmit={handleSubmit} className="card w-full max-w-md p-8">
         <h1 className="text-2xl font-bold mb-6 text-center text-slate-900">
-          Login
+          {t("auth.login.title")}
         </h1>
         <div className="mb-4">
-          <label className="label">Email</label>
+          <label className="label">{t("auth.login.email")}</label>
           <input
             type="email"
             value={email}
@@ -46,7 +48,7 @@ export default function LoginPage() {
           />
         </div>
         <div className="mb-6">
-          <label className="label">Password</label>
+          <label className="label">{t("auth.login.password")}</label>
           <input
             type="password"
             value={password}
@@ -61,13 +63,13 @@ export default function LoginPage() {
           className="btn btn-primary w-full"
           disabled={loading}
         >
-          {loading ? "Logging in..." : "Login"}
+          {loading ? t("auth.login.submitting") : t("auth.login.submit")}
         </button>
         <a
           href="/auth/register"
           className="mt-4 block text-center text-blue-600 hover:underline"
         >
-          Don&apos;t have an account? Register
+          {t("auth.login.registerLink")}
         </a>
       </form>
     </div>

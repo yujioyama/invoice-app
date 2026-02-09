@@ -7,6 +7,7 @@ import { getClients } from "@/lib/apiClients";
 import type { Client } from "@/lib/apiClients";
 import EditableTasksTable from "@/components/invoice/EditableTasksTable";
 import TotalSection from "@/components/invoice/TotalSection";
+import { useTranslation } from "react-i18next";
 
 type Task = {
   id: number;
@@ -20,11 +21,13 @@ export default function EditInvoicePage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const { t } = useTranslation();
   const resolvedParams = use(params);
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [invoiceName, setInvoiceName] = useState("");
-  const [clientId, setClientId] = useState<string>("");
+  const initialClientId = "";
+  const [clientId, setClientId] = useState<string>(initialClientId);
   const [clients, setClients] = useState<Client[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
 
@@ -35,7 +38,7 @@ export default function EditInvoicePage({
       try {
         const invoice = await getInvoiceById(resolvedParams.id);
         if (!invoice) {
-          alert("Invoice not found.");
+          alert(t("invoiceEdit.invoiceNotFound"));
           router.push("/invoices");
           return;
         }
@@ -60,7 +63,7 @@ export default function EditInvoicePage({
         setTasks(formattedTasks);
       } catch (error) {
         console.error("Failed to load invoice:", error);
-        alert("Failed to load invoice.");
+        alert(t("invoiceEdit.loadFailed"));
         router.push("/invoices");
       } finally {
         setLoading(false);
@@ -113,7 +116,7 @@ export default function EditInvoicePage({
   // 保存して詳細ページへ遷移
   const handleSave = useCallback(async () => {
     if (!isValid) {
-      alert("Please fill in all fields.");
+      alert(t("invoiceEdit.fillAllFields"));
       return;
     }
 
@@ -130,15 +133,15 @@ export default function EditInvoicePage({
       router.push(`/invoices/${resolvedParams.id}`);
     } catch (error) {
       console.error("Failed to save invoice:", error);
-      alert("Failed to save.");
+      alert(t("invoiceEdit.saveFailed"));
     }
-  }, [isValid, invoiceName, tasks, clientId, resolvedParams.id, router]);
+  }, [isValid, invoiceName, tasks, clientId, resolvedParams.id, router, t]);
 
   if (loading) {
     return (
       <div className="page">
         <div className="container">
-          <p className="text-slate-700">Loading invoice...</p>
+          <p className="text-slate-700">{t("invoiceDetail.loading")}</p>
         </div>
       </div>
     );
@@ -149,32 +152,32 @@ export default function EditInvoicePage({
       <div className="mx-auto w-full max-w-[210mm]">
         <div className="card">
           <div className="card-header">
-            <h1 className="title">Edit invoice</h1>
-            <p className="subtitle">Update invoice details and tasks.</p>
+            <h1 className="title">{t("invoiceEdit.title")}</h1>
+            <p className="subtitle">{t("invoiceEdit.subtitle")}</p>
           </div>
 
           <div className="card-body">
             {/* Invoice Name */}
             <div className="mb-6">
-              <label className="label">Invoice name</label>
+              <label className="label">{t("invoiceForm.invoiceName")}</label>
               <input
                 type="text"
                 value={invoiceName}
                 onChange={(e) => setInvoiceName(e.target.value)}
-                placeholder="Enter invoice name..."
+                placeholder={t("invoiceForm.invoiceNamePlaceholder")}
                 className="input"
               />
             </div>
 
             {/* Client */}
             <div className="mb-6">
-              <label className="label">Client</label>
+              <label className="label">{t("invoiceForm.client")}</label>
               <select
                 value={clientId}
                 onChange={(e) => setClientId(e.target.value)}
                 className="input"
               >
-                <option value="">Select a client...</option>
+                <option value="">{t("invoiceForm.clientPlaceholder")}</option>
                 {clients.map((c) => (
                   <option key={c.id} value={c.id}>
                     {c.name}
@@ -193,7 +196,7 @@ export default function EditInvoicePage({
             {/* Add Task Button */}
             <div className="mb-6">
               <button onClick={addNewTask} className="btn btn-link">
-                + Add Task
+                {t("invoiceForm.addTask")}
               </button>
             </div>
 
@@ -206,15 +209,19 @@ export default function EditInvoicePage({
                 onClick={() => router.push(`/invoices/${resolvedParams.id}`)}
                 className="btn btn-ghost"
               >
-                Cancel
+                {t("invoiceEdit.cancel")}
               </button>
               <button
                 onClick={handleSave}
                 disabled={!isValid}
                 className="btn btn-primary"
-                title={!isValid ? "Please fill in all fields" : "Save changes"}
+                title={
+                  !isValid
+                    ? t("invoiceEdit.fillAllFields")
+                    : t("invoiceEdit.saveChanges")
+                }
               >
-                Save Changes
+                {t("invoiceEdit.saveChanges")}
               </button>
             </div>
           </div>
