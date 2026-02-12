@@ -169,6 +169,45 @@
     "swiftBic": "SWIFT/BIC",
     "branchAddress": "支店住所",
     "currency": "通貨",
-    "intermediaryBank": "中継銀行"
+    "intermediaryBank": "中継銀行",
+    "countryCodeOptions": {
+      "japan": "日本 (+81)",
+      "usaCanada": "米国/カナダ (+1)",
+      "uk": "英国 (+44)",
+      "australia": "オーストラリア (+61)",
+      "germany": "ドイツ (+49)",
+      "france": "フランス (+33)",
+      "china": "中国 (+86)",
+      "southKorea": "韓国 (+82)",
+      "hongKong": "香港 (+852)",
+      "singapore": "シンガポール (+65)",
+      "spain": "スペイン (+34)",
+      "italy": "イタリア (+39)",
+      "russia": "ロシア (+7)",
+      "india": "インド (+91)",
+      "indonesia": "インドネシア (+62)",
+      "malaysia": "マレーシア (+60)",
+      "philippines": "フィリピン (+63)",
+      "thailand": "タイ (+66)",
+      "taiwan": "台湾 (+886)"
+    }
+  },
+  "invoicePdf": {
+    "invoice": "請求書",
+    "billedTo": "請求先",
+    "paymentInformation": "お支払い情報",
+    "authorizedSignature": "署名",
+    "date": "日付",
+    "totalDueAud": "合計（AUD）",
+    "task": "タスク",
+    "rate": "単価",
+    "hours": "時間",
+    "total": "合計",
+    "action": "操作",
+    "enterTaskName": "タスク名を入力...",
+    "delete": "削除",
+    "deleteTaskTitle": "タスクを削除",
+    "atLeastOneTaskRequired": "少なくとも1つのタスクが必要です",
+    "perHour": "/時"
   }
 }

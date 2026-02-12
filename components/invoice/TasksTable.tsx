@@ -1,3 +1,7 @@
+"use client";
+
+import { useTranslation } from "react-i18next";
+
 interface Task {
   name: string;
   rate: number;
@@ -9,6 +13,8 @@ interface TasksTableProps {
 }
 
 export default function TasksTable({ tasks }: TasksTableProps) {
+  const { t } = useTranslation();
+
   return (
     <div className="mb-2">
       <table className="w-full">
@@ -18,11 +24,17 @@ export default function TasksTable({ tasks }: TasksTableProps) {
               className="py-3 font-bold tracking-wide text-left"
               style={{ width: 350, minWidth: 200, maxWidth: 400 }}
             >
-              TASK
+              {t("invoicePdf.task")}
             </th>
-            <th className="py-3 font-bold tracking-wide text-center">RATE</th>
-            <th className="py-3 font-bold tracking-wide text-center">HOURS</th>
-            <th className="py-3 font-bold tracking-wide text-right">TOTAL</th>
+            <th className="py-3 font-bold tracking-wide text-center">
+              {t("invoicePdf.rate")}
+            </th>
+            <th className="py-3 font-bold tracking-wide text-center">
+              {t("invoicePdf.hours")}
+            </th>
+            <th className="py-3 font-bold tracking-wide text-right">
+              {t("invoicePdf.total")}
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -37,7 +49,10 @@ export default function TasksTable({ tasks }: TasksTableProps) {
               >
                 {task.name}
               </td>
-              <td className="py-3 text-sm text-center">${task.rate}/hr</td>
+              <td className="py-3 text-sm text-center">
+                ${task.rate}
+                {t("invoicePdf.perHour")}
+              </td>
               <td className="py-3 text-sm text-center">{task.hours}</td>
               <td className="py-3 text-sm text-right">
                 ${(task.rate * task.hours).toFixed(2)}

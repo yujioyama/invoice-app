@@ -4,6 +4,7 @@ import Header from "@/app/header";
 import "@/app/globals.css";
 import { Toaster } from "react-hot-toast";
 import Providers from "./providers";
+import { Suspense } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,11 +36,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable} antialiased`}
       >
-        <Providers>
-          <Header />
-          {children}
-          <Toaster />
-        </Providers>
+        <Suspense fallback={null}>
+          <Providers>
+            <Header />
+            {children}
+            <Toaster />
+          </Providers>
+        </Suspense>
       </body>
     </html>
   );

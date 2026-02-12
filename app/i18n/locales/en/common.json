@@ -169,6 +169,45 @@
     "swiftBic": "SWIFT/BIC",
     "branchAddress": "Branch Address",
     "currency": "Currency",
-    "intermediaryBank": "Intermediary Bank"
+    "intermediaryBank": "Intermediary Bank",
+    "countryCodeOptions": {
+      "japan": "Japan (+81)",
+      "usaCanada": "USA/Canada (+1)",
+      "uk": "UK (+44)",
+      "australia": "Australia (+61)",
+      "germany": "Germany (+49)",
+      "france": "France (+33)",
+      "china": "China (+86)",
+      "southKorea": "South Korea (+82)",
+      "hongKong": "Hong Kong (+852)",
+      "singapore": "Singapore (+65)",
+      "spain": "Spain (+34)",
+      "italy": "Italy (+39)",
+      "russia": "Russia (+7)",
+      "india": "India (+91)",
+      "indonesia": "Indonesia (+62)",
+      "malaysia": "Malaysia (+60)",
+      "philippines": "Philippines (+63)",
+      "thailand": "Thailand (+66)",
+      "taiwan": "Taiwan (+886)"
+    }
+  },
+  "invoicePdf": {
+    "invoice": "INVOICE",
+    "billedTo": "BILLED TO",
+    "paymentInformation": "PAYMENT INFORMATION",
+    "authorizedSignature": "AUTHORIZED SIGNATURE",
+    "date": "Date",
+    "totalDueAud": "TOTAL DUE (AUD)",
+    "task": "TASK",
+    "rate": "RATE",
+    "hours": "HOURS",
+    "total": "TOTAL",
+    "action": "ACTION",
+    "enterTaskName": "Enter task name...",
+    "delete": "Delete",
+    "deleteTaskTitle": "Delete task",
+    "atLeastOneTaskRequired": "At least one task required",
+    "perHour": "/hr"
   }
 }

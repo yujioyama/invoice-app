@@ -87,32 +87,58 @@ export default function ProfileEditPage() {
           <input className="input w-full" value={user.name || ""} readOnly />
         </div>
         <div>
-          <label className="block mb-1 font-medium">{t("profile.countryCode")}</label>
+          <label className="block mb-1 font-medium">
+            {t("profile.countryCode")}
+          </label>
           <select
             className="input w-full"
             value={user.countryCode || ""}
             onChange={(e) => setUser({ ...user, countryCode: e.target.value })}
           >
             <option value="">{t("profile.countryCodePlaceholder")}</option>
-            <option value="+81">Japan (+81)</option>
-            <option value="+1">USA/Canada (+1)</option>
-            <option value="+44">UK (+44)</option>
-            <option value="+61">Australia (+61)</option>
-            <option value="+49">Germany (+49)</option>
-            <option value="+33">France (+33)</option>
-            <option value="+86">China (+86)</option>
-            <option value="+82">South Korea (+82)</option>
-            <option value="+852">Hong Kong (+852)</option>
-            <option value="+65">Singapore (+65)</option>
-            <option value="+34">Spain (+34)</option>
-            <option value="+39">Italy (+39)</option>
-            <option value="+7">Russia (+7)</option>
-            <option value="+91">India (+91)</option>
-            <option value="+62">Indonesia (+62)</option>
-            <option value="+60">Malaysia (+60)</option>
-            <option value="+63">Philippines (+63)</option>
-            <option value="+66">Thailand (+66)</option>
-            <option value="+886">Taiwan (+886)</option>
+            <option value="+81">{t("profile.countryCodeOptions.japan")}</option>
+            <option value="+1">
+              {t("profile.countryCodeOptions.usaCanada")}
+            </option>
+            <option value="+44">{t("profile.countryCodeOptions.uk")}</option>
+            <option value="+61">
+              {t("profile.countryCodeOptions.australia")}
+            </option>
+            <option value="+49">
+              {t("profile.countryCodeOptions.germany")}
+            </option>
+            <option value="+33">
+              {t("profile.countryCodeOptions.france")}
+            </option>
+            <option value="+86">{t("profile.countryCodeOptions.china")}</option>
+            <option value="+82">
+              {t("profile.countryCodeOptions.southKorea")}
+            </option>
+            <option value="+852">
+              {t("profile.countryCodeOptions.hongKong")}
+            </option>
+            <option value="+65">
+              {t("profile.countryCodeOptions.singapore")}
+            </option>
+            <option value="+34">{t("profile.countryCodeOptions.spain")}</option>
+            <option value="+39">{t("profile.countryCodeOptions.italy")}</option>
+            <option value="+7">{t("profile.countryCodeOptions.russia")}</option>
+            <option value="+91">{t("profile.countryCodeOptions.india")}</option>
+            <option value="+62">
+              {t("profile.countryCodeOptions.indonesia")}
+            </option>
+            <option value="+60">
+              {t("profile.countryCodeOptions.malaysia")}
+            </option>
+            <option value="+63">
+              {t("profile.countryCodeOptions.philippines")}
+            </option>
+            <option value="+66">
+              {t("profile.countryCodeOptions.thailand")}
+            </option>
+            <option value="+886">
+              {t("profile.countryCodeOptions.taiwan")}
+            </option>
             {/* 必要に応じて追加 */}
           </select>
         </div>
@@ -126,7 +152,9 @@ export default function ProfileEditPage() {
           />
         </div>
         <div>
-          <label className="block mb-1 font-medium">{t("profile.street")}</label>
+          <label className="block mb-1 font-medium">
+            {t("profile.street")}
+          </label>
           <input
             className="input w-full"
             value={user.street || ""}
@@ -153,7 +181,9 @@ export default function ProfileEditPage() {
           />
         </div>
         <div>
-          <label className="block mb-1 font-medium">{t("profile.country")}</label>
+          <label className="block mb-1 font-medium">
+            {t("profile.country")}
+          </label>
           <input
             className="input w-full"
             value={user.country || ""}
@@ -162,7 +192,9 @@ export default function ProfileEditPage() {
           />
         </div>
         <div>
-          <label className="block mb-1 font-medium">{t("profile.postalCode")}</label>
+          <label className="block mb-1 font-medium">
+            {t("profile.postalCode")}
+          </label>
           <input
             className="input w-full"
             value={user.postalCode || ""}
@@ -184,7 +216,9 @@ export default function ProfileEditPage() {
           />
         </div>
         <div>
-          <label className="block mb-1 font-medium">{t("profile.accountName")}</label>
+          <label className="block mb-1 font-medium">
+            {t("profile.accountName")}
+          </label>
           <input
             className="input w-full"
             value={bankAccount?.accountName || ""}
@@ -195,7 +229,9 @@ export default function ProfileEditPage() {
           />
         </div>
         <div>
-          <label className="block mb-1 font-medium">{t("profile.branchCode")}</label>
+          <label className="block mb-1 font-medium">
+            {t("profile.branchCode")}
+          </label>
           <input
             className="input w-full"
             value={bankAccount?.branchCode || ""}
@@ -206,7 +242,9 @@ export default function ProfileEditPage() {
           />
         </div>
         <div>
-          <label className="block mb-1 font-medium">{t("profile.accountNumber")}</label>
+          <label className="block mb-1 font-medium">
+            {t("profile.accountNumber")}
+          </label>
           <input
             className="input w-full"
             value={bankAccount?.accountNumber || ""}
@@ -217,7 +255,9 @@ export default function ProfileEditPage() {
           />
         </div>
         <div>
-          <label className="block mb-1 font-medium">{t("profile.swiftBic")}</label>
+          <label className="block mb-1 font-medium">
+            {t("profile.swiftBic")}
+          </label>
           <input
             className="input w-full"
             value={bankAccount?.swiftBic || ""}
@@ -228,7 +268,9 @@ export default function ProfileEditPage() {
           />
         </div>
         <div>
-          <label className="block mb-1 font-medium">{t("profile.branchAddress")}</label>
+          <label className="block mb-1 font-medium">
+            {t("profile.branchAddress")}
+          </label>
           <input
             className="input w-full"
             value={bankAccount?.branchAddress || ""}
@@ -239,7 +281,9 @@ export default function ProfileEditPage() {
           />
         </div>
         <div>
-          <label className="block mb-1 font-medium">{t("profile.currency")}</label>
+          <label className="block mb-1 font-medium">
+            {t("profile.currency")}
+          </label>
           <input
             className="input w-full"
             value={bankAccount?.currency || ""}
@@ -250,7 +294,9 @@ export default function ProfileEditPage() {
           />
         </div>
         <div>
-          <label className="block mb-1 font-medium">{t("profile.intermediaryBank")}</label>
+          <label className="block mb-1 font-medium">
+            {t("profile.intermediaryBank")}
+          </label>
           <input
             className="input w-full"
             value={bankAccount?.intermediaryBank || ""}

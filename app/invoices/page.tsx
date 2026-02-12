@@ -8,10 +8,16 @@ import { deleteInvoice } from "@/lib/apiInvoices";
 import { useTranslation } from "react-i18next";
 
 export default function InvoicesListPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [invoices, setInvoices] = useState<Invoice[] | null>(null);
+
+  const isJapanese = i18n.language?.startsWith("ja");
+  const dateLocale = isJapanese ? "ja-JP" : "en-GB";
+  const dateOptions: Intl.DateTimeFormatOptions = isJapanese
+    ? { year: "numeric", month: "2-digit", day: "2-digit" }
+    : { day: "numeric", month: "short", year: "numeric" };
 
   const handleDetail = (id: string) => {
     router.push(`/invoices/${id}`);
@@ -55,7 +61,7 @@ export default function InvoicesListPage() {
       }
     }
     loadInvoice();
-  }, []);
+  }, [t]);
 
   if (loading) {
     return (
@@ -108,12 +114,8 @@ export default function InvoicesListPage() {
                         <td className="text-center">
                           {invoice.createdAt &&
                             new Date(invoice.createdAt).toLocaleDateString(
-                              "en-GB",
-                              {
-                                day: "numeric",
-                                month: "short",
-                                year: "numeric",
-                              },
+                              dateLocale,
+                              dateOptions,
                             )}
                         </td>
                         <td className="text-center">
