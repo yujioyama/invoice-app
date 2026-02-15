@@ -17,7 +17,9 @@ export default function TotalSection({ total, currency }: TotalSectionProps) {
     <div className="mb-8">
       <p className="text-base font-bold font-now text-black">
         {t("invoicePdf.totalDue", { currency })}{" "}
-        <span className="float-right">{formatCurrency(total, currency, locale)}</span>
+        <span className="float-right">
+          {formatCurrency(total, currency, locale)}
+        </span>
       </p>
     </div>
   );

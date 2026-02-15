@@ -92,7 +92,11 @@ export default function EditableTasksTable({
                 />
               </td>
               <td className="py-3 text-sm text-right">
-                {formatCurrency(calculateTotal(task.rate, task.hours), currency, locale)}
+                {formatCurrency(
+                  calculateTotal(task.rate, task.hours),
+                  currency,
+                  locale,
+                )}
               </td>
               <td className="py-3 text-center">
                 <button
