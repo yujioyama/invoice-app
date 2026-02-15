@@ -1,6 +1,8 @@
 "use client";
 
 import { useTranslation } from "react-i18next";
+import type { Currency } from "@/shared/types/Invoice";
+import { formatCurrency } from "@/lib/formatCurrency";
 
 interface Task {
   name: string;
@@ -10,10 +12,12 @@ interface Task {
 
 interface TasksTableProps {
   tasks: Task[];
+  currency: Currency;
 }
 
-export default function TasksTable({ tasks }: TasksTableProps) {
-  const { t } = useTranslation();
+export default function TasksTable({ tasks, currency }: TasksTableProps) {
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language?.startsWith("ja") ? "ja-JP" : "en-GB";
 
   return (
     <div className="mb-2">
@@ -50,12 +54,12 @@ export default function TasksTable({ tasks }: TasksTableProps) {
                 {task.name}
               </td>
               <td className="py-3 text-sm text-center">
-                ${task.rate}
+                {formatCurrency(task.rate, currency, locale)}
                 {t("invoicePdf.perHour")}
               </td>
               <td className="py-3 text-sm text-center">{task.hours}</td>
               <td className="py-3 text-sm text-right">
-                ${(task.rate * task.hours).toFixed(2)}
+                {formatCurrency(task.rate * task.hours, currency, locale)}
               </td>
             </tr>
           ))}

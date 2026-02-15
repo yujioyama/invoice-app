@@ -9,6 +9,7 @@ import InvoiceFooter from "./InvoiceFooter";
 import { Client } from "@/shared/types/Client";
 import { BankAccount } from "@/shared/types/BankAccount";
 import { User } from "@/shared/types/User";
+import type { Currency } from "@/shared/types/Invoice";
 
 interface Task {
   name: string;
@@ -21,6 +22,7 @@ interface InvoiceDocumentProps {
   createdAt: string;
   tasks: Task[];
   grandTotal: number;
+  currency: Currency;
   client: Client | null;
   bankAccount: BankAccount | null;
   user: User | null;
@@ -28,7 +30,16 @@ interface InvoiceDocumentProps {
 
 const InvoiceDocument = forwardRef<HTMLDivElement, InvoiceDocumentProps>(
   (
-    { invoiceName, createdAt, tasks, grandTotal, client, bankAccount, user },
+    {
+      invoiceName,
+      createdAt,
+      tasks,
+      grandTotal,
+      currency,
+      client,
+      bankAccount,
+      user,
+    },
     ref,
   ) => {
     return (
@@ -45,8 +56,8 @@ const InvoiceDocument = forwardRef<HTMLDivElement, InvoiceDocumentProps>(
             createdAt={createdAt}
             client={client}
           />
-          <TasksTable tasks={tasks} />
-          <TotalSection total={grandTotal} />
+          <TasksTable tasks={tasks} currency={currency} />
+          <TotalSection total={grandTotal} currency={currency} />
           {bankAccount && <PaymentInformation bankAccount={bankAccount} />}
           <SignatureSection
             createdAt={createdAt}

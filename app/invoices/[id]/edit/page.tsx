@@ -8,6 +8,7 @@ import type { Client } from "@/lib/apiClients";
 import EditableTasksTable from "@/components/invoice/EditableTasksTable";
 import TotalSection from "@/components/invoice/TotalSection";
 import { useTranslation } from "react-i18next";
+import type { Currency } from "@/shared/types/Invoice";
 
 type Task = {
   id: number;
@@ -26,6 +27,7 @@ export default function EditInvoicePage({
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [invoiceName, setInvoiceName] = useState("");
+  const [currency, setCurrency] = useState<Currency>("AUD");
   const initialClientId = "";
   const [clientId, setClientId] = useState<string>(initialClientId);
   const [clients, setClients] = useState<Client[]>([]);
@@ -43,6 +45,7 @@ export default function EditInvoicePage({
           return;
         }
         setInvoiceName(invoice.name);
+        setCurrency((invoice.currency as Currency) || "AUD");
         setClientId(invoice.clientId || "");
         const clientsData = await getClients();
         setClients(clientsData);
@@ -123,6 +126,7 @@ export default function EditInvoicePage({
     try {
       await updateInvoice(resolvedParams.id, {
         name: invoiceName,
+        currency,
         tasks: tasks.map((t) => ({
           name: t.name,
           rate: t.rate,
@@ -135,7 +139,16 @@ export default function EditInvoicePage({
       console.error("Failed to save invoice:", error);
       alert(t("invoiceEdit.saveFailed"));
     }
-  }, [isValid, invoiceName, tasks, clientId, resolvedParams.id, router, t]);
+  }, [
+    isValid,
+    invoiceName,
+    currency,
+    tasks,
+    clientId,
+    resolvedParams.id,
+    router,
+    t,
+  ]);
 
   if (loading) {
     return (
@@ -169,6 +182,24 @@ export default function EditInvoicePage({
               />
             </div>
 
+            {/* Currency */}
+            <div className="mb-6">
+              <label className="label">{t("invoiceForm.currency")}</label>
+              <select
+                value={currency}
+                onChange={(e) => setCurrency(e.target.value as Currency)}
+                className="input"
+              >
+                {(["JPY", "USD", "EUR", "GBP", "AUD"] as Currency[]).map(
+                  (c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ),
+                )}
+              </select>
+            </div>
+
             {/* Client */}
             <div className="mb-6">
               <label className="label">{t("invoiceForm.client")}</label>
@@ -189,6 +220,7 @@ export default function EditInvoicePage({
             {/* Tasks Table */}
             <EditableTasksTable
               tasks={tasks}
+              currency={currency}
               onTaskChange={handleInputChange}
               onTaskDelete={deleteTask}
             />
@@ -201,7 +233,7 @@ export default function EditInvoicePage({
             </div>
 
             {/* Grand Total */}
-            <TotalSection total={grandTotal} />
+            <TotalSection total={grandTotal} currency={currency} />
 
             {/* Action Buttons */}
             <div className="flex gap-4 pb-9">

@@ -6,6 +6,7 @@ export type CreateInvoiceDto = CreateInvoiceInput;
 
 export interface UpdateInvoiceDto {
   name?: string;
+  currency?: CreateInvoiceInput["currency"];
   tasks?: Array<{ id?: string; name: string; rate: number; hours: number }>;
   clientId?: string | null;
 }
@@ -19,6 +20,7 @@ export class InvoicesService {
     return this.prisma.invoice.create({
       data: {
         name: data.name,
+        ...(data.currency ? { currency: data.currency } : {}),
         userId: data.userId,
         ...(clientId ? { clientId } : {}),
         tasks: {
@@ -52,6 +54,7 @@ export class InvoicesService {
       where: { id },
       data: {
         name: data.name,
+        ...(data.currency ? { currency: data.currency } : {}),
         clientId: data.clientId ?? undefined,
         tasks: {
           create: data.tasks || [],

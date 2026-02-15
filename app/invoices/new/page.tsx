@@ -7,6 +7,7 @@ import TotalSection from "@/components/invoice/TotalSection";
 import { getClients } from "@/lib/apiClients";
 import type { Client } from "@/lib/apiClients";
 import { useTranslation } from "react-i18next";
+import type { Currency } from "@/shared/types/Invoice";
 
 type Task = {
   id: number;
@@ -32,10 +33,12 @@ function NewInvoiceForm({
   initialInvoiceName,
   initialTasks,
   initialClientId,
+  initialCurrency,
 }: {
   initialInvoiceName: string;
   initialTasks: Task[];
   initialClientId: string;
+  initialCurrency: Currency;
 }) {
   const { t } = useTranslation();
   const router = useRouter();
@@ -43,6 +46,7 @@ function NewInvoiceForm({
   const [clients, setClients] = useState<Client[]>([]);
   const [clientId, setClientId] = useState<string>(initialClientId);
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
+  const [currency, setCurrency] = useState<Currency>(initialCurrency);
 
   useEffect(() => {
     async function fetchClients() {
@@ -104,12 +108,13 @@ function NewInvoiceForm({
     const queryData = {
       name: invoiceName,
       clientId: clientId,
+      currency,
       createdAt: new Date().toISOString(),
       tasks: JSON.stringify(tasks),
     };
     const queryString = new URLSearchParams(queryData).toString();
     router.push(`/invoices/preview?${queryString}`);
-  }, [invoiceName, tasks, clientId, isValid, router, t]);
+  }, [invoiceName, tasks, clientId, currency, isValid, router, t]);
 
   return (
     <div className="page">
@@ -133,6 +138,24 @@ function NewInvoiceForm({
               />
             </div>
 
+            {/* Currency */}
+            <div className="mb-6">
+              <label className="label">{t("invoiceForm.currency")}</label>
+              <select
+                value={currency}
+                onChange={(e) => setCurrency(e.target.value as Currency)}
+                className="input"
+              >
+                {(["JPY", "USD", "EUR", "GBP", "AUD"] as Currency[]).map(
+                  (c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ),
+                )}
+              </select>
+            </div>
+
             {/* Client */}
             <div className="mb-6">
               <label className="label">{t("invoiceForm.client")}</label>
@@ -153,6 +176,7 @@ function NewInvoiceForm({
             {/* Tasks Table */}
             <EditableTasksTable
               tasks={tasks}
+              currency={currency}
               onTaskChange={handleInputChange}
               onTaskDelete={deleteTask}
             />
@@ -165,7 +189,7 @@ function NewInvoiceForm({
             </div>
 
             {/* Grand Total */}
-            <TotalSection total={grandTotal} />
+            <TotalSection total={grandTotal} currency={currency} />
 
             {/* Action Buttons */}
             <div className="flex gap-4 pb-9">
@@ -200,6 +224,7 @@ export default function NewInvoicePage() {
   const initialInvoiceName = searchParams.get("name") || "";
   const initialTasks = parseInitialTasks(searchParams.get("tasks"));
   const initialClientId = searchParams.get("clientId") || "";
+  const initialCurrency = (searchParams.get("currency") as Currency) || "AUD";
 
   return (
     <NewInvoiceForm
@@ -207,6 +232,7 @@ export default function NewInvoicePage() {
       initialInvoiceName={initialInvoiceName}
       initialTasks={initialTasks}
       initialClientId={initialClientId}
+      initialCurrency={initialCurrency}
     />
   );
 }

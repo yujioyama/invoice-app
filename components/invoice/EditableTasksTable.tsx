@@ -1,6 +1,8 @@
 "use client";
 
 import { useTranslation } from "react-i18next";
+import type { Currency } from "@/shared/types/Invoice";
+import { formatCurrency } from "@/lib/formatCurrency";
 
 interface Task {
   id: number;
@@ -11,16 +13,19 @@ interface Task {
 
 interface EditableTasksTableProps {
   tasks: Task[];
+  currency: Currency;
   onTaskChange: (id: number, field: keyof Task, value: string | number) => void;
   onTaskDelete: (id: number) => void;
 }
 
 export default function EditableTasksTable({
   tasks,
+  currency,
   onTaskChange,
   onTaskDelete,
 }: EditableTasksTableProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language?.startsWith("ja") ? "ja-JP" : "en-GB";
   const calculateTotal = (rate: number, hours: number) => rate * hours;
 
   return (
@@ -87,7 +92,7 @@ export default function EditableTasksTable({
                 />
               </td>
               <td className="py-3 text-sm text-right">
-                ${calculateTotal(task.rate, task.hours).toFixed(2)}
+                {formatCurrency(calculateTotal(task.rate, task.hours), currency, locale)}
               </td>
               <td className="py-3 text-center">
                 <button

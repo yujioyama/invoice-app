@@ -10,6 +10,7 @@ import type { User } from "@/shared/types/User";
 import type { Client } from "@/lib/apiClients";
 import type { BankAccount } from "@/shared/types/BankAccount";
 import { useTranslation } from "react-i18next";
+import type { Currency } from "@/shared/types/Invoice";
 
 interface Task {
   name: string;
@@ -46,6 +47,7 @@ export default function PreviewInvoiceClient() {
   const invoiceName = searchParams.get("name") || t("invoicePreview.untitled");
   const createdAt = searchParams.get("createdAt") || new Date().toISOString();
   const clientId = searchParams.get("clientId") || "";
+  const currency = (searchParams.get("currency") as Currency) || "JPY";
   const grandTotal = tasks.reduce(
     (sum: number, task: Task) => sum + task.rate * task.hours,
     0,
@@ -76,6 +78,7 @@ export default function PreviewInvoiceClient() {
       const invoice = await createInvoice({
         name: invoiceName,
         userId: userId,
+        currency,
         clientId: clientId || null,
         tasks: tasks.map((t: Task) => ({
           name: t.name,
@@ -96,6 +99,7 @@ export default function PreviewInvoiceClient() {
     const queryData = {
       name: invoiceName,
       clientId: clientId,
+      currency,
       createdAt: createdAt,
       tasks: JSON.stringify(tasks),
     };
@@ -129,6 +133,7 @@ export default function PreviewInvoiceClient() {
         createdAt={createdAt}
         tasks={tasks}
         grandTotal={grandTotal}
+        currency={currency}
         client={client}
         user={user}
         bankAccount={bankAccount}

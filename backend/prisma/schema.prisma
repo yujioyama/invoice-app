@@ -10,6 +10,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Currency {
+  JPY
+  USD
+  EUR
+  GBP
+  AUD
+}
+
 model User {
   id        String    @id @default(cuid())
   email     String    @unique
@@ -36,6 +44,7 @@ model User {
 model Invoice {
   id        String   @id @default(cuid())
   name      String
+  currency  Currency @default(AUD)
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   clientId  String?
@@ -78,7 +87,7 @@ model BankAccount {
   accountNumber    String
   swiftBic         String
   branchAddress    String?
-  currency         String   @default("AUD")
+  currency         Currency @default(AUD)
   intermediaryBank String?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt

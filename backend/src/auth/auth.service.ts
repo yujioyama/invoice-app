@@ -10,6 +10,15 @@ import * as bcrypt from "bcryptjs";
 import { JwtService } from "@nestjs/jwt";
 import cuid from "cuid";
 import nodemailer from "nodemailer";
+import { Currency } from "@prisma/client";
+
+function toCurrency(value: unknown): Currency {
+  if (typeof value !== "string") return Currency.AUD;
+  const normalized = value.trim().toUpperCase();
+  return (Object.values(Currency) as string[]).includes(normalized)
+    ? (normalized as Currency)
+    : Currency.AUD;
+}
 
 @Injectable()
 export class AuthService {
@@ -202,7 +211,7 @@ export class AuthService {
             accountNumber: bankAccount.accountNumber,
             swiftBic: bankAccount.swiftBic,
             branchAddress: bankAccount.branchAddress,
-            currency: bankAccount.currency,
+            currency: toCurrency(bankAccount.currency),
             intermediaryBank: bankAccount.intermediaryBank,
           },
         });
@@ -228,7 +237,7 @@ export class AuthService {
             accountNumber: bankAccount.accountNumber,
             swiftBic: bankAccount.swiftBic,
             branchAddress: bankAccount.branchAddress,
-            currency: bankAccount.currency,
+            currency: toCurrency(bankAccount.currency),
             intermediaryBank: bankAccount.intermediaryBank,
           },
         });

@@ -147,6 +147,7 @@ export default function InvoiceDetailPage({
         createdAt={invoice.createdAt}
         tasks={tasks}
         grandTotal={grandTotal}
+        currency={invoice.currency}
         client={client}
         user={user}
         bankAccount={bankAccount}

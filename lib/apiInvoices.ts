@@ -36,7 +36,7 @@ export async function getInvoiceById(id: string): Promise<Invoice | null> {
 
 export async function updateInvoice(
   id: string,
-  data: { name?: string; tasks?: Task[]; clientId?: string | null },
+  data: { name?: string; tasks?: Task[]; clientId?: string | null; currency?: Invoice["currency"] },
 ): Promise<Invoice> {
   const res = await fetch(`${API_BASE_URL}/invoices/${id}`, {
     method: "PATCH",
