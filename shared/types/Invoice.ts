@@ -8,6 +8,11 @@ export type Task = {
   hours: number;
 };
 
+// UI用（編集テーブルなど）: クライアント側で識別するためのid付き
+export type InvoiceTask = Task & {
+  id: number;
+};
+
 export type Invoice = {
   id: string;
   name: string;

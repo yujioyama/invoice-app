@@ -10,13 +10,7 @@ import type { User } from "@/shared/types/User";
 import type { Client } from "@/lib/apiClients";
 import type { BankAccount } from "@/shared/types/BankAccount";
 import { useTranslation } from "react-i18next";
-import type { Currency } from "@/shared/types/Invoice";
-
-interface Task {
-  name: string;
-  rate: number;
-  hours: number;
-}
+import type { Currency, Task } from "@/shared/types/Invoice";
 
 export default function PreviewInvoiceClient() {
   const { t } = useTranslation();
@@ -43,15 +37,12 @@ export default function PreviewInvoiceClient() {
   }, []);
 
   // URLクエリから各種パラメータを取得
-  const tasks = JSON.parse(searchParams.get("tasks") || "[]");
+  const tasks = JSON.parse(searchParams.get("tasks") || "[]") as Task[];
   const invoiceName = searchParams.get("name") || t("invoicePreview.untitled");
   const createdAt = searchParams.get("createdAt") || new Date().toISOString();
   const clientId = searchParams.get("clientId") || "";
   const currency = (searchParams.get("currency") as Currency) || "JPY";
-  const grandTotal = tasks.reduce(
-    (sum: number, task: Task) => sum + task.rate * task.hours,
-    0,
-  );
+  const grandTotal = tasks.reduce((sum, task) => sum + task.rate * task.hours, 0);
 
   useEffect(() => {
     async function fetchClient() {
@@ -80,7 +71,7 @@ export default function PreviewInvoiceClient() {
         userId: userId,
         currency,
         clientId: clientId || null,
-        tasks: tasks.map((t: Task) => ({
+        tasks: tasks.map((t) => ({
           name: t.name,
           rate: t.rate,
           hours: t.hours,

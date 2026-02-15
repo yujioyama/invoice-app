@@ -9,13 +9,7 @@ import InvoiceFooter from "./InvoiceFooter";
 import { Client } from "@/shared/types/Client";
 import { BankAccount } from "@/shared/types/BankAccount";
 import { User } from "@/shared/types/User";
-import type { Currency } from "@/shared/types/Invoice";
-
-interface Task {
-  name: string;
-  rate: number;
-  hours: number;
-}
+import type { Currency, Task } from "@/shared/types/Invoice";
 
 interface InvoiceDocumentProps {
   invoiceName: string;

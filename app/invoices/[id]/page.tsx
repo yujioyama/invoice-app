@@ -11,12 +11,7 @@ import { BankAccount } from "@/shared/types/BankAccount";
 import { getMyDetails } from "@/lib/apiAuth";
 import type { User } from "@/shared/types/User";
 import { useTranslation } from "react-i18next";
-
-interface Task {
-  name: string;
-  rate: number;
-  hours: number;
-}
+import type { Task } from "@/shared/types/Invoice";
 
 export default function InvoiceDetailPage({
   params,
@@ -116,7 +111,7 @@ export default function InvoiceDetailPage({
     );
   }
 
-  const tasks: Task[] = invoice.tasks as Task[];
+  const tasks = invoice.tasks as Task[];
   const grandTotal = tasks.reduce((sum, t) => sum + t.rate * t.hours, 0);
 
   return (

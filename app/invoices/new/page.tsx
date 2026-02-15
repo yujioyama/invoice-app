@@ -8,15 +8,9 @@ import { getClients } from "@/lib/apiClients";
 import type { Client } from "@/lib/apiClients";
 import { useTranslation } from "react-i18next";
 import type { Currency } from "@/shared/types/Invoice";
+import { useInvoiceTasks, type InvoiceTask } from "@/hooks/useInvoiceTasks";
 
-type Task = {
-  id: number;
-  name: string;
-  rate: number;
-  hours: number;
-};
-
-function parseInitialTasks(value: string | null): Task[] {
+function parseInitialTasks(value: string | null): InvoiceTask[] {
   if (!value) return [{ id: 1, name: "", rate: 27, hours: 0 }];
   try {
     const parsed = JSON.parse(value);
@@ -36,7 +30,7 @@ function NewInvoiceForm({
   initialCurrency,
 }: {
   initialInvoiceName: string;
-  initialTasks: Task[];
+  initialTasks: InvoiceTask[];
   initialClientId: string;
   initialCurrency: Currency;
 }) {
@@ -45,8 +39,10 @@ function NewInvoiceForm({
   const [invoiceName, setInvoiceName] = useState(initialInvoiceName);
   const [clients, setClients] = useState<Client[]>([]);
   const [clientId, setClientId] = useState<string>(initialClientId);
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [currency, setCurrency] = useState<Currency>(initialCurrency);
+
+  const { tasks, grandTotal, areTasksValid, updateTask, addTask, deleteTask } =
+    useInvoiceTasks({ initialTasks });
 
   useEffect(() => {
     async function fetchClients() {
@@ -60,43 +56,10 @@ function NewInvoiceForm({
     fetchClients();
   }, []);
 
-  // Grand Totalをメモ化
-  const grandTotal = useMemo(() => {
-    return tasks.reduce((sum, task) => sum + task.rate * task.hours, 0);
-  }, [tasks]);
-
   // バリデーション
   const isValid = useMemo(() => {
-    return (
-      !!clientId && tasks.every((task) => task.name.trim() && task.hours > 0)
-    );
-  }, [tasks, clientId]);
-
-  // タスク変更ハンドラーをメモ化
-  const handleInputChange = useCallback(
-    (id: number, field: keyof Task, value: string | number) => {
-      setTasks((prevTasks) =>
-        prevTasks.map((task) =>
-          task.id === id ? { ...task, [field]: value } : task,
-        ),
-      );
-    },
-    [],
-  );
-
-  // タスク追加をメモ化
-  const addNewTask = useCallback(() => {
-    setTasks((prevTasks) => {
-      const newId =
-        prevTasks.length > 0 ? prevTasks[prevTasks.length - 1].id + 1 : 1;
-      return [...prevTasks, { id: newId, name: "", rate: 27, hours: 0 }];
-    });
-  }, []);
-
-  // タスク削除をメモ化
-  const deleteTask = useCallback((id: number) => {
-    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
-  }, []);
+    return !!clientId && areTasksValid;
+  }, [areTasksValid, clientId]);
 
   // プレビュー遷移
   const handlePreview = useCallback(() => {
@@ -177,13 +140,13 @@ function NewInvoiceForm({
             <EditableTasksTable
               tasks={tasks}
               currency={currency}
-              onTaskChange={handleInputChange}
+              onTaskChange={updateTask}
               onTaskDelete={deleteTask}
             />
 
             {/* Add Task Button */}
             <div className="mb-6">
-              <button onClick={addNewTask} className="btn btn-link">
+              <button onClick={addTask} className="btn btn-link">
                 {t("invoiceForm.addTask")}
               </button>
             </div>

@@ -1,18 +1,12 @@
 "use client";
 
 import { useTranslation } from "react-i18next";
-import type { Currency } from "@/shared/types/Invoice";
+import type { Currency, InvoiceTask, Task } from "@/shared/types/Invoice";
 import { formatCurrency } from "@/lib/formatCurrency";
-
-interface Task {
-  id: number;
-  name: string;
-  rate: number;
-  hours: number;
-}
+onTaskDelete;
 
 interface EditableTasksTableProps {
-  tasks: Task[];
+  tasks: InvoiceTask[];
   currency: Currency;
   onTaskChange: (id: number, field: keyof Task, value: string | number) => void;
   onTaskDelete: (id: number) => void;

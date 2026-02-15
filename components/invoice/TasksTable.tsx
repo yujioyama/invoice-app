@@ -1,14 +1,8 @@
 "use client";
 
 import { useTranslation } from "react-i18next";
-import type { Currency } from "@/shared/types/Invoice";
+import type { Currency, Task } from "@/shared/types/Invoice";
 import { formatCurrency } from "@/lib/formatCurrency";
-
-interface Task {
-  name: string;
-  rate: number;
-  hours: number;
-}
 
 interface TasksTableProps {
   tasks: Task[];
@@ -42,13 +36,13 @@ export default function TasksTable({ tasks, currency }: TasksTableProps) {
           </tr>
         </thead>
         <tbody>
-          {tasks.map((task: Task, index: number) => (
+          {tasks.map((task, index) => (
             <tr
               key={index}
               className="border-b border-gray-300 font-tt-chocolates"
             >
               <td
-                className="py-3 text-sm whitespace-normal break-words"
+                className="py-3 text-sm whitespace-normal wrap-break-word"
                 style={{ width: 350, minWidth: 200, maxWidth: 400 }}
               >
                 {task.name}
