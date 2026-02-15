@@ -1,17 +1,26 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { getInvoices, Invoice } from "@/lib/apiInvoices";
-import { useEffect, useState } from "react";
+import { getInvoices } from "@/lib/apiInvoices";
+import { useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { deleteInvoice } from "@/lib/apiInvoices";
 import { useTranslation } from "react-i18next";
+import { useAsyncLoad } from "@/hooks/useAsyncLoad";
 
 export default function InvoicesListPage() {
   const { t, i18n } = useTranslation();
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
-  const [invoices, setInvoices] = useState<Invoice[] | null>(null);
+  const {
+    data: invoices,
+    setData: setInvoices,
+    loading,
+    run: loadInvoices,
+  } = useAsyncLoad(getInvoices, {
+    initialData: null,
+    initialLoading: true,
+    onError: () => toast.error(t("invoices.loadFailed")),
+  });
 
   const isJapanese = i18n.language?.startsWith("ja");
   const dateLocale = isJapanese ? "ja-JP" : "en-GB";
@@ -48,20 +57,10 @@ export default function InvoicesListPage() {
   };
 
   useEffect(() => {
-    async function loadInvoice() {
-      setLoading(true);
-      try {
-        const data = await getInvoices();
-        setInvoices(data);
-      } catch (error) {
-        console.error("Failed to load invoices:", error);
-        toast.error(t("invoices.loadFailed"));
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadInvoice();
-  }, [t]);
+    loadInvoices().catch((error) => {
+      console.error("Failed to load invoices:", error);
+    });
+  }, [loadInvoices]);
 
   if (loading) {
     return (

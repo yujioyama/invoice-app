@@ -1,17 +1,26 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { getClients, Client } from "@/lib/apiClients";
-import { useEffect, useState } from "react";
+import { getClients } from "@/lib/apiClients";
+import { useEffect } from "react";
 import { deleteClient } from "@/lib/apiClients";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
+import { useAsyncLoad } from "@/hooks/useAsyncLoad";
 
 export default function InvoicesListPage() {
   const { t } = useTranslation();
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
-  const [clients, setClients] = useState<Client[] | null>(null);
+  const {
+    data: clients,
+    setData: setClients,
+    loading,
+    run: loadClients,
+  } = useAsyncLoad(getClients, {
+    initialData: null,
+    initialLoading: true,
+    onError: () => toast.error(t("clients.loadFailed")),
+  });
 
   const handleNewClient = () => {
     router.push("/clients/new");
@@ -37,20 +46,10 @@ export default function InvoicesListPage() {
   };
 
   useEffect(() => {
-    async function loadClients() {
-      setLoading(true);
-      try {
-        const data = await getClients();
-        setClients(data);
-      } catch (error) {
-        console.error("Failed to load clients:", error);
-        toast.error(t("clients.loadFailed"));
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadClients();
-  }, [t]);
+    loadClients().catch((error) => {
+      console.error("Failed to load clients:", error);
+    });
+  }, [loadClients]);
 
   if (loading) {
     return (
