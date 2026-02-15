@@ -3,7 +3,6 @@
 import { useTranslation } from "react-i18next";
 import type { Currency, InvoiceTask, Task } from "@/shared/types/Invoice";
 import { formatCurrency } from "@/lib/formatCurrency";
-onTaskDelete;
 
 interface EditableTasksTableProps {
   tasks: InvoiceTask[];

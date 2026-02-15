@@ -81,11 +81,7 @@ export default function EditInvoicePage({
 
   // バリデーション
   const isValid = useMemo(() => {
-    return (
-      invoiceName.trim() &&
-      !!clientId &&
-      areTasksValid
-    );
+    return invoiceName.trim() && !!clientId && areTasksValid;
   }, [invoiceName, areTasksValid, clientId]);
 
   // 保存して詳細ページへ遷移

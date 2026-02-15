@@ -42,7 +42,10 @@ export default function PreviewInvoiceClient() {
   const createdAt = searchParams.get("createdAt") || new Date().toISOString();
   const clientId = searchParams.get("clientId") || "";
   const currency = (searchParams.get("currency") as Currency) || "JPY";
-  const grandTotal = tasks.reduce((sum, task) => sum + task.rate * task.hours, 0);
+  const grandTotal = tasks.reduce(
+    (sum, task) => sum + task.rate * task.hours,
+    0,
+  );
 
   useEffect(() => {
     async function fetchClient() {
