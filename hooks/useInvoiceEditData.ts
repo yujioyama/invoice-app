@@ -8,7 +8,9 @@ export type InvoiceEditData = {
   clients: Client[];
 };
 
-async function loadInvoiceEditData(invoiceId: string): Promise<InvoiceEditData | null> {
+async function loadInvoiceEditData(
+  invoiceId: string,
+): Promise<InvoiceEditData | null> {
   const [invoice, clients] = await Promise.all([
     getInvoiceById(invoiceId),
     getClients(),
@@ -20,10 +22,7 @@ async function loadInvoiceEditData(invoiceId: string): Promise<InvoiceEditData |
 }
 
 export function useInvoiceEditData(invoiceId: string) {
-  const loader = useCallback(
-    () => loadInvoiceEditData(invoiceId),
-    [invoiceId],
-  );
+  const loader = useCallback(() => loadInvoiceEditData(invoiceId), [invoiceId]);
 
   const { data, loading, error, run, reset } = useAsyncLoad(loader, {
     initialData: null,

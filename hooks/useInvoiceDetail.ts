@@ -17,7 +17,9 @@ type MyDetailsResponse = {
   user?: User | null;
 } | null;
 
-async function loadInvoiceDetail(invoiceId: string): Promise<InvoiceDetailData | null> {
+async function loadInvoiceDetail(
+  invoiceId: string,
+): Promise<InvoiceDetailData | null> {
   const [invoice, myDetails] = await Promise.all([
     getInvoiceById(invoiceId),
     getMyDetails() as Promise<MyDetailsResponse>,
@@ -28,7 +30,9 @@ async function loadInvoiceDetail(invoiceId: string): Promise<InvoiceDetailData |
   const user = myDetails?.user ?? null;
   const bankAccount = user?.bankAccounts?.[0] ?? null;
 
-  const client = invoice.clientId ? await getClientById(invoice.clientId) : null;
+  const client = invoice.clientId
+    ? await getClientById(invoice.clientId)
+    : null;
 
   return {
     invoice,

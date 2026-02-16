@@ -8,8 +8,11 @@ type UseAsyncActionOptions<TResult> = {
 
 export function useAsyncAction<TResult, TArgs extends unknown[] = []>(
   action: (...args: TArgs) => Promise<TResult>,
-  { initialLoading = false, onSuccess, onError }: UseAsyncActionOptions<TResult> =
-    {},
+  {
+    initialLoading = false,
+    onSuccess,
+    onError,
+  }: UseAsyncActionOptions<TResult> = {},
 ) {
   const [loading, setLoading] = useState<boolean>(initialLoading);
   const [error, setError] = useState<unknown>(null);

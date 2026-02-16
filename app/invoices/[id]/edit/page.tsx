@@ -58,14 +58,8 @@ function EditInvoiceForm({
     }) => updateInvoice(invoiceId, payload),
   );
 
-  const {
-    tasks,
-    grandTotal,
-    areTasksValid,
-    updateTask,
-    addTask,
-    deleteTask,
-  } = useInvoiceTasks({ initialTasks });
+  const { tasks, grandTotal, areTasksValid, updateTask, addTask, deleteTask } =
+    useInvoiceTasks({ initialTasks });
 
   const isValid = useMemo(() => {
     return invoiceName.trim() && !!clientId && areTasksValid;
@@ -93,7 +87,17 @@ function EditInvoiceForm({
       console.error("Failed to save invoice:", error);
       alert(t("invoiceEdit.saveFailed"));
     }
-  }, [clientId, currency, invoiceId, invoiceName, isValid, router, saveInvoice, t, tasks]);
+  }, [
+    clientId,
+    currency,
+    invoiceId,
+    invoiceName,
+    isValid,
+    router,
+    saveInvoice,
+    t,
+    tasks,
+  ]);
 
   return (
     <div className="page">
