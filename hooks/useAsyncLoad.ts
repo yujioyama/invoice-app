@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type UseAsyncLoadOptions<TResult> = {
   initialData?: TResult | null;
@@ -20,6 +20,17 @@ export function useAsyncLoad<TResult, TArgs extends unknown[] = []>(
   const [loading, setLoading] = useState<boolean>(initialLoading);
   const [error, setError] = useState<unknown>(null);
 
+  const onSuccessRef = useRef(onSuccess);
+  const onErrorRef = useRef(onError);
+
+  useEffect(() => {
+    onSuccessRef.current = onSuccess;
+  }, [onSuccess]);
+
+  useEffect(() => {
+    onErrorRef.current = onError;
+  }, [onError]);
+
   const requestIdRef = useRef(0);
 
   const run = useCallback(
@@ -32,18 +43,18 @@ export function useAsyncLoad<TResult, TArgs extends unknown[] = []>(
         const result = await loader(...args);
         if (requestId !== requestIdRef.current) return result;
         setData(result);
-        onSuccess?.(result);
+        onSuccessRef.current?.(result);
         return result;
       } catch (err) {
         if (requestId !== requestIdRef.current) throw err;
         setError(err);
-        onError?.(err);
+        onErrorRef.current?.(err);
         throw err;
       } finally {
         if (requestId === requestIdRef.current) setLoading(false);
       }
     },
-    [loader, onError, onSuccess],
+    [loader],
   );
 
   const reset = useCallback(() => {

@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type UseAsyncActionOptions<TResult> = {
   initialLoading?: boolean;
@@ -17,6 +17,17 @@ export function useAsyncAction<TResult, TArgs extends unknown[] = []>(
   const [loading, setLoading] = useState<boolean>(initialLoading);
   const [error, setError] = useState<unknown>(null);
 
+  const onSuccessRef = useRef(onSuccess);
+  const onErrorRef = useRef(onError);
+
+  useEffect(() => {
+    onSuccessRef.current = onSuccess;
+  }, [onSuccess]);
+
+  useEffect(() => {
+    onErrorRef.current = onError;
+  }, [onError]);
+
   const requestIdRef = useRef(0);
 
   const run = useCallback(
@@ -28,18 +39,18 @@ export function useAsyncAction<TResult, TArgs extends unknown[] = []>(
       try {
         const result = await action(...args);
         if (requestId !== requestIdRef.current) return result;
-        onSuccess?.(result);
+        onSuccessRef.current?.(result);
         return result;
       } catch (err) {
         if (requestId !== requestIdRef.current) throw err;
         setError(err);
-        onError?.(err);
+        onErrorRef.current?.(err);
         throw err;
       } finally {
         if (requestId === requestIdRef.current) setLoading(false);
       }
     },
-    [action, onError, onSuccess],
+    [action],
   );
 
   const reset = useCallback(() => {
