@@ -1,3 +1,5 @@
+import type { BankAccount } from "@/shared/types/BankAccount";
+
 export interface User {
   id: string;
   email: string;
@@ -11,5 +13,6 @@ export interface User {
   state?: string;
   country?: string;
   postalCode?: string;
+  bankAccounts?: BankAccount[];
   // その他必要なフィールドがあれば追加
 }

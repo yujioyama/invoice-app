@@ -7,6 +7,7 @@ import type { BankAccount } from "@/shared/types/BankAccount";
 import type { User } from "@/shared/types/User";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
+import { useAsyncAction } from "@/hooks/useAsyncAction";
 
 const emptyBankAccount: BankAccount = {
   id: "",
@@ -31,6 +32,8 @@ export default function ProfileEditPage() {
   >(emptyBankAccount);
   const [loading, setLoading] = useState(true);
 
+  const { run: saveProfile, loading: saving } = useAsyncAction(updateMyDetails);
+
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
@@ -48,7 +51,7 @@ export default function ProfileEditPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await updateMyDetails({
+      await saveProfile({
         firstName: user.firstName,
         lastName: user.lastName,
         phone: user.phone,
@@ -309,7 +312,11 @@ export default function ProfileEditPage() {
             }
           />
         </div>
-        <button className="btn btn-primary w-full mt-6" type="submit">
+        <button
+          className="btn btn-primary w-full mt-6"
+          type="submit"
+          disabled={saving}
+        >
           {t("profile.save")}
         </button>
       </form>

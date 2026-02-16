@@ -2,15 +2,17 @@
 
 import { useRouter } from "next/navigation";
 import { getInvoices } from "@/lib/apiInvoices";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { deleteInvoice } from "@/lib/apiInvoices";
 import { useTranslation } from "react-i18next";
 import { useAsyncLoad } from "@/hooks/useAsyncLoad";
+import { useAsyncAction } from "@/hooks/useAsyncAction";
 
 export default function InvoicesListPage() {
   const { t, i18n } = useTranslation();
   const router = useRouter();
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const {
     data: invoices,
     setData: setInvoices,
@@ -21,6 +23,8 @@ export default function InvoicesListPage() {
     initialLoading: true,
     onError: () => toast.error(t("invoices.loadFailed")),
   });
+
+  const { run: runDeleteInvoice } = useAsyncAction(deleteInvoice);
 
   const isJapanese = i18n.language?.startsWith("ja");
   const dateLocale = isJapanese ? "ja-JP" : "en-GB";
@@ -39,8 +43,9 @@ export default function InvoicesListPage() {
   const handleDeleteInvoice = async (id: string) => {
     const invoiceName =
       invoices?.find((invoice) => invoice.id === id)?.name || "";
+    setDeletingId(id);
     try {
-      await deleteInvoice(id);
+      await runDeleteInvoice(id);
       setInvoices(
         (prevInvoices) =>
           prevInvoices?.filter((invoice) => invoice.id !== id) || null,
@@ -53,6 +58,8 @@ export default function InvoicesListPage() {
     } catch (error) {
       console.error("Failed to delete invoice:", error);
       toast.error(t("invoices.deleteFailed"));
+    } finally {
+      setDeletingId((prev) => (prev === id ? null : prev));
     }
   };
 
@@ -128,6 +135,7 @@ export default function InvoicesListPage() {
                             <button
                               onClick={() => handleDeleteInvoice(invoice.id)}
                               className="btn btn-danger ml-2"
+                              disabled={deletingId === invoice.id}
                             >
                               {t("invoices.delete")}
                             </button>

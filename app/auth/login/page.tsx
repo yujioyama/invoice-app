@@ -1,33 +1,32 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { login } from "@/lib/apiAuth";
 import { useTranslation } from "react-i18next";
+import { useAsyncAction } from "@/hooks/useAsyncAction";
 
 export default function LoginPage() {
   const { t } = useTranslation();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+
+  const { run, loading, error } = useAsyncAction(login);
+
+  const errorMessage = useMemo(() => {
+    if (!error) return "";
+    if (error instanceof Error) return error.message || t("auth.login.failed");
+    return t("auth.login.failed");
+  }, [error, t]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-    setLoading(true);
     try {
-      await login(email, password);
+      await run(email, password);
       router.push("/dashboard");
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message || t("auth.login.failed"));
-      } else {
-        setError(t("auth.login.failed"));
-      }
-    } finally {
-      setLoading(false);
+    } catch {
+      // error state is handled by useAsyncAction
     }
   };
 
@@ -57,7 +56,9 @@ export default function LoginPage() {
             required
           />
         </div>
-        {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
+        {errorMessage && (
+          <div className="mb-4 text-red-600 text-sm">{errorMessage}</div>
+        )}
         <button
           type="submit"
           className="btn btn-primary w-full"

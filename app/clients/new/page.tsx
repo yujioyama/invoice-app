@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient, Client } from "@/lib/apiClients";
 import { getMe } from "@/lib/apiAuth";
 import { useTranslation } from "react-i18next";
+import { useAsyncAction } from "@/hooks/useAsyncAction";
 
 export default function NewInvoicePage() {
   const { t } = useTranslation();
@@ -17,8 +18,9 @@ export default function NewInvoicePage() {
     phone: "",
     country: "",
   });
-  const [saving, setSaving] = useState(false);
   const [user, setUser] = useState<{ id?: string }>({});
+
+  const { run: saveClient, loading: saving } = useAsyncAction(createClient);
 
   useEffect(() => {
     async function fetchUser() {
@@ -36,11 +38,10 @@ export default function NewInvoicePage() {
   }, [client]);
 
   const handleSave = async () => {
-    setSaving(true);
     try {
       if (!user.id) throw new Error(t("invoicePreview.userSessionNotFound"));
       console.log("Fetched user data:", user);
-      await createClient({
+      await saveClient({
         userId: user.id,
         ...client,
       });
@@ -49,8 +50,6 @@ export default function NewInvoicePage() {
     } catch (error) {
       console.error("Failed to save client:", error);
       alert(t("clients.saveFailedWithBackend"));
-    } finally {
-      setSaving(false);
     }
   };
 
@@ -133,7 +132,7 @@ export default function NewInvoicePage() {
             <div className="flex gap-4 pb-9">
               <button
                 onClick={handleSave}
-                disabled={!isValid}
+                disabled={!isValid || saving}
                 className="btn btn-primary"
               >
                 {saving ? t("clients.saving") : t("clients.saveContinue")}

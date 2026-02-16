@@ -1,17 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState, use } from "react";
+import { useMemo, useRef, use } from "react";
 import { useRouter } from "next/navigation";
-import { getInvoiceById } from "@/lib/apiInvoices";
-import { getClientById } from "@/lib/apiClients";
-import type { Invoice } from "@/lib/apiInvoices";
-import type { Client } from "@/lib/apiClients";
 import InvoiceDocument from "@/components/invoice/InvoiceDocument";
-import { BankAccount } from "@/shared/types/BankAccount";
-import { getMyDetails } from "@/lib/apiAuth";
-import type { User } from "@/shared/types/User";
 import { useTranslation } from "react-i18next";
 import type { Task } from "@/shared/types/Invoice";
+import { useInvoiceDetail } from "@/hooks/useInvoiceDetail";
 
 export default function InvoiceDetailPage({
   params,
@@ -21,42 +15,17 @@ export default function InvoiceDetailPage({
   const { t } = useTranslation();
   const resolvedParams = use(params);
   const router = useRouter();
-  const [invoice, setInvoice] = useState<Invoice | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [client, setClient] = useState<Client | null>(null);
-  const [bankAccount, setBankAccount] = useState<BankAccount | null>(null);
-  const [user, setUser] = useState<User | null>(null);
+
+  const { invoice, client, user, bankAccount, loading } = useInvoiceDetail(
+    resolvedParams.id,
+  );
   const invoiceRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    async function loadInvoice() {
-      setLoading(true);
-      try {
-        const [invoiceData, userRes] = await Promise.all([
-          getInvoiceById(resolvedParams.id),
-          getMyDetails(),
-        ]);
-
-        setInvoice(invoiceData);
-        // bankAccountはuserRes.user.bankAccountsの1件目を利用
-        const firstBankAccount = userRes?.user?.bankAccounts?.[0] ?? null;
-        setBankAccount(firstBankAccount);
-        setUser(userRes?.user || null);
-
-        if (invoiceData?.clientId) {
-          const clientData = await getClientById(invoiceData.clientId);
-          setClient(clientData);
-        } else {
-          setClient(null);
-        }
-      } catch (error) {
-        console.error("Failed to load invoice:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadInvoice();
-  }, [resolvedParams.id]);
+  const { tasks, grandTotal } = useMemo(() => {
+    const tasks = (invoice?.tasks ?? []) as Task[];
+    const grandTotal = tasks.reduce((sum, t) => sum + t.rate * t.hours, 0);
+    return { tasks, grandTotal };
+  }, [invoice]);
 
   const downloadPDF = async () => {
     if (!invoice) return;
@@ -110,9 +79,6 @@ export default function InvoiceDetailPage({
       </div>
     );
   }
-
-  const tasks = invoice.tasks as Task[];
-  const grandTotal = tasks.reduce((sum, t) => sum + t.rate * t.hours, 0);
 
   return (
     <div className="page">

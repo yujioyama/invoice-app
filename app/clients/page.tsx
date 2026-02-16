@@ -2,15 +2,17 @@
 
 import { useRouter } from "next/navigation";
 import { getClients } from "@/lib/apiClients";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { deleteClient } from "@/lib/apiClients";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import { useAsyncLoad } from "@/hooks/useAsyncLoad";
+import { useAsyncAction } from "@/hooks/useAsyncAction";
 
 export default function InvoicesListPage() {
   const { t } = useTranslation();
   const router = useRouter();
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const {
     data: clients,
     setData: setClients,
@@ -22,14 +24,17 @@ export default function InvoicesListPage() {
     onError: () => toast.error(t("clients.loadFailed")),
   });
 
+  const { run: runDeleteClient } = useAsyncAction(deleteClient);
+
   const handleNewClient = () => {
     router.push("/clients/new");
   };
 
   const handleDeleteClient = async (id: string) => {
     const clientName = clients?.find((client) => client.id === id)?.name || "";
+    setDeletingId(id);
     try {
-      await deleteClient(id);
+      await runDeleteClient(id);
       setClients(
         (prevClients) =>
           prevClients?.filter((client) => client.id !== id) || null,
@@ -42,6 +47,8 @@ export default function InvoicesListPage() {
     } catch (error) {
       console.error("Failed to delete client:", error);
       toast.error(t("clients.deleteFailed"));
+    } finally {
+      setDeletingId((prev) => (prev === id ? null : prev));
     }
   };
 
@@ -102,6 +109,7 @@ export default function InvoicesListPage() {
                           <button
                             onClick={() => handleDeleteClient(client.id)}
                             className="btn btn-danger"
+                            disabled={deletingId === client.id}
                           >
                             {t("clients.delete")}
                           </button>

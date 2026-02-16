@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { register } from "@/lib/apiAuth";
 import { useTranslation } from "react-i18next";
+import { useAsyncAction } from "@/hooks/useAsyncAction";
 
 export default function RegisterPage() {
   const { t } = useTranslation();
@@ -12,30 +13,32 @@ export default function RegisterPage() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [validationError, setValidationError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
+  const { run, loading, error } = useAsyncAction(register);
+
+  const errorMessage = useMemo(() => {
+    if (validationError) return validationError;
+    if (!error) return "";
+    if (error instanceof Error)
+      return error.message || t("auth.register.failed");
+    return t("auth.register.failed");
+  }, [error, t, validationError]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+    setValidationError("");
     if (password !== confirm) {
-      setError(t("auth.register.passwordMismatch"));
+      setValidationError(t("auth.register.passwordMismatch"));
       return;
     }
-    setLoading(true);
     try {
-      await register(email, name, password);
+      await run(email, name, password);
       router.push("/auth/emailSent");
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message || t("auth.register.failed"));
-      } else {
-        setError(t("auth.register.failed"));
-      }
-    } finally {
-      setLoading(false);
+    } catch {
+      // error state is handled by useAsyncAction
     }
   };
 
@@ -199,7 +202,9 @@ export default function RegisterPage() {
             </button>
           </div>
         </div>
-        {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
+        {errorMessage && (
+          <div className="mb-4 text-red-600 text-sm">{errorMessage}</div>
+        )}
         <button
           type="submit"
           className="btn btn-primary w-full"

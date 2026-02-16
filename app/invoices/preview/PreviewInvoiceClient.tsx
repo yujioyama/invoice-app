@@ -11,16 +11,18 @@ import type { Client } from "@/lib/apiClients";
 import type { BankAccount } from "@/shared/types/BankAccount";
 import { useTranslation } from "react-i18next";
 import type { Currency, Task } from "@/shared/types/Invoice";
+import { useAsyncAction } from "@/hooks/useAsyncAction";
 
 export default function PreviewInvoiceClient() {
   const { t } = useTranslation();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [saving, setSaving] = useState(false);
   const [client, setClient] = useState<Client | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [bankAccount, setBankAccount] = useState<BankAccount | null>(null);
+
+  const { run: saveInvoice, loading: saving } = useAsyncAction(createInvoice);
 
   // PDF出力対象の内容を参照
   const invoiceRef = useRef<HTMLDivElement>(null);
@@ -66,10 +68,9 @@ export default function PreviewInvoiceClient() {
 
   // プレビューからAPIで保存して詳細画面へ遷移
   const handleSave = async () => {
-    setSaving(true);
     try {
       if (!userId) throw new Error(t("invoicePreview.userSessionNotFound"));
-      const invoice = await createInvoice({
+      const invoice = await saveInvoice({
         name: invoiceName,
         userId: userId,
         currency,
@@ -84,8 +85,6 @@ export default function PreviewInvoiceClient() {
     } catch (error) {
       console.error("Failed to save invoice:", error);
       alert(t("invoicePreview.saveFailedWithBackend"));
-    } finally {
-      setSaving(false);
     }
   };
 
