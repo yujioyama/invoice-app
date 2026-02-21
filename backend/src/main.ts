@@ -12,7 +12,7 @@ async function bootstrap() {
 
   // CORS設定（フロントエンドからのアクセスを許可）
   app.enableCors({
-    origin: process.env.CORS_ORIGIN?.split(",") || ["http://localhost:3000"],
+    origin: true,
     credentials: true,
   });
 
