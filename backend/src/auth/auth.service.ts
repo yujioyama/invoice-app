@@ -53,22 +53,27 @@ export class AuthService {
       select: { id: true, email: true, name: true },
     });
 
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false,
-      auth: {
-        user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASS,
-      },
-    });
+    try {
+      const transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false,
+        auth: {
+          user: process.env.MAIL_USER,
+          pass: process.env.MAIL_PASS,
+        },
+      });
 
-    await transporter.sendMail({
-      from: process.env.MAIL_USER,
-      to: user.email,
-      subject: "メールアドレス確認",
-      text: `下記URLをクリックして認証してください: http://localhost:3000/auth/verifyEmail?token=${verificationToken}`,
-    });
+      await transporter.sendMail({
+        from: process.env.MAIL_USER,
+        to: user.email,
+        subject: "メールアドレス確認",
+        text: `下記URLをクリックして認証してください: http://localhost:3000/auth/verifyEmail?token=${verificationToken}`,
+      });
+    } catch (error) {
+      await this.prisma.user.delete({ where: { id: user.id } });
+      throw new Error("メール送信に失敗しました。再度お試しください。");
+    }
 
     const jwtToken = this.generateJwt(user);
     return {
