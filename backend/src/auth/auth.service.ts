@@ -71,6 +71,7 @@ export class AuthService {
         text: `下記URLをクリックして認証してください: http://localhost:3000/auth/verifyEmail?token=${verificationToken}`,
       });
     } catch (error) {
+      console.error(error);
       try {
         await this.prisma.user.delete({ where: { id: user.id } });
       } catch (deleteError) {
