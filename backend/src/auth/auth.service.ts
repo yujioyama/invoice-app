@@ -9,8 +9,9 @@ import { LoginDto } from "./dto/login.dto";
 import * as bcrypt from "bcryptjs";
 import { JwtService } from "@nestjs/jwt";
 import cuid from "cuid";
-import nodemailer from "nodemailer";
+// import nodemailer from "nodemailer";
 import { Currency } from "@prisma/client";
+import { Resend } from "resend";
 
 function toCurrency(value: unknown): Currency {
   if (typeof value !== "string") return Currency.AUD;
@@ -54,21 +55,12 @@ export class AuthService {
     });
 
     try {
-      const transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 587,
-        secure: false,
-        auth: {
-          user: process.env.MAIL_USER,
-          pass: process.env.MAIL_PASS,
-        },
-      });
-
-      await transporter.sendMail({
-        from: process.env.MAIL_USER,
+      const resend = new Resend(process.env.RESEND_API_KEY);
+      await resend.emails.send({
+        from: "onboarding@resend.dev", // 最初はこれでOK
         to: user.email,
         subject: "メールアドレス確認",
-        text: `下記URLをクリックして認証してください: http://localhost:3000/auth/verifyEmail?token=${verificationToken}`,
+        text: `下記URLをクリックして認証してください: https://invoice-app-phi-lime.vercel.app/auth/verifyEmail?token=${verificationToken}`,
       });
     } catch (error) {
       console.error("MAIL_USER:", process.env.MAIL_USER);
