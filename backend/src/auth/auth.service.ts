@@ -71,6 +71,8 @@ export class AuthService {
         text: `下記URLをクリックして認証してください: http://localhost:3000/auth/verifyEmail?token=${verificationToken}`,
       });
     } catch (error) {
+      console.error("MAIL_USER:", process.env.MAIL_USER);
+      console.error("MAIL_PASS exists:", !!process.env.MAIL_PASS);
       console.error(error);
       try {
         await this.prisma.user.delete({ where: { id: user.id } });
