@@ -15,10 +15,18 @@ import { LoginDto } from "./dto/login.dto";
 import { Response } from "express";
 import { JwtAuthGuard } from "./jwt-auth.guard";
 
+const isProduction = process.env.NODE_ENV === "production";
+
+// COOKIE_OPTIONS: settings for authentication token cookie
 const COOKIE_OPTIONS = {
+  // Cookie cannot be accessed via JavaScript (protects against XSS attacks)
   httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: "none" as const,
+  // Cookie is sent only over HTTPS in production (protects against interception)
+  secure: isProduction,
+  // "none" allows cross-site cookie sending (required for frontend/backend on different domains, must be used with secure: true)
+  // "lax" restricts cookie sending to same-site or safe cross-site requests (better for local development)
+  sameSite: (isProduction ? "none" : "lax") as "none" | "lax",
+  // Cookie expiration time in milliseconds (here: 7 days)
   maxAge: 7 * 24 * 60 * 60 * 1000,
 };
 @Controller("auth")
