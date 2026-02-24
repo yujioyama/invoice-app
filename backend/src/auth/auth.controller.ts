@@ -18,7 +18,7 @@ import { JwtAuthGuard } from "./jwt-auth.guard";
 const COOKIE_OPTIONS = {
   httpOnly: true,
   secure: process.env.NODE_ENV === "production",
-  sameSite: "lax" as const,
+  sameSite: "none" as const,
   maxAge: 7 * 24 * 60 * 60 * 1000,
 };
 @Controller("auth")
@@ -55,7 +55,6 @@ export class AuthController {
   async getMe(@Request() req) {
     return { user: req.user };
   }
-
 
   @Get("me/details")
   @UseGuards(JwtAuthGuard)
