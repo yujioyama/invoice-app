@@ -57,8 +57,9 @@ async function main() {
     });
 
     // Clients
+    const createdClients = [];
     for (let c = 0; c < 2; c++) {
-      await prisma.client.create({
+      const client = await prisma.client.create({
         data: {
           name: faker.company.name(),
           email: faker.internet.email(),
@@ -70,6 +71,7 @@ async function main() {
           updatedAt: new Date(),
         },
       });
+      createdClients.push(client);
     }
 
     // BankAccount
@@ -91,11 +93,17 @@ async function main() {
 
     // Invoices & Tasks
     for (let i = 0; i < 3; i++) {
+      // 紐づけるClientをランダムに選択（なければnull）
+      const client =
+        createdClients.length > 0
+          ? faker.helpers.arrayElement(createdClients)
+          : null;
       const invoice = await prisma.invoice.create({
         data: {
           name: faker.commerce.productName(),
           currency: faker.helpers.arrayElement(Object.values(Currency)),
           userId: user.id,
+          clientId: client ? client.id : undefined,
           createdAt: faker.date.past(),
           updatedAt: new Date(),
         },
@@ -115,8 +123,9 @@ async function main() {
   }
 
   // Demoユーザーにも最低限のデータを追加
+  const demoClients = [];
   for (let c = 0; c < 2; c++) {
-    await prisma.client.create({
+    const client = await prisma.client.create({
       data: {
         name: faker.company.name(),
         email: faker.internet.email(),
@@ -128,6 +137,7 @@ async function main() {
         updatedAt: new Date(),
       },
     });
+    demoClients.push(client);
   }
 
   await prisma.bankAccount.create({
@@ -147,11 +157,15 @@ async function main() {
   });
 
   for (let i = 0; i < 3; i++) {
+    // 紐づけるClientをランダムに選択（なければnull）
+    const client =
+      demoClients.length > 0 ? faker.helpers.arrayElement(demoClients) : null;
     const invoice = await prisma.invoice.create({
       data: {
         name: faker.commerce.productName(),
         currency: faker.helpers.arrayElement(Object.values(Currency)),
         userId: demoUser.id,
+        clientId: client ? client.id : undefined,
         createdAt: faker.date.past(),
         updatedAt: new Date(),
       },
