@@ -44,6 +44,7 @@ export default function LoginPage() {
             onChange={(e) => setEmail(e.target.value)}
             className="input"
             required
+            autoComplete="email"
           />
         </div>
         <div className="mb-6">
@@ -54,6 +55,7 @@ export default function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
             className="input"
             required
+            autoComplete="current-password"
           />
         </div>
         {errorMessage && (
