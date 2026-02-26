@@ -140,6 +140,7 @@
     "invoiceName": "請求書名",
     "invoiceNamePlaceholder": "請求書名を入力...",
     "currency": "通貨",
+    "language": "請求書の言語",
     "client": "クライアント",
     "clientPlaceholder": "クライアントを選択...",
     "addTask": "+ タスク追加",
@@ -149,6 +150,10 @@
     "previewAlert": "プレビュー前に、クライアントを選択して全てのタスク名と時間を入力してください。"
   },
   "profile": {
+    "invoiceLanguage": {
+      "en": "英語",
+      "ja": "日本語"
+    },
     "editTitle": "プロフィール編集",
     "save": "変更を保存",
     "updated": "プロフィールを更新しました",

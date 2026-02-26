@@ -98,10 +98,14 @@ async function main() {
         createdClients.length > 0
           ? faker.helpers.arrayElement(createdClients)
           : null;
+
+      const language = faker.helpers.arrayElement(["en", "ja"] as const);
+
       const invoice = await prisma.invoice.create({
         data: {
           name: faker.commerce.productName(),
           currency: faker.helpers.arrayElement(Object.values(Currency)),
+          language: language as any,
           userId: user.id,
           clientId: client ? client.id : undefined,
           createdAt: faker.date.past(),
@@ -160,10 +164,14 @@ async function main() {
     // 紐づけるClientをランダムに選択（なければnull）
     const client =
       demoClients.length > 0 ? faker.helpers.arrayElement(demoClients) : null;
+
+    const language = faker.helpers.arrayElement(["en", "ja"] as const);
+
     const invoice = await prisma.invoice.create({
       data: {
         name: faker.commerce.productName(),
         currency: faker.helpers.arrayElement(Object.values(Currency)),
+        language: language as any,
         userId: demoUser.id,
         clientId: client ? client.id : undefined,
         createdAt: faker.date.past(),
@@ -188,7 +196,7 @@ main()
   .then(async () => {
     await prisma.$disconnect();
     console.log("🌱 Dummy data seeded!");
-    console.log("Demo user: test.carey@example.com / password123");
+    console.log("Demo user: test.carey@example.com / test");
   })
   .catch(async (e) => {
     console.error(e);

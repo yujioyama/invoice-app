@@ -6,11 +6,12 @@ import { createInvoice } from "@/lib/apiInvoices";
 import { getMyDetails } from "@/lib/apiAuth";
 import { getClientById } from "@/lib/apiClients";
 import InvoiceDocument from "@/components/invoice/InvoiceDocument";
+import { InvoiceLanguageProvider } from "@/components/invoice/InvoiceLanguageProvider";
 import type { User } from "@/shared/types/User";
 import type { Client } from "@/lib/apiClients";
 import type { BankAccount } from "@/shared/types/BankAccount";
 import { useTranslation } from "react-i18next";
-import type { Currency, Task } from "@/shared/types/Invoice";
+import type { Currency, InvoiceLanguage, Task } from "@/shared/types/Invoice";
 import { useAsyncAction } from "@/hooks/useAsyncAction";
 
 export default function PreviewInvoiceClient() {
@@ -44,6 +45,7 @@ export default function PreviewInvoiceClient() {
   const createdAt = searchParams.get("createdAt") || new Date().toISOString();
   const clientId = searchParams.get("clientId") || "";
   const currency = (searchParams.get("currency") as Currency) || "JPY";
+  const language = (searchParams.get("language") as InvoiceLanguage) || "en";
   const grandTotal = tasks.reduce(
     (sum, task) => sum + task.rate * task.hours,
     0,
@@ -74,6 +76,7 @@ export default function PreviewInvoiceClient() {
         name: invoiceName,
         userId: userId,
         currency,
+        language,
         clientId: clientId || null,
         tasks: tasks.map((t) => ({
           name: t.name,
@@ -93,6 +96,7 @@ export default function PreviewInvoiceClient() {
       name: invoiceName,
       clientId: clientId,
       currency,
+      language,
       createdAt: createdAt,
       tasks: JSON.stringify(tasks),
     };
@@ -120,17 +124,19 @@ export default function PreviewInvoiceClient() {
       </div>
 
       {/* PDF出力対象要素 */}
-      <InvoiceDocument
-        ref={invoiceRef}
-        invoiceName={invoiceName}
-        createdAt={createdAt}
-        tasks={tasks}
-        grandTotal={grandTotal}
-        currency={currency}
-        client={client}
-        user={user}
-        bankAccount={bankAccount}
-      />
+      <InvoiceLanguageProvider language={language}>
+        <InvoiceDocument
+          ref={invoiceRef}
+          invoiceName={invoiceName}
+          createdAt={createdAt}
+          tasks={tasks}
+          grandTotal={grandTotal}
+          currency={currency}
+          client={client}
+          user={user}
+          bankAccount={bankAccount}
+        />
+      </InvoiceLanguageProvider>
     </div>
   );
 }

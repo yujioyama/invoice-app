@@ -7,7 +7,7 @@ import TotalSection from "@/components/invoice/TotalSection";
 import { getClients } from "@/lib/apiClients";
 import type { Client } from "@/lib/apiClients";
 import { useTranslation } from "react-i18next";
-import type { Currency } from "@/shared/types/Invoice";
+import type { Currency, InvoiceLanguage } from "@/shared/types/Invoice";
 import { useInvoiceTasks, type InvoiceTask } from "@/hooks/useInvoiceTasks";
 
 function parseInitialTasks(value: string | null): InvoiceTask[] {
@@ -28,11 +28,13 @@ function NewInvoiceForm({
   initialTasks,
   initialClientId,
   initialCurrency,
+  initialLanguage,
 }: {
   initialInvoiceName: string;
   initialTasks: InvoiceTask[];
   initialClientId: string;
   initialCurrency: Currency;
+  initialLanguage: InvoiceLanguage;
 }) {
   const { t } = useTranslation();
   const router = useRouter();
@@ -40,6 +42,17 @@ function NewInvoiceForm({
   const [clients, setClients] = useState<Client[]>([]);
   const [clientId, setClientId] = useState<string>(initialClientId);
   const [currency, setCurrency] = useState<Currency>(initialCurrency);
+  const [language, setLanguage] = useState<InvoiceLanguage>(initialLanguage);
+
+  useEffect(() => {
+    if (initialLanguage !== "en") return;
+    const stored = window.localStorage.getItem(
+      "lang",
+    ) as InvoiceLanguage | null;
+    if (stored === "en" || stored === "ja") {
+      setLanguage(stored);
+    }
+  }, [initialLanguage]);
 
   const { tasks, grandTotal, areTasksValid, updateTask, addTask, deleteTask } =
     useInvoiceTasks({ initialTasks });
@@ -72,12 +85,13 @@ function NewInvoiceForm({
       name: invoiceName,
       clientId: clientId,
       currency,
+      language,
       createdAt: new Date().toISOString(),
       tasks: JSON.stringify(tasks),
     };
     const queryString = new URLSearchParams(queryData).toString();
     router.push(`/invoices/preview?${queryString}`);
-  }, [invoiceName, tasks, clientId, currency, isValid, router, t]);
+  }, [invoiceName, tasks, clientId, currency, language, isValid, router, t]);
 
   return (
     <div className="page">
@@ -116,6 +130,19 @@ function NewInvoiceForm({
                     </option>
                   ),
                 )}
+              </select>
+            </div>
+
+            {/* Language */}
+            <div className="mb-6">
+              <label className="label">{t("invoiceForm.language")}</label>
+              <select
+                value={language}
+                onChange={(e) => setLanguage(e.target.value as InvoiceLanguage)}
+                className="input"
+              >
+                <option value="en">{t("invoiceLanguage.en")}</option>
+                <option value="ja">{t("invoiceLanguage.ja")}</option>
               </select>
             </div>
 
@@ -188,6 +215,8 @@ export default function NewInvoicePage() {
   const initialTasks = parseInitialTasks(searchParams.get("tasks"));
   const initialClientId = searchParams.get("clientId") || "";
   const initialCurrency = (searchParams.get("currency") as Currency) || "AUD";
+  const initialLanguage =
+    (searchParams.get("language") as InvoiceLanguage) || "en";
 
   return (
     <NewInvoiceForm
@@ -196,6 +225,7 @@ export default function NewInvoicePage() {
       initialTasks={initialTasks}
       initialClientId={initialClientId}
       initialCurrency={initialCurrency}
+      initialLanguage={initialLanguage}
     />
   );
 }

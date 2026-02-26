@@ -2,6 +2,8 @@ import type { Client } from "./Client";
 
 export type Currency = "JPY" | "USD" | "EUR" | "GBP" | "AUD";
 
+export type InvoiceLanguage = "en" | "ja";
+
 export type Task = {
   name: string;
   rate: number;
@@ -17,6 +19,7 @@ export type Invoice = {
   id: string;
   name: string;
   currency: Currency;
+  language: InvoiceLanguage;
   createdAt: string;
   updatedAt: string;
   tasks: Task[];
@@ -29,5 +32,6 @@ export type CreateInvoiceInput = {
   userId: string;
   tasks: Task[];
   currency?: Currency;
+  language?: InvoiceLanguage;
   clientId?: string | null;
 };

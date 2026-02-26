@@ -3,6 +3,7 @@
 import { useMemo, useRef, use } from "react";
 import { useRouter } from "next/navigation";
 import InvoiceDocument from "@/components/invoice/InvoiceDocument";
+import { InvoiceLanguageProvider } from "@/components/invoice/InvoiceLanguageProvider";
 import { useTranslation } from "react-i18next";
 import type { Task } from "@/shared/types/Invoice";
 import { useInvoiceDetail } from "@/hooks/useInvoiceDetail";
@@ -102,17 +103,19 @@ export default function InvoiceDetailPage({
         </div>
       </div>
 
-      <InvoiceDocument
-        ref={invoiceRef}
-        invoiceName={invoice.name}
-        createdAt={invoice.createdAt}
-        tasks={tasks}
-        grandTotal={grandTotal}
-        currency={invoice.currency}
-        client={client}
-        user={user}
-        bankAccount={bankAccount}
-      />
+      <InvoiceLanguageProvider language={invoice.language ?? "en"}>
+        <InvoiceDocument
+          ref={invoiceRef}
+          invoiceName={invoice.name}
+          createdAt={invoice.createdAt}
+          tasks={tasks}
+          grandTotal={grandTotal}
+          currency={invoice.currency}
+          client={client}
+          user={user}
+          bankAccount={bankAccount}
+        />
+      </InvoiceLanguageProvider>
     </div>
   );
 }

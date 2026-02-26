@@ -18,6 +18,11 @@ enum Currency {
   AUD
 }
 
+enum InvoiceLanguage {
+  en
+  ja
+}
+
 model User {
   id        String    @id @default(cuid())
   email     String    @unique
@@ -45,6 +50,7 @@ model Invoice {
   id        String   @id @default(cuid())
   name      String
   currency  Currency @default(AUD)
+  language  InvoiceLanguage @default(en)
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   clientId  String?

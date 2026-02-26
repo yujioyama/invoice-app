@@ -7,7 +7,7 @@ import type { Client } from "@/lib/apiClients";
 import EditableTasksTable from "@/components/invoice/EditableTasksTable";
 import TotalSection from "@/components/invoice/TotalSection";
 import { useTranslation } from "react-i18next";
-import type { Currency } from "@/shared/types/Invoice";
+import type { Currency, InvoiceLanguage } from "@/shared/types/Invoice";
 import { useInvoiceTasks, type InvoiceTask } from "@/hooks/useInvoiceTasks";
 import { useAsyncAction } from "@/hooks/useAsyncAction";
 import { useInvoiceEditData } from "@/hooks/useInvoiceEditData";
@@ -32,6 +32,7 @@ function EditInvoiceForm({
   invoice: {
     name: string;
     currency?: Currency;
+    language?: InvoiceLanguage;
     clientId?: string | null;
     tasks: Array<{ name: string; rate: number; hours: number }>;
   };
@@ -43,6 +44,9 @@ function EditInvoiceForm({
   const [invoiceName, setInvoiceName] = useState(invoice.name);
   const [currency, setCurrency] = useState<Currency>(invoice.currency || "AUD");
   const [clientId, setClientId] = useState<string>(invoice.clientId || "");
+  const [language, setLanguage] = useState<InvoiceLanguage>(
+    invoice.language || "en",
+  );
 
   const initialTasks = useMemo(
     () => formatInvoiceTasksForEdit(invoice),
@@ -53,6 +57,7 @@ function EditInvoiceForm({
     async (payload: {
       name: string;
       currency: Currency;
+      language: InvoiceLanguage;
       tasks: Array<{ name: string; rate: number; hours: number }>;
       clientId: string | null;
     }) => updateInvoice(invoiceId, payload),
@@ -75,6 +80,7 @@ function EditInvoiceForm({
       await saveInvoice({
         name: invoiceName,
         currency,
+        language,
         tasks: tasks.map((t) => ({
           name: t.name,
           rate: t.rate,
@@ -90,6 +96,7 @@ function EditInvoiceForm({
   }, [
     clientId,
     currency,
+    language,
     invoiceId,
     invoiceName,
     isValid,
@@ -136,6 +143,19 @@ function EditInvoiceForm({
                     </option>
                   ),
                 )}
+              </select>
+            </div>
+
+            {/* Language */}
+            <div className="mb-6">
+              <label className="label">{t("invoiceForm.language")}</label>
+              <select
+                value={language}
+                onChange={(e) => setLanguage(e.target.value as InvoiceLanguage)}
+                className="input"
+              >
+                <option value="en">{t("invoiceLanguage.en")}</option>
+                <option value="ja">{t("invoiceLanguage.ja")}</option>
               </select>
             </div>
 

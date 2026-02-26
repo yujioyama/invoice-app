@@ -7,6 +7,7 @@ export type CreateInvoiceDto = CreateInvoiceInput;
 export interface UpdateInvoiceDto {
   name?: string;
   currency?: CreateInvoiceInput["currency"];
+  language?: CreateInvoiceInput["language"];
   tasks?: Array<{ id?: string; name: string; rate: number; hours: number }>;
   clientId?: string | null;
 }
@@ -21,6 +22,7 @@ export class InvoicesService {
       data: {
         name: data.name,
         ...(data.currency ? { currency: data.currency } : {}),
+        ...(data.language ? { language: data.language } : {}),
         userId: data.userId,
         ...(clientId ? { clientId } : {}),
         tasks: {
@@ -55,6 +57,7 @@ export class InvoicesService {
       data: {
         name: data.name,
         ...(data.currency ? { currency: data.currency } : {}),
+        ...(data.language ? { language: data.language } : {}),
         clientId: data.clientId ?? undefined,
         tasks: {
           create: data.tasks || [],

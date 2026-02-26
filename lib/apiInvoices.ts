@@ -1,8 +1,13 @@
-import type { Task, Invoice, CreateInvoiceInput } from "@/shared/types/Invoice";
+import type {
+  Task,
+  Invoice,
+  CreateInvoiceInput,
+  InvoiceLanguage,
+} from "@/shared/types/Invoice";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
-export type { Task, Invoice };
+export type { Task, Invoice, InvoiceLanguage };
 
 export async function createInvoice(
   data: CreateInvoiceInput,
@@ -41,6 +46,7 @@ export async function updateInvoice(
     tasks?: Task[];
     clientId?: string | null;
     currency?: Invoice["currency"];
+    language?: Invoice["language"];
   },
 ): Promise<Invoice> {
   const res = await fetch(`${API_BASE_URL}/invoices/${id}`, {

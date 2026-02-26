@@ -140,6 +140,7 @@
     "invoiceName": "Invoice name",
     "invoiceNamePlaceholder": "Enter invoice name...",
     "currency": "Currency",
+    "language": "Invoice language",
     "client": "Client",
     "clientPlaceholder": "Select a client...",
     "addTask": "+ Add Task",
@@ -147,6 +148,10 @@
     "previewTitle": "Preview invoice",
     "previewDisabledTitle": "Please select a client and fill in all task names and hours",
     "previewAlert": "Please select a client and fill in all task names and hours before previewing."
+  },
+  "invoiceLanguage": {
+    "en": "English",
+    "ja": "Japanese"
   },
   "profile": {
     "editTitle": "Edit Profile",
