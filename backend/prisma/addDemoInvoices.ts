@@ -77,7 +77,8 @@ async function main() {
 
   // --- Create 10 clients (5 Japanese, 5 international) ---
   console.log("Creating 10 clients...");
-  const clients = [];
+  const jaClients = [];
+  const intlClients = [];
 
   for (let i = 0; i < 5; i++) {
     const client = await prisma.client.create({
@@ -92,7 +93,7 @@ async function main() {
         updatedAt: new Date(),
       },
     });
-    clients.push(client);
+    jaClients.push(client);
   }
 
   for (let i = 0; i < 5; i++) {
@@ -108,7 +109,7 @@ async function main() {
         updatedAt: new Date(),
       },
     });
-    clients.push(client);
+    intlClients.push(client);
   }
 
   // --- Create 20 invoices ---
@@ -116,7 +117,9 @@ async function main() {
 
   for (const batch of INVOICE_BATCHES) {
     for (let i = 0; i < batch.count; i++) {
-      const client = faker.helpers.arrayElement(clients);
+      // JPY/Japanese invoices → Japanese clients; others → international clients
+      const clientPool = batch.language === InvoiceLanguage.ja ? jaClients : intlClients;
+      const client = faker.helpers.arrayElement(clientPool);
       const isJa = batch.language === InvoiceLanguage.ja;
 
       const invoiceName = isJa
