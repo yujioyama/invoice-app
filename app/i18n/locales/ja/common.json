@@ -68,7 +68,11 @@
     "saveFailedWithBackend": "保存に失敗しました。バックエンドサーバーが起動しているか確認してください。",
     "deleted": "クライアント{{name}}を削除しました。",
     "deleteFailed": "クライアントの削除に失敗しました",
-    "loadFailed": "クライアントの読み込みに失敗しました"
+    "loadFailed": "クライアントの読み込みに失敗しました",
+    "editTitle": "クライアントを編集",
+    "saveChanges": "変更を保存",
+    "updated": "クライアントを更新しました",
+    "updateFailed": "クライアントの更新に失敗しました"
   },
   "landing": {
     "badge": "ポートフォリオ作品",

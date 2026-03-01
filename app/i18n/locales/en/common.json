@@ -68,7 +68,11 @@
     "saveFailedWithBackend": "Failed to save. Please make sure the backend server is running.",
     "deleted": "Client{{name}} has been deleted.",
     "deleteFailed": "Failed to delete client",
-    "loadFailed": "Failed to load clients"
+    "loadFailed": "Failed to load clients",
+    "editTitle": "Edit Client",
+    "saveChanges": "Save Changes",
+    "updated": "Client updated",
+    "updateFailed": "Failed to update client"
   },
   "landing": {
     "badge": "Portfolio Project",

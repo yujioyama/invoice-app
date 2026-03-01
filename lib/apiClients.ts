@@ -34,7 +34,7 @@ export async function getClientById(id: string): Promise<Client | null> {
 
 export async function updateClient(
   id: string,
-  data: { name?: string },
+  data: { name?: string; email?: string; phone?: string; address?: string; country?: string },
 ): Promise<Client> {
   const res = await fetch(`${API_BASE_URL}/clients/${id}`, {
     method: "PATCH",

@@ -103,13 +103,23 @@ export default function InvoicesListPage() {
                         <td className="text-slate-500">{client.phone}</td>
                         <td className="text-slate-500">{client.address}</td>
                         <td className="text-right">
-                          <button
-                            onClick={() => handleDeleteClient(client.id)}
-                            className="btn btn-danger"
-                            disabled={deletingId === client.id}
-                          >
-                            {t("clients.delete")}
-                          </button>
+                          <div className="flex justify-end gap-2">
+                            <button
+                              onClick={() =>
+                                router.push(`/clients/${client.id}/edit`)
+                              }
+                              className="btn btn-secondary"
+                            >
+                              {t("invoiceDetail.edit")}
+                            </button>
+                            <button
+                              onClick={() => handleDeleteClient(client.id)}
+                              className="btn btn-danger"
+                              disabled={deletingId === client.id}
+                            >
+                              {t("clients.delete")}
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}

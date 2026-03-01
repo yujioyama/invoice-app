@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import InvoiceDocument from "@/components/invoice/InvoiceDocument";
 import { InvoiceLanguageProvider } from "@/components/invoice/InvoiceLanguageProvider";
 import { useTranslation } from "react-i18next";
+import toast from "react-hot-toast";
 import type { Task } from "@/shared/types/Invoice";
 import { useInvoiceDetail } from "@/hooks/useInvoiceDetail";
 
@@ -44,7 +45,7 @@ export default function InvoiceDetailPage({
       URL.revokeObjectURL(objectUrl);
     } catch (error) {
       console.error(error);
-      alert(t("invoiceDetail.downloadFailed"));
+      toast.error(t("invoiceDetail.downloadFailed"));
     }
   };
 

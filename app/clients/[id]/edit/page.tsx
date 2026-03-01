@@ -1,63 +1,90 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, use } from "react";
 import { useRouter } from "next/navigation";
-import { createClient, Client } from "@/lib/apiClients";
-import { getMe } from "@/lib/apiAuth";
+import { getClientById, updateClient } from "@/lib/apiClients";
 import { useTranslation } from "react-i18next";
 import { useAsyncAction } from "@/hooks/useAsyncAction";
 import toast from "react-hot-toast";
 
-export default function NewInvoicePage() {
+export default function EditClientPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { t } = useTranslation();
   const router = useRouter();
-  const [client, setClient] = useState<Client>({
-    id: "",
+  const resolvedParams = use(params);
+
+  const [client, setClient] = useState({
     name: "",
     email: "",
     address: "",
     phone: "",
     country: "",
   });
-  const [user, setUser] = useState<{ id?: string }>({});
+  const [loading, setLoading] = useState(true);
 
-  const { run: saveClient, loading: saving } = useAsyncAction(createClient);
+  const { run: saveClient, loading: saving } = useAsyncAction(
+    (data: typeof client) => updateClient(resolvedParams.id, data),
+  );
 
   useEffect(() => {
-    async function fetchUser() {
-      const data = await getMe();
-      if (data?.user) {
-        setUser(data.user);
+    async function fetchClient() {
+      try {
+        const data = await getClientById(resolvedParams.id);
+        if (!data) {
+          toast.error(t("clients.loadFailed"));
+          router.push("/clients");
+          return;
+        }
+        setClient({
+          name: data.name,
+          email: data.email ?? "",
+          address: data.address,
+          phone: data.phone ?? "",
+          country: data.country,
+        });
+      } catch {
+        toast.error(t("clients.loadFailed"));
+        router.push("/clients");
+      } finally {
+        setLoading(false);
       }
     }
-    fetchUser();
-  }, []);
+    fetchClient();
+  }, [resolvedParams.id, router, t]);
 
   const isValid = useMemo(() => {
-    return client.name.trim() !== "" && client.address!.trim() !== "";
+    return client.name.trim() !== "" && client.address.trim() !== "";
   }, [client]);
 
   const handleSave = async () => {
     try {
-      if (!user.id) throw new Error(t("invoicePreview.userSessionNotFound"));
-      await saveClient({
-        userId: user.id,
-        ...client,
-      });
-
-      router.push(`/clients`);
-    } catch (error) {
-      console.error("Failed to save client:", error);
-      toast.error(t("clients.saveFailedWithBackend"));
+      await saveClient(client);
+      toast.success(t("clients.updated"));
+      router.push("/clients");
+    } catch {
+      toast.error(t("clients.updateFailed"));
     }
   };
+
+  if (loading) {
+    return (
+      <div className="page">
+        <div className="mx-auto w-full max-w-2xl">
+          <p className="text-slate-700">{t("clients.loading")}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="page">
       <div className="mx-auto w-full max-w-2xl">
         <div className="card">
           <div className="card-header">
-            <h1 className="title">{t("clients.create")}</h1>
+            <h1 className="title">{t("clients.editTitle")}</h1>
             <p className="subtitle">{t("clients.subtitle")}</p>
           </div>
 
@@ -99,7 +126,6 @@ export default function NewInvoicePage() {
                 className="input"
               />
             </div>
-
             {/* Email */}
             <div className="mb-6">
               <label className="label">{t("clients.email")}</label>
@@ -134,7 +160,7 @@ export default function NewInvoicePage() {
                 disabled={!isValid || saving}
                 className="btn btn-primary"
               >
-                {saving ? t("clients.saving") : t("clients.saveContinue")}
+                {saving ? t("clients.saving") : t("clients.saveChanges")}
               </button>
               <button
                 onClick={() => router.push("/clients")}

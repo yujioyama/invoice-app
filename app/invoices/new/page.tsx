@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import toast from "react-hot-toast";
 import EditableTasksTable from "@/components/invoice/EditableTasksTable";
 import TotalSection from "@/components/invoice/TotalSection";
 import { getClients } from "@/lib/apiClients";
@@ -77,7 +78,7 @@ function NewInvoiceForm({
   // プレビュー遷移
   const handlePreview = useCallback(() => {
     if (!isValid) {
-      alert(t("invoiceForm.previewAlert"));
+      toast.error(t("invoiceForm.previewAlert"));
       return;
     }
 

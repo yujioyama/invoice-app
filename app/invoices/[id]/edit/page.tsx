@@ -3,6 +3,7 @@
 import { useState, useCallback, useMemo, useEffect, use, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { updateInvoice } from "@/lib/apiInvoices";
+import toast from "react-hot-toast";
 import type { Client } from "@/lib/apiClients";
 import EditableTasksTable from "@/components/invoice/EditableTasksTable";
 import TotalSection from "@/components/invoice/TotalSection";
@@ -72,7 +73,7 @@ function EditInvoiceForm({
 
   const handleSave = useCallback(async () => {
     if (!isValid) {
-      alert(t("invoiceEdit.fillAllFields"));
+      toast.error(t("invoiceEdit.fillAllFields"));
       return;
     }
 
@@ -91,7 +92,7 @@ function EditInvoiceForm({
       router.push(`/invoices/${invoiceId}`);
     } catch (error) {
       console.error("Failed to save invoice:", error);
-      alert(t("invoiceEdit.saveFailed"));
+      toast.error(t("invoiceEdit.saveFailed"));
     }
   }, [
     clientId,
@@ -239,7 +240,7 @@ export default function EditInvoicePage({
     if (data !== null) return;
     if (notFoundHandledRef.current) return;
     notFoundHandledRef.current = true;
-    alert(t("invoiceEdit.invoiceNotFound"));
+    toast.error(t("invoiceEdit.invoiceNotFound"));
     router.push("/invoices");
   }, [data, loading, router, t]);
 
