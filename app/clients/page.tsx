@@ -87,24 +87,21 @@ export default function InvoicesListPage() {
               <div className="overflow-x-auto">
                 <table className="table">
                   <thead>
-                    <tr className="bg-[#f6f5f4] border-b border-gray-300">
+                    <tr>
                       <th>{t("clients.name")}</th>
-                      <th className="text-center">{t("clients.email")}</th>
-                      <th className="text-center">{t("clients.phone")}</th>
-                      <th className="text-center">{t("clients.address")}</th>
+                      <th>{t("clients.email")}</th>
+                      <th>{t("clients.phone")}</th>
+                      <th>{t("clients.address")}</th>
                       <th></th>
                     </tr>
                   </thead>
                   <tbody>
                     {clients.map((client) => (
-                      <tr
-                        key={client.id}
-                        className="border-b border-gray-300 hover:bg-gray-50 font-tt-chocolates"
-                      >
-                        <td>{client.name}</td>
-                        <td className="text-right">{client.email}</td>
-                        <td className="text-right">{client.phone}</td>
-                        <td className="text-right">{client.address}</td>
+                      <tr key={client.id}>
+                        <td className="font-medium text-slate-900">{client.name}</td>
+                        <td className="text-slate-500">{client.email}</td>
+                        <td className="text-slate-500">{client.phone}</td>
+                        <td className="text-slate-500">{client.address}</td>
                         <td className="text-right">
                           <button
                             onClick={() => handleDeleteClient(client.id)}

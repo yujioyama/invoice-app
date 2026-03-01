@@ -32,8 +32,8 @@ export default function LoginPage() {
 
   return (
     <div className="page flex items-center justify-center">
-      <form onSubmit={handleSubmit} className="card w-full max-w-md p-8">
-        <h1 className="text-2xl font-bold mb-6 text-center text-slate-900">
+      <form onSubmit={handleSubmit} className="card w-full max-w-sm p-8">
+        <h1 className="title mb-7 text-center">
           {t("auth.login.title")}
         </h1>
         <div className="mb-4">
@@ -59,7 +59,9 @@ export default function LoginPage() {
           />
         </div>
         {errorMessage && (
-          <div className="mb-4 text-red-600 text-sm">{errorMessage}</div>
+          <div className="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600">
+            {errorMessage}
+          </div>
         )}
         <button
           type="submit"
@@ -70,7 +72,7 @@ export default function LoginPage() {
         </button>
         <a
           href="/auth/register"
-          className="mt-4 block text-center text-blue-600 hover:underline"
+          className="mt-4 block text-center text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
         >
           {t("auth.login.registerLink")}
         </a>

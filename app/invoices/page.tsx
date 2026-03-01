@@ -98,7 +98,7 @@ export default function InvoicesListPage() {
               <div className="overflow-x-auto">
                 <table className="table">
                   <thead>
-                    <tr className="bg-[#f6f5f4] border-b border-gray-300">
+                    <tr>
                       <th>{t("invoices.client")}</th>
                       <th>{t("invoices.invoice")}</th>
                       <th className="text-center">{t("invoices.tasks")}</th>
@@ -108,12 +108,9 @@ export default function InvoicesListPage() {
                   </thead>
                   <tbody>
                     {invoices.map((invoice) => (
-                      <tr
-                        key={invoice.id}
-                        className="border-b border-gray-300 hover:bg-gray-50 font-tt-chocolates"
-                      >
-                        <td>{invoice.client?.name || t("invoices.none")}</td>
-                        <td>{invoice.name}</td>
+                      <tr key={invoice.id}>
+                        <td className="text-slate-500">{invoice.client?.name || t("invoices.none")}</td>
+                        <td className="font-medium text-slate-900">{invoice.name}</td>
                         <td className="text-center">
                           {invoice.tasks?.length || 0}
                         </td>

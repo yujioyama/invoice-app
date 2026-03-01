@@ -79,18 +79,23 @@ export default function ProfileEditPage() {
     }
   };
 
-  if (loading) return <div className="container">{t("common.loading")}</div>;
+  if (loading) return <div className="page"><div className="container">{t("common.loading")}</div></div>;
 
   return (
-    <div className="container max-w-xl py-10">
-      <h1 className="text-2xl font-bold mb-6">{t("profile.editTitle")}</h1>
-      <form onSubmit={handleSubmit} className="space-y-6">
+    <div className="page">
+      <div className="container max-w-xl">
+      <div className="card">
+        <div className="card-header">
+          <h1 className="title">{t("profile.editTitle")}</h1>
+        </div>
+        <div className="card-body">
+      <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label className="block mb-1 font-medium">{t("profile.name")}</label>
+          <label className="label">{t("profile.name")}</label>
           <input className="input w-full" value={user.name || ""} readOnly />
         </div>
         <div>
-          <label className="block mb-1 font-medium">
+          <label className="label">
             {t("profile.countryCode")}
           </label>
           <select
@@ -146,7 +151,7 @@ export default function ProfileEditPage() {
           </select>
         </div>
         <div>
-          <label className="block mb-1 font-medium">{t("profile.phone")}</label>
+          <label className="label">{t("profile.phone")}</label>
           <input
             className="input w-full"
             value={user.phone || ""}
@@ -155,7 +160,7 @@ export default function ProfileEditPage() {
           />
         </div>
         <div>
-          <label className="block mb-1 font-medium">
+          <label className="label">
             {t("profile.street")}
           </label>
           <input
@@ -166,7 +171,7 @@ export default function ProfileEditPage() {
           />
         </div>
         <div>
-          <label className="block mb-1 font-medium">{t("profile.city")}</label>
+          <label className="label">{t("profile.city")}</label>
           <input
             className="input w-full"
             value={user.city || ""}
@@ -175,7 +180,7 @@ export default function ProfileEditPage() {
           />
         </div>
         <div>
-          <label className="block mb-1 font-medium">{t("profile.state")}</label>
+          <label className="label">{t("profile.state")}</label>
           <input
             className="input w-full"
             value={user.state || ""}
@@ -184,7 +189,7 @@ export default function ProfileEditPage() {
           />
         </div>
         <div>
-          <label className="block mb-1 font-medium">
+          <label className="label">
             {t("profile.country")}
           </label>
           <input
@@ -195,7 +200,7 @@ export default function ProfileEditPage() {
           />
         </div>
         <div>
-          <label className="block mb-1 font-medium">
+          <label className="label">
             {t("profile.postalCode")}
           </label>
           <input
@@ -205,10 +210,15 @@ export default function ProfileEditPage() {
             onChange={(e) => setUser({ ...user, postalCode: e.target.value })}
           />
         </div>
-        <hr />
-        <h2 className="text-lg font-bold mb-2">{t("profile.bankAccount")}</h2>
+        <div className="pt-2">
+          <div className="flex items-center gap-3">
+            <div className="h-px flex-1 bg-slate-200" />
+            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">{t("profile.bankAccount")}</span>
+            <div className="h-px flex-1 bg-slate-200" />
+          </div>
+        </div>
         <div>
-          <label className="block mb-1 font-medium">{t("profile.bank")}</label>
+          <label className="label">{t("profile.bank")}</label>
           <input
             className="input w-full"
             value={bankAccount?.bank || ""}
@@ -219,7 +229,7 @@ export default function ProfileEditPage() {
           />
         </div>
         <div>
-          <label className="block mb-1 font-medium">
+          <label className="label">
             {t("profile.accountName")}
           </label>
           <input
@@ -232,7 +242,7 @@ export default function ProfileEditPage() {
           />
         </div>
         <div>
-          <label className="block mb-1 font-medium">
+          <label className="label">
             {t("profile.branchCode")}
           </label>
           <input
@@ -245,7 +255,7 @@ export default function ProfileEditPage() {
           />
         </div>
         <div>
-          <label className="block mb-1 font-medium">
+          <label className="label">
             {t("profile.accountNumber")}
           </label>
           <input
@@ -258,7 +268,7 @@ export default function ProfileEditPage() {
           />
         </div>
         <div>
-          <label className="block mb-1 font-medium">
+          <label className="label">
             {t("profile.swiftBic")}
           </label>
           <input
@@ -271,7 +281,7 @@ export default function ProfileEditPage() {
           />
         </div>
         <div>
-          <label className="block mb-1 font-medium">
+          <label className="label">
             {t("profile.branchAddress")}
           </label>
           <input
@@ -284,7 +294,7 @@ export default function ProfileEditPage() {
           />
         </div>
         <div>
-          <label className="block mb-1 font-medium">
+          <label className="label">
             {t("profile.currency")}
           </label>
           <input
@@ -297,7 +307,7 @@ export default function ProfileEditPage() {
           />
         </div>
         <div>
-          <label className="block mb-1 font-medium">
+          <label className="label">
             {t("profile.intermediaryBank")}
           </label>
           <input
@@ -320,6 +330,9 @@ export default function ProfileEditPage() {
           {t("profile.save")}
         </button>
       </form>
+        </div>
+      </div>
+      </div>
     </div>
   );
 }

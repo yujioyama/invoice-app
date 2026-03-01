@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { getMe } from "@/lib/apiAuth";
 import { usePathname } from "next/navigation";
 import { logout } from "@/lib/apiAuth";
@@ -11,6 +11,8 @@ export default function Header() {
   const { t, i18n } = useTranslation();
   const router = useRouter();
   const [user, setUser] = useState<{ id?: string; name?: string }>({});
+  const [profileOpen, setProfileOpen] = useState(false);
+  const profileRef = useRef<HTMLDivElement>(null);
 
   const pathname = usePathname();
   const noAuthPages = useMemo(
@@ -34,23 +36,31 @@ export default function Header() {
 
     async function fetchUser() {
       const data = await getMe();
-
       if (data?.user) {
         setUser(data.user);
-      } else {
-        console.log("No user data received");
       }
     }
     fetchUser();
   }, [pathname, noAuthPages]);
 
+  // プロフィールドロップダウンを外クリックで閉じる
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
+        setProfileOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   if (noAuthPages.includes(pathname)) {
     return (
-      <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
-        <div className="mx-auto flex h-16 max-w-4xl items-center justify-end px-4 sm:px-8">
+      <header className="sticky top-0 z-50 border-b border-slate-200 bg-white">
+        <div className="mx-auto flex h-14 max-w-4xl items-center justify-end px-4 sm:px-8">
           <button
             onClick={toggleLanguage}
-            className="btn btn-ghost"
+            className="btn btn-ghost text-xs tracking-widest"
             title={t("language.switchTitle")}
           >
             {t("language.toggle")}
@@ -80,68 +90,91 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-4xl items-center justify-between px-4 sm:px-8">
-        <div className="flex items-center gap-4">
+    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white">
+      <div className="mx-auto flex h-14 max-w-4xl items-center justify-between px-4 sm:px-8">
+        <div className="flex items-center gap-3">
           <button onClick={handleHeaderClick} className="brand">
             {t("app.name")}
           </button>
-          {/* Dashboardに戻るボタン */}
-          <button
-            onClick={() => router.push("/dashboard")}
-            className="btn btn-secondary"
-          >
-            {t("nav.backToDashboard")}
-          </button>
+          {pathname !== "/dashboard" && (
+            <button
+              onClick={() => router.push("/dashboard")}
+              className="btn btn-secondary h-8 px-3 text-xs"
+            >
+              {t("nav.backToDashboard")}
+            </button>
+          )}
         </div>
-        <div className="flex items-center gap-4">
+
+        <div className="flex items-center gap-2">
           <button
             onClick={toggleLanguage}
-            className="btn btn-ghost"
+            className="btn btn-ghost h-8 px-3 text-xs tracking-widest"
             title={t("language.switchTitle")}
           >
             {t("language.toggle")}
           </button>
+
           {user.name && (
-            <div className="relative group">
+            <div className="relative" ref={profileRef}>
               <button
-                className="flex items-center gap-2 text-slate-700 font-medium hover:underline focus:outline-none"
-                title={t("nav.profileEdit")}
-                tabIndex={0}
+                onClick={() => setProfileOpen((v) => !v)}
+                className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100"
               >
-                <span>{t("nav.hello", { name: user.name })}</span>
-              </button>
-              <div className="absolute right-0 top-full w-40 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 hover:opacity-100 hover:pointer-events-auto focus-within:opacity-100 focus-within:pointer-events-auto pointer-events-none group-hover:pointer-events-auto group-focus-within:pointer-events-auto transition-opacity z-10">
-                <button
-                  className="w-full gap-1 flex text-left px-4 py-2 hover:bg-slate-100 text-sm bg-white border rounded shadow-lg"
-                  onClick={() => router.push("/profile/edit")}
+                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-indigo-700">
+                  {user.name.charAt(0).toUpperCase()}
+                </span>
+                <span className="hidden sm:inline">{user.name}</span>
+                <svg
+                  className={`h-3.5 w-3.5 text-slate-400 transition-transform duration-150 ${profileOpen ? "rotate-180" : ""}`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2.5}
                 >
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 20 20"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {profileOpen && (
+                <div className="absolute right-0 top-full mt-1.5 w-44 rounded-xl border border-slate-200 bg-white py-1 shadow-lg shadow-slate-200/60">
+                  <button
+                    className="flex w-full items-center gap-2.5 px-3.5 py-2 text-sm text-slate-700 transition-colors hover:bg-slate-50"
+                    onClick={() => {
+                      router.push("/profile/edit");
+                      setProfileOpen(false);
+                    }}
                   >
-                    <path
-                      d="M3 17.25V14.75C3 14.3358 3.33579 14 3.75 14H16.25C16.6642 14 17 14.3358 17 14.75V17.25C17 17.6642 16.6642 18 16.25 18H3.75C3.33579 18 3 17.6642 3 17.25Z"
-                      stroke="#555"
-                      strokeWidth="1.2"
-                    />
-                    <path
-                      d="M14.5 3.5L16.5 5.5M7 13L14.5 5.5M7 13L5 13L5 11L12.5 3.5L14.5 5.5L7 13Z"
-                      stroke="#555"
-                      strokeWidth="1.2"
-                    />
-                  </svg>
-                  {t("nav.profileEdit")}
-                </button>
-              </div>
+                    <svg width="15" height="15" viewBox="0 0 20 20" fill="none">
+                      <path
+                        d="M14.5 3.5L16.5 5.5M7 13L14.5 5.5M7 13L5 13L5 11L12.5 3.5L14.5 5.5L7 13Z"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                    {t("nav.profileEdit")}
+                  </button>
+                  <div className="my-1 border-t border-slate-100" />
+                  <button
+                    onClick={() => {
+                      handleLogoutClick();
+                      setProfileOpen(false);
+                    }}
+                    className="flex w-full items-center gap-2.5 px-3.5 py-2 text-sm text-rose-600 transition-colors hover:bg-rose-50"
+                  >
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                      <polyline points="16 17 21 12 16 7" />
+                      <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
+                    {t("nav.logout")}
+                  </button>
+                </div>
+              )}
             </div>
           )}
-          <button onClick={handleLogoutClick} className="btn btn-primary">
-            {t("nav.logout")}
-          </button>
         </div>
       </div>
     </header>
