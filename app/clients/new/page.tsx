@@ -25,7 +25,6 @@ export default function NewInvoicePage() {
   useEffect(() => {
     async function fetchUser() {
       const data = await getMe();
-      console.log("Fetched user data:", data);
       if (data?.user) {
         setUser(data.user);
       }
@@ -40,7 +39,6 @@ export default function NewInvoicePage() {
   const handleSave = async () => {
     try {
       if (!user.id) throw new Error(t("invoicePreview.userSessionNotFound"));
-      console.log("Fetched user data:", user);
       await saveClient({
         userId: user.id,
         ...client,
