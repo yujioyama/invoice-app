@@ -6,28 +6,72 @@
 
 ## English
 
-Full-stack invoice management app built with Next.js (frontend) and NestJS + Prisma + PostgreSQL (backend).
+A full-stack invoice management web app built as a portfolio project. Supports client management, task-based invoicing, PDF export, and full Japanese / English UI switching.
 
-### Highlights
+**Live Demo:** https://invoice-app-phi-lime.vercel.app
 
-- Authentication flow (register, email verification, login)
-- Clients CRUD
-- Invoices CRUD (tasks: name / rate / hours)
-- Automatic totals and invoice preview
-- PDF export (A4)
-- i18n: Japanese / English UI switching
+> Demo account — Email: `test.carey@example.com` / Password: `test`
+
+---
+
+### Features
+
+- **Landing page** with one-click demo login
+- **Authentication** — register, email verification, login / logout
+- **Client management** — create and delete clients with contact details
+- **Invoice management** — create, edit, delete invoices with itemized task rows
+- **Auto-calculated totals** — rate × hours per task, summed automatically
+- **Invoice preview** — review before saving
+- **PDF export** — A4-format PDF with payment info and signature area
+- **Multi-currency** — JPY, USD, EUR, GBP, AUD
+- **i18n** — full UI switching between Japanese and English; invoice language is set independently per invoice
+
+---
 
 ### Tech Stack
 
-- Frontend: Next.js (App Router), React, TypeScript, Tailwind CSS
-- i18n: i18next + react-i18next
-- Backend: NestJS, Prisma, PostgreSQL
+| Layer | Technology |
+|---|---|
+| Frontend framework | Next.js 16 (App Router) |
+| UI library | React 19 |
+| Language | TypeScript 5 |
+| Styling | Tailwind CSS v4 |
+| Internationalisation | i18next 25 + react-i18next |
+| Backend framework | NestJS 11 |
+| ORM | Prisma 5 |
+| Database (production) | PostgreSQL (Supabase) |
+| Deployment | Vercel (frontend) |
+
+---
+
+### Architecture
+
+```
+invoice-app/
+├── app/              # Next.js App Router pages and layouts
+├── components/       # Shared React components
+├── hooks/            # Custom React hooks
+├── lib/              # API client functions
+├── shared/types/     # TypeScript types shared between frontend and backend
+└── backend/          # NestJS API server
+    ├── src/
+    │   ├── auth/     # JWT auth, email verification
+    │   ├── invoices/ # Invoice CRUD + PDF generation
+    │   ├── clients/  # Client CRUD
+    │   └── users/    # User profile
+    └── prisma/       # Schema and seed data
+```
+
+---
 
 ### Local Setup
 
-#### 1) Start PostgreSQL
+#### Prerequisites
 
-Using Docker (recommended):
+- Node.js 20+
+- Docker (for local PostgreSQL)
+
+#### 1. Start PostgreSQL
 
 ```bash
 docker run --name invoice-postgres \
@@ -36,21 +80,21 @@ docker run --name invoice-postgres \
   -p 5432:5432 -d postgres:15
 ```
 
-#### 2) Backend
+#### 2. Backend
 
 ```bash
 cd backend
 npm install
-
+# copy .env.example to .env and set DATABASE_URL
 npm run prisma:generate
 npm run prisma:push
-
+npm run prisma:seed   # optional: seed demo data
 npm run start:dev
 ```
 
 Backend runs on `http://localhost:3001`.
 
-#### 3) Frontend
+#### 3. Frontend
 
 ```bash
 npm install
@@ -59,52 +103,103 @@ npm run dev
 
 Frontend runs on `http://localhost:3000`.
 
-### i18n
+---
 
-- Use the language toggle button in the header, or
-- Append `?lang=ja` / `?lang=en` to the URL on first load.
+### Environment Variables
 
-### Database GUI
+**backend/.env**
 
-```bash
-cd backend
-npx prisma studio
+```
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/invoice_db?schema=public
+JWT_SECRET=your_jwt_secret
+MAIL_HOST=...
+MAIL_USER=...
+MAIL_PASS=...
+FRONTEND_URL=http://localhost:3000
 ```
 
-Studio opens at `http://localhost:5555`.
+**Frontend (.env.local)**
 
-### API
+```
+NEXT_PUBLIC_API_URL=http://localhost:3001
+```
 
-See [backend/README.md](backend/README.md).
+---
+
+### API Reference
+
+See [backend/README.md](backend/README.md) for full endpoint documentation.
 
 ---
 
 ## 日本語
 
-Next.js（フロントエンド） + NestJS + Prisma + PostgreSQL（バックエンド）で構築したフルスタック請求書管理アプリです。
+フルスタック構成の請求書管理Webアプリです。クライアント管理・タスクベースの請求書作成・PDF出力・日英UI切替に対応しています。
+
+**デモ:** https://invoice-app-phi-lime.vercel.app
+
+> デモアカウント — メール: `test.carey@example.com` / パスワード: `test`
+
+---
 
 ### 機能
 
-- 認証（登録 / メール認証 / ログイン）
-- クライアント管理（CRUD）
-- 請求書管理（CRUD）
-  - タスク（タスク名 / Rate / Hours）
-  - 合計金額の自動計算
-  - プレビュー
-- PDF出力（A4）
-- 日英切替（i18n）
+- **ランディングページ** — ワンクリックでデモログイン
+- **認証** — ユーザー登録 / メール認証 / ログイン / ログアウト
+- **クライアント管理** — 連絡先付きでクライアントを登録・削除
+- **請求書管理** — タスク行の追加・編集・削除、請求書のCRUD
+- **合計金額の自動計算** — 単価 × 時間をタスクごとに計算し合算
+- **請求書プレビュー** — 保存前に内容を確認
+- **PDF出力** — 支払い情報・署名欄付きのA4フォーマット
+- **多通貨対応** — JPY / USD / EUR / GBP / AUD
+- **i18n** — UI言語（日/英）と請求書言語を独立して切替可能
+
+---
 
 ### 技術スタック
 
-- フロントエンド: Next.js（App Router）, React, TypeScript, Tailwind CSS
-- i18n: i18next + react-i18next
-- バックエンド: NestJS, Prisma, PostgreSQL
+| レイヤー | 技術 |
+|---|---|
+| フロントエンド | Next.js 16（App Router） |
+| UIライブラリ | React 19 |
+| 言語 | TypeScript 5 |
+| スタイリング | Tailwind CSS v4 |
+| 国際化 | i18next 25 + react-i18next |
+| バックエンド | NestJS 11 |
+| ORM | Prisma 5 |
+| データベース（本番） | PostgreSQL（Supabase） |
+| デプロイ | Vercel（フロントエンド） |
 
-### セットアップ
+---
 
-#### 1) PostgreSQL の起動
+### アーキテクチャ
 
-Docker（推奨）:
+```
+invoice-app/
+├── app/              # Next.js App Router ページ・レイアウト
+├── components/       # 共通Reactコンポーネント
+├── hooks/            # カスタムフック
+├── lib/              # APIクライアント関数
+├── shared/types/     # フロント・バックエンド共通の型定義
+└── backend/          # NestJS APIサーバー
+    ├── src/
+    │   ├── auth/     # JWT認証・メール認証
+    │   ├── invoices/ # 請求書CRUD・PDF生成
+    │   ├── clients/  # クライアントCRUD
+    │   └── users/    # ユーザープロフィール
+    └── prisma/       # スキーマ・シードデータ
+```
+
+---
+
+### ローカル環境のセットアップ
+
+#### 事前準備
+
+- Node.js 20 以上
+- Docker（ローカルのPostgreSQL用）
+
+#### 1. PostgreSQL の起動
 
 ```bash
 docker run --name invoice-postgres \
@@ -113,21 +208,21 @@ docker run --name invoice-postgres \
   -p 5432:5432 -d postgres:15
 ```
 
-#### 2) バックエンド
+#### 2. バックエンド
 
 ```bash
 cd backend
 npm install
-
+# .env.example を .env にコピーして DATABASE_URL を設定
 npm run prisma:generate
 npm run prisma:push
-
+npm run prisma:seed   # 任意: デモデータの投入
 npm run start:dev
 ```
 
 バックエンドは `http://localhost:3001` で起動します。
 
-#### 3) フロントエンド
+#### 3. フロントエンド
 
 ```bash
 npm install
@@ -136,26 +231,29 @@ npm run dev
 
 フロントエンドは `http://localhost:3000` で起動します。
 
-### 使い方（例）
+---
 
-1. `/invoices/new` で請求書作成
-2. タスクを入力 → プレビューへ
-3. 保存後、詳細画面でPDFをダウンロード
+### 環境変数
 
-### 言語切替（i18n）
+**backend/.env**
 
-- ヘッダーの切替ボタン、または
-- 初回ロード時にURLへ `?lang=ja` / `?lang=en` を付与
-
-### データベース管理（Prisma Studio）
-
-```bash
-cd backend
-npx prisma studio
+```
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/invoice_db?schema=public
+JWT_SECRET=your_jwt_secret
+MAIL_HOST=...
+MAIL_USER=...
+MAIL_PASS=...
+FRONTEND_URL=http://localhost:3000
 ```
 
-ブラウザで `http://localhost:5555` が開きます。
+**フロントエンド (.env.local)**
+
+```
+NEXT_PUBLIC_API_URL=http://localhost:3001
+```
+
+---
 
 ### API
 
-詳細は [backend/README.md](backend/README.md) を参照してください。
+エンドポイントの詳細は [backend/README.md](backend/README.md) を参照してください。
