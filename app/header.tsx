@@ -17,6 +17,7 @@ export default function Header() {
   const pathname = usePathname();
   const noAuthPages = useMemo(
     () => [
+      "/",
       "/auth/login",
       "/auth/verifyEmail",
       "/auth/emailSent",
