@@ -1,134 +1,6 @@
 # Invoice App
 
-[English](#english) | [日本語](#日本語)
-
----
-
-## English
-
-A full-stack invoice management web app built as a portfolio project. Supports client management, task-based invoicing, PDF export, and full Japanese / English UI switching.
-
-**Live Demo:** https://invoice-app-phi-lime.vercel.app
-
-> Demo account — Email: `test.carey@example.com` / Password: `test`
-
----
-
-### Features
-
-- **Landing page** with one-click demo login
-- **Authentication** — register, email verification, login / logout
-- **Client management** — create and delete clients with contact details
-- **Invoice management** — create, edit, delete invoices with itemized task rows
-- **Auto-calculated totals** — rate × hours per task, summed automatically
-- **Invoice preview** — review before saving
-- **PDF export** — A4-format PDF with payment info and signature area
-- **Multi-currency** — JPY, USD, EUR, GBP, AUD
-- **i18n** — full UI switching between Japanese and English; invoice language is set independently per invoice
-
----
-
-### Tech Stack
-
-| Layer | Technology |
-|---|---|
-| Frontend framework | Next.js 16 (App Router) |
-| UI library | React 19 |
-| Language | TypeScript 5 |
-| Styling | Tailwind CSS v4 |
-| Internationalisation | i18next 25 + react-i18next |
-| Backend framework | NestJS 11 |
-| ORM | Prisma 5 |
-| Database (production) | PostgreSQL (Supabase) |
-| Deployment | Vercel (frontend) |
-
----
-
-### Architecture
-
-```
-invoice-app/
-├── app/              # Next.js App Router pages and layouts
-├── components/       # Shared React components
-├── hooks/            # Custom React hooks
-├── lib/              # API client functions
-├── shared/types/     # TypeScript types shared between frontend and backend
-└── backend/          # NestJS API server
-    ├── src/
-    │   ├── auth/     # JWT auth, email verification
-    │   ├── invoices/ # Invoice CRUD + PDF generation
-    │   ├── clients/  # Client CRUD
-    │   └── users/    # User profile
-    └── prisma/       # Schema and seed data
-```
-
----
-
-### Local Setup
-
-#### Prerequisites
-
-- Node.js 20+
-- Docker (for local PostgreSQL)
-
-#### 1. Start PostgreSQL
-
-```bash
-docker run --name invoice-postgres \
-  -e POSTGRES_PASSWORD=postgres \
-  -e POSTGRES_DB=invoice_db \
-  -p 5432:5432 -d postgres:15
-```
-
-#### 2. Backend
-
-```bash
-cd backend
-npm install
-# copy .env.example to .env and set DATABASE_URL
-npm run prisma:generate
-npm run prisma:push
-npm run prisma:seed   # optional: seed demo data
-npm run start:dev
-```
-
-Backend runs on `http://localhost:3001`.
-
-#### 3. Frontend
-
-```bash
-npm install
-npm run dev
-```
-
-Frontend runs on `http://localhost:3000`.
-
----
-
-### Environment Variables
-
-**backend/.env**
-
-```
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/invoice_db?schema=public
-JWT_SECRET=your_jwt_secret
-MAIL_HOST=...
-MAIL_USER=...
-MAIL_PASS=...
-FRONTEND_URL=http://localhost:3000
-```
-
-**Frontend (.env.local)**
-
-```
-NEXT_PUBLIC_API_URL=http://localhost:3001
-```
-
----
-
-### API Reference
-
-See [backend/README.md](backend/README.md) for full endpoint documentation.
+[日本語](#日本語) | [English](#english)
 
 ---
 
@@ -257,3 +129,131 @@ NEXT_PUBLIC_API_URL=http://localhost:3001
 ### API
 
 エンドポイントの詳細は [backend/README.md](backend/README.md) を参照してください。
+
+---
+
+## English
+
+A full-stack invoice management web app built as a portfolio project. Supports client management, task-based invoicing, PDF export, and full Japanese / English UI switching.
+
+**Live Demo:** https://invoice-app-phi-lime.vercel.app
+
+> Demo account — Email: `test.carey@example.com` / Password: `test`
+
+---
+
+### Features
+
+- **Landing page** with one-click demo login
+- **Authentication** — register, email verification, login / logout
+- **Client management** — create and delete clients with contact details
+- **Invoice management** — create, edit, delete invoices with itemized task rows
+- **Auto-calculated totals** — rate × hours per task, summed automatically
+- **Invoice preview** — review before saving
+- **PDF export** — A4-format PDF with payment info and signature area
+- **Multi-currency** — JPY, USD, EUR, GBP, AUD
+- **i18n** — full UI switching between Japanese and English; invoice language is set independently per invoice
+
+---
+
+### Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend framework | Next.js 16 (App Router) |
+| UI library | React 19 |
+| Language | TypeScript 5 |
+| Styling | Tailwind CSS v4 |
+| Internationalisation | i18next 25 + react-i18next |
+| Backend framework | NestJS 11 |
+| ORM | Prisma 5 |
+| Database (production) | PostgreSQL (Supabase) |
+| Deployment | Vercel (frontend) |
+
+---
+
+### Architecture
+
+```
+invoice-app/
+├── app/              # Next.js App Router pages and layouts
+├── components/       # Shared React components
+├── hooks/            # Custom React hooks
+├── lib/              # API client functions
+├── shared/types/     # TypeScript types shared between frontend and backend
+└── backend/          # NestJS API server
+    ├── src/
+    │   ├── auth/     # JWT auth, email verification
+    │   ├── invoices/ # Invoice CRUD + PDF generation
+    │   ├── clients/  # Client CRUD
+    │   └── users/    # User profile
+    └── prisma/       # Schema and seed data
+```
+
+---
+
+### Local Setup
+
+#### Prerequisites
+
+- Node.js 20+
+- Docker (for local PostgreSQL)
+
+#### 1. Start PostgreSQL
+
+```bash
+docker run --name invoice-postgres \
+  -e POSTGRES_PASSWORD=postgres \
+  -e POSTGRES_DB=invoice_db \
+  -p 5432:5432 -d postgres:15
+```
+
+#### 2. Backend
+
+```bash
+cd backend
+npm install
+# copy .env.example to .env and set DATABASE_URL
+npm run prisma:generate
+npm run prisma:push
+npm run prisma:seed   # optional: seed demo data
+npm run start:dev
+```
+
+Backend runs on `http://localhost:3001`.
+
+#### 3. Frontend
+
+```bash
+npm install
+npm run dev
+```
+
+Frontend runs on `http://localhost:3000`.
+
+---
+
+### Environment Variables
+
+**backend/.env**
+
+```
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/invoice_db?schema=public
+JWT_SECRET=your_jwt_secret
+MAIL_HOST=...
+MAIL_USER=...
+MAIL_PASS=...
+FRONTEND_URL=http://localhost:3000
+```
+
+**Frontend (.env.local)**
+
+```
+NEXT_PUBLIC_API_URL=http://localhost:3001
+```
+
+---
+
+### API Reference
+
+See [backend/README.md](backend/README.md) for full endpoint documentation.
