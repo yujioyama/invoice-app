@@ -12,6 +12,7 @@
     "prisma:migrate:deploy": "prisma migrate deploy --schema prisma/schema.prisma",
     "prisma:push": "prisma db push --schema prisma/schema.prisma",
     "prisma:studio": "prisma studio --schema prisma/schema.prisma",
+    "prisma:seed:demo": "ts-node prisma/addDemoInvoices.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "prisma": {
