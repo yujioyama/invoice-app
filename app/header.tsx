@@ -23,6 +23,12 @@ export default function Header() {
     [],
   );
 
+  const toggleLanguage = async () => {
+    const nextLang = i18n.language === "ja" ? "en" : "ja";
+    await i18n.changeLanguage(nextLang);
+    localStorage.setItem("lang", nextLang);
+  };
+
   useEffect(() => {
     if (noAuthPages.includes(pathname)) return;
 
@@ -38,7 +44,21 @@ export default function Header() {
     fetchUser();
   }, [pathname, noAuthPages]);
 
-  if (noAuthPages.includes(pathname)) return null;
+  if (noAuthPages.includes(pathname)) {
+    return (
+      <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
+        <div className="mx-auto flex h-16 max-w-4xl items-center justify-end px-4 sm:px-8">
+          <button
+            onClick={toggleLanguage}
+            className="btn btn-ghost"
+            title={t("language.switchTitle")}
+          >
+            {t("language.toggle")}
+          </button>
+        </div>
+      </header>
+    );
+  }
 
   const handleHeaderClick = () => {
     if (user.id) {
@@ -57,12 +77,6 @@ export default function Header() {
     } catch (err: unknown) {
       console.error("Logout failed", err);
     }
-  };
-
-  const toggleLanguage = async () => {
-    const nextLang = i18n.language === "ja" ? "en" : "ja";
-    await i18n.changeLanguage(nextLang);
-    localStorage.setItem("lang", nextLang);
   };
 
   return (
