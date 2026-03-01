@@ -218,6 +218,11 @@
       "taiwan": "台湾 (+886)"
     }
   },
+  "notFound": {
+    "title": "ページが見つかりません",
+    "subtitle": "お探しのページは存在しません。",
+    "backHome": "ダッシュボードへ戻る"
+  },
   "invoicePdf": {
     "invoice": "請求書",
     "billedTo": "請求先",

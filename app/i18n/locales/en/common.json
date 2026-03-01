@@ -218,6 +218,11 @@
       "taiwan": "Taiwan (+886)"
     }
   },
+  "notFound": {
+    "title": "Page not found",
+    "subtitle": "The page you're looking for doesn't exist.",
+    "backHome": "Back to Dashboard"
+  },
   "invoicePdf": {
     "invoice": "INVOICE",
     "billedTo": "BILLED TO",
