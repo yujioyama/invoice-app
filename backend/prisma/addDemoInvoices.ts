@@ -75,10 +75,11 @@ async function main() {
   await prisma.invoice.deleteMany({ where: { userId: demoUser.id } });
   await prisma.client.deleteMany({ where: { userId: demoUser.id } });
 
-  // --- Create 10 Japanese clients ---
+  // --- Create 10 clients (5 Japanese, 5 international) ---
   console.log("Creating 10 clients...");
   const clients = [];
-  for (let i = 0; i < 10; i++) {
+
+  for (let i = 0; i < 5; i++) {
     const client = await prisma.client.create({
       data: {
         name: fakerJA.company.name(),
@@ -86,6 +87,22 @@ async function main() {
         phone: fakerJA.phone.number(),
         address: fakerJA.location.streetAddress(),
         country: "日本",
+        userId: demoUser.id,
+        createdAt: faker.date.past({ years: 2 }),
+        updatedAt: new Date(),
+      },
+    });
+    clients.push(client);
+  }
+
+  for (let i = 0; i < 5; i++) {
+    const client = await prisma.client.create({
+      data: {
+        name: faker.company.name(),
+        email: faker.internet.email(),
+        phone: faker.phone.number(),
+        address: faker.location.streetAddress(),
+        country: faker.location.country(),
         userId: demoUser.id,
         createdAt: faker.date.past({ years: 2 }),
         updatedAt: new Date(),
