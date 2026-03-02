@@ -1,9 +1,51 @@
 import { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import puppeteer, { Browser } from "puppeteer";
+import type { Browser } from "puppeteer";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+
+const isVercelRuntime =
+  process.env.VERCEL === "1" ||
+  process.env.VERCEL === "true" ||
+  Boolean(process.env.AWS_LAMBDA_FUNCTION_NAME);
+
+async function launchBrowser(): Promise<Browser> {
+  const executablePathFromEnv =
+    process.env.PUPPETEER_EXECUTABLE_PATH || process.env.CHROME_EXECUTABLE_PATH;
+
+  if (isVercelRuntime) {
+    const puppeteerCoreImport = await import("puppeteer-core");
+    const puppeteerCore = puppeteerCoreImport.default ?? puppeteerCoreImport;
+    const chromiumImport = await import("@sparticuz/chromium");
+    const chromium = chromiumImport.default ?? chromiumImport;
+
+    const executablePath =
+      executablePathFromEnv ?? (await chromium.executablePath());
+
+    const headless: boolean | "shell" | undefined =
+      typeof chromium.headless === "string"
+        ? chromium.headless === "shell"
+          ? "shell"
+          : true
+        : chromium.headless;
+
+    return (await puppeteerCore.launch({
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath,
+      headless,
+    })) as unknown as Browser;
+  }
+
+  const puppeteerImport = await import("puppeteer");
+  const puppeteer = puppeteerImport.default ?? puppeteerImport;
+
+  return await puppeteer.launch({
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    executablePath: executablePathFromEnv,
+  });
+}
 
 export async function GET(
   req: NextRequest,
@@ -19,9 +61,7 @@ export async function GET(
   const url = `${origin}/invoices/${id}`;
   let browser: Browser | null = null;
   try {
-    browser = await puppeteer.launch({
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    });
+    browser = await launchBrowser();
     const page = await browser.newPage();
     const cookieHeader = req.headers.get("cookie");
     if (cookieHeader) {
