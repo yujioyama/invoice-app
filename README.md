@@ -6,7 +6,7 @@
 
 ## 日本語
 
-フルスタック構成の請求書管理Webアプリです。クライアント管理・タスクベースの請求書作成・PDF出力・日英UI切替に対応しています。
+ワーキングホリデーで勤務していたオーストラリアの企業と、帰国後に業務委託契約を締結。その請求書発行を自動化するために開発したフルスタックWebアプリです。現在も実際の業務で使用しています。クライアント管理・タスクベースの請求書作成・PDF出力・日英UI切替に対応しています。
 
 **デモ:** https://invoice-app-phi-lime.vercel.app
 
@@ -134,7 +134,7 @@ NEXT_PUBLIC_API_URL=http://localhost:3001
 
 ## English
 
-A full-stack invoice management web app built as a portfolio project. Supports client management, task-based invoicing, PDF export, and full Japanese / English UI switching.
+A full-stack invoice management web app built to automate invoicing for a freelance contract with an Australian company where I previously worked during my working holiday. After returning to Japan, I continued working with them remotely and built this app to handle the billing workflow. Still actively used in production. Supports client management, task-based invoicing, PDF export, and full Japanese / English UI switching.
 
 **Live Demo:** https://invoice-app-phi-lime.vercel.app
 

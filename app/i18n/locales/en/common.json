@@ -183,6 +183,8 @@
     "updated": "Profile updated",
     "updateFailed": "Failed to update profile",
     "name": "Name",
+    "firstName": "First Name",
+    "lastName": "Last Name",
     "countryCode": "Country Code",
     "countryCodePlaceholder": "Select country code...",
     "phone": "Phone",

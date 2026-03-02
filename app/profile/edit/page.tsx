@@ -94,6 +94,22 @@ export default function ProfileEditPage() {
           <input className="input w-full" value={user.name || ""} readOnly />
         </div>
         <div>
+          <label className="label">{t("profile.firstName")}</label>
+          <input
+            className="input w-full"
+            value={user.firstName || ""}
+            onChange={(e) => setUser({ ...user, firstName: e.target.value })}
+          />
+        </div>
+        <div>
+          <label className="label">{t("profile.lastName")}</label>
+          <input
+            className="input w-full"
+            value={user.lastName || ""}
+            onChange={(e) => setUser({ ...user, lastName: e.target.value })}
+          />
+        </div>
+        <div>
           <label className="label">
             {t("profile.countryCode")}
           </label>

@@ -9,6 +9,6 @@ export function formatCurrency(
   return new Intl.NumberFormat(locale, {
     style: "currency",
     currency,
-    currencyDisplay: "symbol",
+    currencyDisplay: "narrowSymbol",
   }).format(safeAmount);
 }

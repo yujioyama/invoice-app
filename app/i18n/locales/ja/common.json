@@ -183,6 +183,8 @@
     "updated": "プロフィールを更新しました",
     "updateFailed": "プロフィールの更新に失敗しました",
     "name": "名前",
+    "firstName": "名",
+    "lastName": "姓",
     "countryCode": "国番号",
     "countryCodePlaceholder": "国番号を選択...",
     "phone": "電話番号",
