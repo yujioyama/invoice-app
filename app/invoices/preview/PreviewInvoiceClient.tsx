@@ -14,6 +14,21 @@ import { useTranslation } from "react-i18next";
 import type { Currency, InvoiceLanguage, Task } from "@/shared/types/Invoice";
 import { useAsyncAction } from "@/hooks/useAsyncAction";
 
+const PDF_PAYLOAD_STORAGE_KEY = "invoice_pdf_payload_v1";
+
+type PdfPayload = {
+  invoice: {
+    name: string;
+    createdAt: string;
+    currency: Currency;
+    language: InvoiceLanguage;
+  };
+  tasks: Task[];
+  client: Client | null;
+  user: User | null;
+  bankAccount: BankAccount | null;
+};
+
 export default function PreviewInvoiceClient() {
   const { t } = useTranslation();
   const searchParams = useSearchParams();
@@ -22,13 +37,30 @@ export default function PreviewInvoiceClient() {
   const [userId, setUserId] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [bankAccount, setBankAccount] = useState<BankAccount | null>(null);
+  const [pdfPayload, setPdfPayload] = useState<PdfPayload | null>(null);
 
   const { run: saveInvoice, loading: saving } = useAsyncAction(createInvoice);
 
   // PDF出力対象の内容を参照
   const invoiceRef = useRef<HTMLDivElement>(null);
 
+  const isPdfMode = searchParams.get("pdf") === "1";
+
   useEffect(() => {
+    if (!isPdfMode) return;
+    try {
+      const raw = window.localStorage.getItem(PDF_PAYLOAD_STORAGE_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw) as PdfPayload;
+      setPdfPayload(parsed);
+      window.localStorage.removeItem(PDF_PAYLOAD_STORAGE_KEY);
+    } catch (error) {
+      console.error("Failed to parse PDF payload:", error);
+    }
+  }, [isPdfMode]);
+
+  useEffect(() => {
+    if (isPdfMode) return;
     async function fetchUser() {
       const data = await getMyDetails();
       const fetchedUser = data?.user ?? null;
@@ -37,21 +69,32 @@ export default function PreviewInvoiceClient() {
       setBankAccount(fetchedUser?.bankAccounts?.[0] ?? null);
     }
     fetchUser();
-  }, []);
+  }, [isPdfMode]);
 
   // URLクエリから各種パラメータを取得
-  const tasks = JSON.parse(searchParams.get("tasks") || "[]") as Task[];
-  const invoiceName = searchParams.get("name") || t("invoicePreview.untitled");
-  const createdAt = searchParams.get("createdAt") || new Date().toISOString();
+  const tasks = isPdfMode
+    ? (pdfPayload?.tasks ?? [])
+    : (JSON.parse(searchParams.get("tasks") || "[]") as Task[]);
+  const invoiceName = isPdfMode
+    ? (pdfPayload?.invoice.name ?? "")
+    : searchParams.get("name") || t("invoicePreview.untitled");
+  const createdAt = isPdfMode
+    ? (pdfPayload?.invoice.createdAt ?? new Date().toISOString())
+    : searchParams.get("createdAt") || new Date().toISOString();
   const clientId = searchParams.get("clientId") || "";
-  const currency = (searchParams.get("currency") as Currency) || "JPY";
-  const language = (searchParams.get("language") as InvoiceLanguage) || "en";
+  const currency = isPdfMode
+    ? (pdfPayload?.invoice.currency ?? "JPY")
+    : (searchParams.get("currency") as Currency) || "JPY";
+  const language = isPdfMode
+    ? (pdfPayload?.invoice.language ?? "en")
+    : (searchParams.get("language") as InvoiceLanguage) || "en";
   const grandTotal = tasks.reduce(
     (sum, task) => sum + task.rate * task.hours,
     0,
   );
 
   useEffect(() => {
+    if (isPdfMode) return;
     async function fetchClient() {
       if (!clientId) {
         setClient(null);
@@ -66,7 +109,13 @@ export default function PreviewInvoiceClient() {
       }
     }
     fetchClient();
-  }, [clientId]);
+  }, [clientId, isPdfMode]);
+
+  const effectiveClient = isPdfMode ? (pdfPayload?.client ?? null) : client;
+  const effectiveUser = isPdfMode ? (pdfPayload?.user ?? null) : user;
+  const effectiveBankAccount = isPdfMode
+    ? (pdfPayload?.bankAccount ?? null)
+    : bankAccount;
 
   // プレビューからAPIで保存して詳細画面へ遷移
   const handleSave = async () => {
@@ -125,17 +174,19 @@ export default function PreviewInvoiceClient() {
 
       {/* PDF出力対象要素 */}
       <InvoiceLanguageProvider language={language}>
-        <InvoiceDocument
-          ref={invoiceRef}
-          invoiceName={invoiceName}
-          createdAt={createdAt}
-          tasks={tasks}
-          grandTotal={grandTotal}
-          currency={currency}
-          client={client}
-          user={user}
-          bankAccount={bankAccount}
-        />
+        {isPdfMode && !pdfPayload ? null : (
+          <InvoiceDocument
+            ref={invoiceRef}
+            invoiceName={invoiceName}
+            createdAt={createdAt}
+            tasks={tasks}
+            grandTotal={grandTotal}
+            currency={currency}
+            client={effectiveClient}
+            user={effectiveUser}
+            bankAccount={effectiveBankAccount}
+          />
+        )}
       </InvoiceLanguageProvider>
     </div>
   );

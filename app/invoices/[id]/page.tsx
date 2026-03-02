@@ -32,7 +32,22 @@ export default function InvoiceDetailPage({
   const downloadPDF = async () => {
     if (!invoice) return;
     try {
-      const res = await fetch(`/api/invoices/${resolvedParams.id}/pdf`);
+      const res = await fetch(`/api/invoices/${resolvedParams.id}/pdf`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          invoice: {
+            name: invoice.name,
+            createdAt: invoice.createdAt,
+            currency: invoice.currency,
+            language: invoice.language ?? "en",
+          },
+          tasks,
+          client,
+          user,
+          bankAccount,
+        }),
+      });
       if (!res.ok) throw new Error("PDF download failed");
       const blob = await res.blob();
       const objectUrl = URL.createObjectURL(blob);
