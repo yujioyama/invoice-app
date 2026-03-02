@@ -19,19 +19,12 @@ export async function GET(
   const url = `${origin}/invoices/${id}`;
   let browser: Browser | null = null;
   try {
-    // Launch Puppeteer (headless Chrome) with sandbox disabled for compatibility with most server environments (e.g., Vercel, Docker, some Linux servers).
-    // --no-sandbox and --disable-setuid-sandbox are required in many cloud/serverless environments where Chrome's sandbox cannot be used.
-    // Only use this in trusted environments, as disabling the sandbox reduces security.
     browser = await puppeteer.launch({
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
-
     const page = await browser.newPage();
-
-    // 認証クッキーをPuppeteerに渡す
     const cookieHeader = req.headers.get("cookie");
     if (cookieHeader) {
-      // cookieHeader例: "token=xxxx; other=yyy"
       const cookies = cookieHeader.split(";").map((c) => {
         const [name, ...rest] = c.trim().split("=");
         return {
@@ -43,14 +36,8 @@ export async function GET(
       });
       await page.setCookie(...cookies);
     }
-
-    // Wait until there are no more than 0 network connections for at least 500ms.
-    // This ensures the page and all its resources (images, fonts, API calls) are fully loaded before rendering the PDF.
     await page.goto(url, { waitUntil: "networkidle0" });
-
     await page.waitForSelector("#invoice-pdf", { timeout: 30_000 });
-
-    // InvoiceDocumentだけ残す（スタイルはページ側のCSSを利用する）
     await page.evaluate(() => {
       const el = document.querySelector("#invoice-pdf");
       if (!el) throw new Error("#invoice-pdf not found");
@@ -59,9 +46,6 @@ export async function GET(
       document.body.style.background = "#ffffff";
       document.body.style.margin = "0";
     });
-
-    // TODO
-    // PDF時の見た目を確実に揃える（print CSSが効かない環境でも適用される）
     await page.addStyleTag({
       content: `
         #invoice-pdf {
@@ -75,19 +59,14 @@ export async function GET(
         #invoice-pdf .invoice-footer { margin-top: auto !important; }
       `,
     });
-
-    // フォント読み込み完了を待つ
     await page.evaluate(() => document.fonts?.ready ?? Promise.resolve());
-
     await page.emulateMediaType("print");
-
     const pdfBuffer = await page.pdf({
       format: "A4",
       printBackground: true,
       margin: { top: "0mm", bottom: "0mm", left: "0mm", right: "0mm" },
     });
     await page.close();
-
     const pdfBytes = new Uint8Array(pdfBuffer.byteLength);
     pdfBytes.set(pdfBuffer);
     const pdfBlob = new Blob([pdfBytes], { type: "application/pdf" });
@@ -98,8 +77,16 @@ export async function GET(
         "Content-Disposition": "attachment; filename=invoice-" + id + ".pdf",
       },
     });
-  } catch {
-    return new NextResponse("Failed to generate PDF", { status: 500 });
+  } catch (err) {
+    // Detailed error logging for debugging
+    console.error("PDF generation error:", err);
+    let errorMessage = "Failed to generate PDF";
+    if (err instanceof Error) {
+      errorMessage += ": " + err.message;
+    } else if (typeof err === "string") {
+      errorMessage += ": " + err;
+    }
+    return new NextResponse(errorMessage, { status: 500 });
   } finally {
     if (browser) await browser.close();
   }
