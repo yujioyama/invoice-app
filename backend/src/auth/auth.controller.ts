@@ -14,6 +14,7 @@ import { RegisterDto } from "./dto/register.dto";
 import { LoginDto } from "./dto/login.dto";
 import { Response } from "express";
 import { JwtAuthGuard } from "./jwt-auth.guard";
+import { ApiTags, ApiOperation, ApiBearerAuth } from "@nestjs/swagger";
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -29,10 +30,12 @@ const COOKIE_OPTIONS = {
   // Cookie expiration time in milliseconds (here: 7 days)
   maxAge: 7 * 24 * 60 * 60 * 1000,
 };
+@ApiTags("Auth")
 @Controller("auth")
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @ApiOperation({ summary: "register a new user" })
   @Post("register")
   async register(@Body() dto: RegisterDto, @Res() res: Response) {
     const { token, user } = await this.authService.register(dto);
@@ -40,11 +43,13 @@ export class AuthController {
     return res.json({ user });
   }
 
+  @ApiOperation({ summary: "verify email address" })
   @Get("verifyEmail")
   async verifyEmail(@Query("token") token: string) {
     return this.authService.verifyEmail(token);
   }
 
+  @ApiOperation({ summary: "login a user" })
   @Post("login")
   async login(@Body() dto: LoginDto, @Res() res: Response) {
     const { token, user } = await this.authService.login(dto);
@@ -52,18 +57,21 @@ export class AuthController {
     return res.json({ user });
   }
 
+  @ApiOperation({ summary: "logout a user" })
   @Post("logout")
   async logout(@Res() res: Response) {
     res.clearCookie("token", COOKIE_OPTIONS);
     return res.json({ message: "Logged out" });
   }
 
+  @ApiOperation({ summary: "get current authenticated user" })
   @Get("me")
   @UseGuards(JwtAuthGuard)
   async getMe(@Request() req) {
     return { user: req.user };
   }
 
+  @ApiOperation({ summary: "get current authenticated user's details" })
   @Get("me/details")
   @UseGuards(JwtAuthGuard)
   async getMyDetails(@Request() req) {
@@ -71,6 +79,7 @@ export class AuthController {
     return { user };
   }
 
+  @ApiOperation({ summary: "update current authenticated user's details" })
   @Patch("me/details")
   @UseGuards(JwtAuthGuard)
   async updateMyDetails(@Request() req, @Body() data: any) {

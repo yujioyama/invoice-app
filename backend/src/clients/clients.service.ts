@@ -1,16 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import type { CreateClientInput } from "@shared/types/Client";
+import { UpdateClientDto } from "./dto/update-client.dto";
 
 export type CreateClientDto = CreateClientInput;
-
-export interface UpdateClientDto {
-  name?: string;
-  email?: string;
-  phone?: string;
-  address?: string;
-  country?: string;
-}
 
 @Injectable()
 export class ClientsService {
