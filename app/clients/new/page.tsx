@@ -1,54 +1,52 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { createClient, Client } from "@/lib/apiClients";
+import { useForm } from "react-hook-form";
+import { createClient } from "@/lib/apiClients";
 import { getMe } from "@/lib/apiAuth";
 import { useTranslation } from "react-i18next";
-import { useAsyncAction } from "@/hooks/useAsyncAction";
 import toast from "react-hot-toast";
 
-export default function NewInvoicePage() {
+type ClientFormData = {
+  name: string;
+  address: string;
+  country: string;
+  email: string;
+  phone: string;
+};
+
+export default function NewClientPage() {
   const { t } = useTranslation();
   const router = useRouter();
-  const [client, setClient] = useState<Client>({
-    id: "",
-    name: "",
-    email: "",
-    address: "",
-    phone: "",
-    country: "",
-  });
-  const [user, setUser] = useState<{ id?: string }>({});
+  const [userId, setUserId] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
 
-  const { run: saveClient, loading: saving } = useAsyncAction(createClient);
+  // react-hook-form の初期化
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ClientFormData>();
 
   useEffect(() => {
-    async function fetchUser() {
-      const data = await getMe();
-      if (data?.user) {
-        setUser(data.user);
-      }
-    }
-    fetchUser();
+    getMe().then((data) => {
+      if (data?.user?.id) setUserId(data.user.id);
+    });
   }, []);
 
-  const isValid = useMemo(() => {
-    return client.name.trim() !== "" && client.address!.trim() !== "";
-  }, [client]);
-
-  const handleSave = async () => {
+  // react-hook-form collects form data and calls onSubmit when the form is submitted
+  const onSubmit = async (data: ClientFormData) => {
     try {
-      if (!user.id) throw new Error(t("invoicePreview.userSessionNotFound"));
-      await saveClient({
-        userId: user.id,
-        ...client,
-      });
-
-      router.push(`/clients`);
+      if (!userId) throw new Error(t("invoicePreview.userSessionNotFound"));
+      setSaving(true);
+      await createClient({ userId, ...data });
+      router.push("/clients");
     } catch (error) {
       console.error("Failed to save client:", error);
       toast.error(t("clients.saveFailedWithBackend"));
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -61,40 +59,46 @@ export default function NewInvoicePage() {
             <p className="subtitle">{t("clients.subtitle")}</p>
           </div>
 
-          <div className="card-body">
+          <form onSubmit={handleSubmit(onSubmit)} className="card-body">
             {/* Name */}
             <div className="mb-6">
               <label className="label">{t("clients.name")}</label>
               <input
+                {...register("name", { required: "名前は必須です" })}
                 type="text"
-                value={client.name}
-                onChange={(e) => setClient({ ...client, name: e.target.value })}
                 placeholder={t("clients.namePlaceholder")}
                 className="input"
               />
+              {/* インラインエラー表示 */}
+              {errors.name && (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.name.message}
+                </p>
+              )}
             </div>
+
             {/* Address */}
             <div className="mb-6">
               <label className="label">{t("clients.address")}</label>
               <input
+                {...register("address", { required: "住所は必須です" })}
                 type="text"
-                value={client.address}
-                onChange={(e) =>
-                  setClient({ ...client, address: e.target.value })
-                }
                 placeholder={t("clients.addressPlaceholder")}
                 className="input"
               />
+              {errors.address && (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.address.message}
+                </p>
+              )}
             </div>
+
             {/* Country */}
             <div className="mb-6">
               <label className="label">{t("clients.country")}</label>
               <input
+                {...register("country")}
                 type="text"
-                value={client.country}
-                onChange={(e) =>
-                  setClient({ ...client, country: e.target.value })
-                }
                 placeholder={t("clients.countryPlaceholder")}
                 className="input"
               />
@@ -104,24 +108,29 @@ export default function NewInvoicePage() {
             <div className="mb-6">
               <label className="label">{t("clients.email")}</label>
               <input
+                {...register("email", {
+                  pattern: {
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    message: "正しいメールアドレスを入力してください",
+                  },
+                })}
                 type="email"
-                value={client.email}
-                onChange={(e) =>
-                  setClient({ ...client, email: e.target.value })
-                }
                 placeholder={t("clients.emailPlaceholder")}
                 className="input"
               />
+              {errors.email && (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.email.message}
+                </p>
+              )}
             </div>
+
             {/* Phone */}
             <div className="mb-6">
               <label className="label">{t("clients.phone")}</label>
               <input
+                {...register("phone")}
                 type="text"
-                value={client.phone}
-                onChange={(e) =>
-                  setClient({ ...client, phone: e.target.value })
-                }
                 placeholder={t("clients.phonePlaceholder")}
                 className="input"
               />
@@ -130,20 +139,21 @@ export default function NewInvoicePage() {
             {/* Action Buttons */}
             <div className="flex gap-4 pb-9">
               <button
-                onClick={handleSave}
-                disabled={!isValid || saving}
+                type="submit"
+                disabled={saving}
                 className="btn btn-primary"
               >
                 {saving ? t("clients.saving") : t("clients.saveContinue")}
               </button>
               <button
+                type="button"
                 onClick={() => router.push("/clients")}
                 className="btn btn-ghost"
               >
                 {t("clients.list")}
               </button>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>

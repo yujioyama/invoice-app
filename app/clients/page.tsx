@@ -98,7 +98,9 @@ export default function InvoicesListPage() {
                   <tbody>
                     {clients.map((client) => (
                       <tr key={client.id}>
-                        <td className="font-medium text-slate-900">{client.name}</td>
+                        <td className="font-medium text-slate-900">
+                          {client.name}
+                        </td>
                         <td className="text-slate-500">{client.email}</td>
                         <td className="text-slate-500">{client.phone}</td>
                         <td className="text-slate-500">{client.address}</td>
@@ -110,14 +112,14 @@ export default function InvoicesListPage() {
                               }
                               className="btn btn-secondary"
                             >
-                              {t("invoiceDetail.edit")}
+                              {t("clientDetail.edit")}
                             </button>
                             <button
                               onClick={() => handleDeleteClient(client.id)}
                               className="btn btn-danger"
                               disabled={deletingId === client.id}
                             >
-                              {t("clients.delete")}
+                              {t("clientDetail.delete")}
                             </button>
                           </div>
                         </td>
