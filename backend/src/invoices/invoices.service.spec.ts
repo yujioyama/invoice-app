@@ -118,4 +118,63 @@ describe("InvoicesService", () => {
       });
     });
   });
+
+  describe("update", () => {
+    it("既存のタスクを削除してから請求書を更新する", async () => {
+      // 準備:
+      // mockPrismaService.task.deleteMany に何かを返させる
+      mockPrismaService.task.deleteMany.mockResolvedValue({ count: 1 });
+      // mockPrismaService.invoice.update に何かを返させる
+      const mockUpdatedInvoice = {
+        id: "invoice-1",
+        userId: "user-1",
+        title: "Updated Invoice",
+        tasks: [
+          {
+            id: "task-1",
+            invoiceId: "invoice-1",
+            name: "Task 1",
+            rate: 27,
+            hours: 1,
+          },
+        ],
+      };
+      mockPrismaService.invoice.update.mockResolvedValue(mockUpdatedInvoice);
+
+      // 実行
+      const result = await service.update("invoice-1", {
+        name: "Updated Invoice",
+        clientId: "client-1",
+        tasks: [
+          {
+            name: "Task 1",
+            rate: 27,
+            hours: 1,
+          },
+        ],
+      });
+
+      expect(mockPrismaService.task.deleteMany).toHaveBeenCalledWith({
+        where: { invoiceId: "invoice-1" },
+      });
+      expect(mockPrismaService.invoice.update).toHaveBeenCalledWith({
+        where: { id: "invoice-1" },
+        data: {
+          name: "Updated Invoice",
+          clientId: "client-1",
+          tasks: {
+            create: [
+              {
+                name: "Task 1",
+                rate: 27,
+                hours: 1,
+              },
+            ],
+          },
+        },
+        include: { tasks: true, client: true },
+      });
+      expect(result).toEqual(mockUpdatedInvoice);
+    });
+  });
 });
