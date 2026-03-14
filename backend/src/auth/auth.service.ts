@@ -60,7 +60,7 @@ export class AuthService {
         from: "onboarding@resend.dev", // 最初はこれでOK
         to: user.email,
         subject: "メールアドレス確認",
-        text: `下記URLをクリックして認証してください: https://invoice-app-phi-lime.vercel.app/auth/verifyEmail?token=${verificationToken}`,
+        text: `下記URLをクリックして認証してください: ${process.env.FRONTEND_URL}/auth/verifyEmail?token=${verificationToken}`,
       });
     } catch (error) {
       console.error("MAIL_USER:", process.env.MAIL_USER);
