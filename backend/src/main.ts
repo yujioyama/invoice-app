@@ -3,6 +3,7 @@ import { AppModule } from "./app.module";
 import cookieParser from "cookie-parser";
 import { HttpExceptionLoggerFilter } from "./filters/http-exception-logger.filter";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import { ValidationPipe } from "@nestjs/common";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule); // create NestJS application instance using the root module (AppModule) that defines the application's structure and dependencies.
@@ -12,6 +13,11 @@ async function bootstrap() {
   // applying a global filter to log HTTP exceptions that occur during request processing.
   // This filter will catch any HttpException thrown in the application, log the details of the exception (like HTTP method, URL, status code, and message),and then show it in the terminal or send a structured JSON response back to the client.
   app.useGlobalFilters(new HttpExceptionLoggerFilter());
+
+  // Apply a global validation pipe to all incoming requests.
+  // whitelist: true removes properties not defined in DTOs.
+  // transform: true converts payloads to DTO types for type-safe validation.
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
   // allowing cross-origin requests from any origin and enabling credentials (like cookies) to be included in cross-origin requests.
   // This is important for frontend applications that need to communicate with this backend server from a different domain.
