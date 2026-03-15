@@ -15,6 +15,7 @@ import { LoginDto } from "./dto/login.dto";
 import { Response } from "express";
 import { JwtAuthGuard } from "./jwt-auth.guard";
 import { ApiTags, ApiOperation, ApiBearerAuth } from "@nestjs/swagger";
+import { ThrottlerGuard, Throttle } from "@nestjs/throttler";
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -36,6 +37,8 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @ApiOperation({ summary: "register a new user" })
+  @Throttle({ default: { ttl: 60000, limit: 5 } })
+  @UseGuards(ThrottlerGuard)
   @Post("register")
   async register(@Body() dto: RegisterDto, @Res() res: Response) {
     const { token, user } = await this.authService.register(dto);
@@ -50,6 +53,8 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: "login a user" })
+  @Throttle({ default: { ttl: 60000, limit: 5 } })
+  @UseGuards(ThrottlerGuard)
   @Post("login")
   async login(@Body() dto: LoginDto, @Res() res: Response) {
     const { token, user } = await this.authService.login(dto);

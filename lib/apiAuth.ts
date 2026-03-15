@@ -16,6 +16,8 @@ export async function register(email: string, name: string, password: string) {
     body: JSON.stringify({ email, name, password }),
     credentials: "include",
   });
+  if (res.status === 429)
+    throw new Error("Too many attempts. Please try again after 1 minute.");
   if (!res.ok) throw new Error("failed to register");
   return res.json();
 }
@@ -27,6 +29,10 @@ export async function login(email: string, password: string) {
     body: JSON.stringify({ email, password }),
     credentials: "include",
   });
+  if (res.status === 429)
+    throw new Error(
+      "Too many login attempts. Please try again after 1 minute.",
+    );
   if (!res.ok) throw new Error("failed to login");
   return res.json();
 }

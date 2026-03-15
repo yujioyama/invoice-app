@@ -4,10 +4,21 @@ import { InvoicesModule } from "./invoices/invoices.module";
 import { ClientsModule } from "./clients/clients.module";
 import { AuthModule } from "./auth/auth.module";
 import { LoggerMiddleware } from "./middleware/logger.middleware";
-import { HttpExceptionLoggerFilter } from "./filters/http-exception-logger.filter";
+import { ThrottlerModule } from "@nestjs/throttler";
 
 @Module({
-  imports: [PrismaModule, InvoicesModule, ClientsModule, AuthModule],
+  imports: [
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000, // 60秒間
+        limit: 5, // 最大5回
+      },
+    ]),
+    PrismaModule,
+    InvoicesModule,
+    ClientsModule,
+    AuthModule,
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
