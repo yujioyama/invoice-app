@@ -45,13 +45,14 @@ export default function RegisterPage() {
   return (
     <div className="page flex items-center justify-center">
       <form onSubmit={handleSubmit} className="card w-full max-w-sm p-8">
-        <h1 className="title mb-7 text-center">
-          {t("auth.register.title")}
-        </h1>
+        <h1 className="title mb-7 text-center">{t("auth.register.title")}</h1>
         <div className="mb-4">
-          <label className="label">{t("auth.register.email")}</label>
+          <label className="label" htmlFor="email">
+            {t("auth.register.email")}
+          </label>
           <input
             type="email"
+            id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="input"
@@ -59,9 +60,12 @@ export default function RegisterPage() {
           />
         </div>
         <div className="mb-4">
-          <label className="label">{t("auth.register.name")}</label>
+          <label className="label" htmlFor="name">
+            {t("auth.register.name")}
+          </label>
           <input
             type="text"
+            id="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="input"
@@ -69,10 +73,13 @@ export default function RegisterPage() {
           />
         </div>
         <div className="mb-4">
-          <label className="label">{t("auth.register.password")}</label>
+          <label className="label" htmlFor="password">
+            {t("auth.register.password")}
+          </label>
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
+              id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="input pr-10"
@@ -136,10 +143,13 @@ export default function RegisterPage() {
           </div>
         </div>
         <div className="mb-6">
-          <label className="label">{t("auth.register.confirmPassword")}</label>
+          <label className="label" htmlFor="confirm">
+            {t("auth.register.confirmPassword")}
+          </label>
           <div className="relative">
             <input
               type={showConfirm ? "text" : "password"}
+              id="confirm"
               value={confirm}
               onChange={(e) => setConfirm(e.target.value)}
               className="input pr-10"

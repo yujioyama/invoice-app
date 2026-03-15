@@ -46,9 +46,7 @@ export default function LoginPage() {
   return (
     <div className="page flex items-center justify-center">
       <div className="card w-full max-w-sm p-8">
-        <h1 className="title mb-7 text-center">
-          {t("auth.login.title")}
-        </h1>
+        <h1 className="title mb-7 text-center">{t("auth.login.title")}</h1>
 
         {/* デモボタン */}
         <button
@@ -62,15 +60,20 @@ export default function LoginPage() {
 
         <div className="relative mb-5 flex items-center gap-3">
           <div className="h-px flex-1 bg-slate-200" />
-          <span className="text-xs text-slate-400">{t("auth.login.demoOr")}</span>
+          <span className="text-xs text-slate-400">
+            {t("auth.login.demoOr")}
+          </span>
           <div className="h-px flex-1 bg-slate-200" />
         </div>
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="label">{t("auth.login.email")}</label>
+            <label className="label" htmlFor="email">
+              {t("auth.login.email")}
+            </label>
             <input
               type="email"
+              id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="input"
@@ -79,9 +82,12 @@ export default function LoginPage() {
             />
           </div>
           <div className="mb-6">
-            <label className="label">{t("auth.login.password")}</label>
+            <label className="label" htmlFor="password">
+              {t("auth.login.password")}
+            </label>
             <input
               type="password"
+              id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="input"

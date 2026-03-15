@@ -97,3 +97,7 @@ invoice-app/
 ## language
 
 - comments, words to be used should be English
+
+## Instruction style
+
+- When guiding the user to edit a file, show only the changed lines with surrounding context — never the entire file
