@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import type { CreateInvoiceInput } from "../../../shared/types/Invoice";
 
@@ -41,15 +41,19 @@ export class InvoicesService {
     });
   }
 
-  async findOne(id: string) {
-    return this.prisma.invoice.findUnique({
+  async findOne(id: string, userId: string) {
+    const invoice = await this.prisma.invoice.findUnique({
       where: { id },
       include: { tasks: true, client: true },
     });
+    if (!invoice || invoice.userId !== userId) {
+      throw new NotFoundException("Invoice not found");
+    }
+    return invoice;
   }
 
-  async update(id: string, data: UpdateInvoiceDto) {
-    // 既存のタスクを削除して新しいタスクを作成
+  async update(id: string, userId: string, data: UpdateInvoiceDto) {
+    await this.findOne(id, userId);
     await this.prisma.task.deleteMany({ where: { invoiceId: id } });
 
     return this.prisma.invoice.update({
@@ -67,7 +71,8 @@ export class InvoicesService {
     });
   }
 
-  async remove(id: string) {
+  async remove(id: string, userId: string) {
+    await this.findOne(id, userId);
     return this.prisma.invoice.delete({
       where: { id },
     });

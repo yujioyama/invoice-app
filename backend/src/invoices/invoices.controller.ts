@@ -24,14 +24,16 @@ export class InvoicesController {
 
   @ApiOperation({ summary: "create invoice" })
   @Post()
-  create(@Body() createInvoiceDto: CreateInvoiceDto) {
-    return this.invoicesService.create(createInvoiceDto);
+  create(@Body() createInvoiceDto: CreateInvoiceDto, @Request() req: any) {
+    const userId = req.user.id;
+    return this.invoicesService.create({ ...createInvoiceDto, userId });
   }
 
   @ApiOperation({ summary: "get invoice by id" })
   @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.invoicesService.findOne(id);
+  findOne(@Param("id") id: string, @Request() req: any) {
+    const userId = req.user.id;
+    return this.invoicesService.findOne(id, userId);
   }
 
   @ApiOperation({ summary: "get all invoices for the authenticated user" })
@@ -43,13 +45,19 @@ export class InvoicesController {
 
   @ApiOperation({ summary: "update invoice by id" })
   @Patch(":id")
-  update(@Param("id") id: string, @Body() updateInvoiceDto: UpdateInvoiceDto) {
-    return this.invoicesService.update(id, updateInvoiceDto);
+  update(
+    @Param("id") id: string,
+    @Body() updateInvoiceDto: UpdateInvoiceDto,
+    @Request() req: any,
+  ) {
+    const userId = req.user.id;
+    return this.invoicesService.update(id, userId, updateInvoiceDto);
   }
 
   @ApiOperation({ summary: "delete invoice by id" })
   @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.invoicesService.remove(id);
+  remove(@Param("id") id: string, @Request() req: any) {
+    const userId = req.user.id;
+    return this.invoicesService.remove(id, userId);
   }
 }

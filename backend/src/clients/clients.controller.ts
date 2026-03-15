@@ -24,33 +24,38 @@ export class ClientsController {
 
   @ApiOperation({ summary: "create client" })
   @Post()
-  create(@Body() createClientDto: CreateClientDto, @Request() req) {
+  create(@Body() createClientDto: CreateClientDto, @Request() req: any) {
     return this.clientsService.create({
       ...createClientDto,
+      userId: req.user.id,
     });
-  }
-
-  @ApiOperation({ summary: "get client by id" })
-  @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.clientsService.findOne(id);
   }
 
   @ApiOperation({ summary: "get all clients for the authenticated user" })
   @Get()
-  findAll(@Request() req) {
+  findAll(@Request() req: any) {
     return this.clientsService.findAll(req.user.id);
+  }
+
+  @ApiOperation({ summary: "get client by id" })
+  @Get(":id")
+  findOne(@Param("id") id: string, @Request() req: any) {
+    return this.clientsService.findOne(id, req.user.id);
   }
 
   @ApiOperation({ summary: "update client by id" })
   @Patch(":id")
-  update(@Param("id") id: string, @Body() updateClientDto: UpdateClientDto) {
-    return this.clientsService.update(id, updateClientDto);
+  update(
+    @Param("id") id: string,
+    @Body() updateClientDto: UpdateClientDto,
+    @Request() req: any,
+  ) {
+    return this.clientsService.update(id, req.user.id, updateClientDto);
   }
 
   @ApiOperation({ summary: "delete client by id" })
   @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.clientsService.remove(id);
+  remove(@Param("id") id: string, @Request() req: any) {
+    return this.clientsService.remove(id, req.user.id);
   }
 }

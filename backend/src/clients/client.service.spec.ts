@@ -1,7 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { ClientsService } from "./clients.service";
 import { PrismaService } from "../prisma/prisma.service";
-import { InvoicesService } from "../invoices/invoices.service";
+import { NotFoundException } from "@nestjs/common";
 
 const mockPrismaService = {
   client: {
@@ -34,7 +34,6 @@ describe("ClientsService", () => {
   });
 
   describe("findAll", () => {
-    // findAllのテストケースをここに書く
     it("ユーザーの全てのクライアントを取得できる", async () => {
       const mockClient = {
         id: "client-1",
@@ -66,7 +65,6 @@ describe("ClientsService", () => {
   });
 
   describe("findOne", () => {
-    // findOneのテストケースをここに書く
     it("IDでクライアントを取得できる", async () => {
       const mockClient = {
         id: "client-1",
@@ -77,21 +75,32 @@ describe("ClientsService", () => {
       };
       mockPrismaService.client.findUnique.mockResolvedValue(mockClient);
 
-      const result = await service.findOne("client-1");
+      const result = await service.findOne("client-1", "user-1");
       expect(result).toEqual(mockClient);
       expect(mockPrismaService.client.findUnique).toHaveBeenCalledWith({
         where: { id: "client-1" },
       });
     });
 
-    it("存在しないIDの場合はnullを返す", async () => {
+    it("存在しないIDの場合はNotFoundExceptionを投げる", async () => {
       mockPrismaService.client.findUnique.mockResolvedValue(null);
 
-      const result = await service.findOne("non-existent-id");
-      expect(result).toBeNull();
-      expect(mockPrismaService.client.findUnique).toHaveBeenCalledWith({
-        where: { id: "non-existent-id" },
-      });
+      await expect(
+        service.findOne("non-existent-id", "user-1"),
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    it("他のユーザーのクライアントはNotFoundExceptionを投げる", async () => {
+      const mockClient = {
+        id: "client-1",
+        userId: "user-2",
+        name: "Test Client",
+      };
+      mockPrismaService.client.findUnique.mockResolvedValue(mockClient);
+
+      await expect(service.findOne("client-1", "user-1")).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -104,9 +113,10 @@ describe("ClientsService", () => {
         email: "test@example.com",
         phone: "123-456-7890",
       };
+      mockPrismaService.client.findUnique.mockResolvedValue(mockClient);
       mockPrismaService.client.delete.mockResolvedValue(mockClient);
 
-      const result = await service.remove("client-1");
+      const result = await service.remove("client-1", "user-1");
       expect(result).toEqual(mockClient);
       expect(mockPrismaService.client.delete).toHaveBeenCalledWith({
         where: { id: "client-1" },

@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import type { CreateClientInput } from "@shared/types/Client";
 import { UpdateClientDto } from "./dto/update-client.dto";
@@ -10,10 +10,6 @@ export class ClientsService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: CreateClientDto) {
-    if (!data.userId) {
-      throw new Error("userId is required");
-    }
-
     return this.prisma.client.create({
       data: {
         name: data.name,
@@ -33,13 +29,18 @@ export class ClientsService {
     });
   }
 
-  async findOne(id: string) {
-    return this.prisma.client.findUnique({
+  async findOne(id: string, userId: string) {
+    const client = await this.prisma.client.findUnique({
       where: { id },
     });
+    if (!client || client.userId !== userId) {
+      throw new NotFoundException("Client not found");
+    }
+    return client;
   }
 
-  async update(id: string, data: UpdateClientDto) {
+  async update(id: string, userId: string, data: UpdateClientDto) {
+    await this.findOne(id, userId);
     return this.prisma.client.update({
       where: { id },
       data: {
@@ -52,7 +53,8 @@ export class ClientsService {
     });
   }
 
-  async remove(id: string) {
+  async remove(id: string, userId: string) {
+    await this.findOne(id, userId); // Ensure the client exists and belongs to the user before deletion
     return this.prisma.client.delete({
       where: { id },
     });
