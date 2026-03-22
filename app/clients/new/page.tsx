@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { createClient } from "@/lib/apiClients";
-import { getMe } from "@/lib/apiAuth";
 import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 type ClientFormData = {
   name: string;
@@ -19,7 +19,6 @@ type ClientFormData = {
 export default function NewClientPage() {
   const { t } = useTranslation();
   const router = useRouter();
-  const [userId, setUserId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
   // react-hook-form の初期化
@@ -29,18 +28,14 @@ export default function NewClientPage() {
     formState: { errors },
   } = useForm<ClientFormData>();
 
-  useEffect(() => {
-    getMe().then((data) => {
-      if (data?.user?.id) setUserId(data.user.id);
-    });
-  }, []);
+  const { user } = useAuth();
 
   // react-hook-form collects form data and calls onSubmit when the form is submitted
   const onSubmit = async (data: ClientFormData) => {
     try {
-      if (!userId) throw new Error(t("invoicePreview.userSessionNotFound"));
+      if (!user.id) throw new Error(t("invoicePreview.userSessionNotFound"));
       setSaving(true);
-      await createClient({ userId, ...data });
+      await createClient({ userId: user.id, ...data });
       router.push("/clients");
     } catch (error) {
       console.error("Failed to save client:", error);

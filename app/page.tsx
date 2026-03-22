@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getMe, login } from "@/lib/apiAuth";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "@/contexts/AuthContext";
 
 const DEMO_EMAIL = "test.carey@example.com";
 const DEMO_PASSWORD = "test";
@@ -24,15 +25,15 @@ export default function LandingPage() {
   const [ready, setReady] = useState(false);
   const [demoLoading, setDemoLoading] = useState(false);
 
+  const { user } = useAuth();
+
   useEffect(() => {
-    getMe().then((data) => {
-      if (data?.user?.id) {
-        router.replace("/dashboard");
-      } else {
-        setReady(true);
-      }
-    });
-  }, [router]);
+    if (user.id) {
+      router.replace("/dashboard");
+    } else {
+      setReady(true);
+    }
+  }, [router, user]);
 
   const handleDemo = async () => {
     setDemoLoading(true);

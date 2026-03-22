@@ -1,7 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useMemo, useRef } from "react";
-import { getMe } from "@/lib/apiAuth";
 import { usePathname } from "next/navigation";
 import { logout } from "@/lib/apiAuth";
 import toast from "react-hot-toast";
