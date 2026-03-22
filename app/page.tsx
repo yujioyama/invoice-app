@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getMe, login } from "@/lib/apiAuth";
+import { login } from "@/lib/apiAuth";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
 
