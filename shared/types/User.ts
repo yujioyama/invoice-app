@@ -14,5 +14,4 @@ export interface User {
   country?: string;
   postalCode?: string;
   bankAccounts?: BankAccount[];
-  // その他必要なフィールドがあれば追加
 }

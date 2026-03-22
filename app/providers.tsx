@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { I18nextProvider } from "react-i18next";
 import i18n from "./i18n/i18n";
 import { useSearchParams } from "next/navigation";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   const searchParams = useSearchParams();
@@ -46,5 +47,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     }
   }, [langParam]);
 
-  return <I18nextProvider i18n={i18n}>{children}</I18nextProvider>;
+  return (
+    <AuthProvider>
+      <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
+    </AuthProvider>
+  );
 }

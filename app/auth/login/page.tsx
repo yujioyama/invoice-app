@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { login } from "@/lib/apiAuth";
 import { useTranslation } from "react-i18next";
 import { useAsyncAction } from "@/hooks/useAsyncAction";
+import { useAuth } from "@/contexts/AuthContext";
 
 const DEMO_EMAIL = "test.carey@example.com";
 const DEMO_PASSWORD = "test";
@@ -14,6 +15,7 @@ export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { setUser } = useAuth();
 
   const { run, loading, error } = useAsyncAction(login);
   const { run: runDemo, loading: demoLoading } = useAsyncAction(login);
@@ -27,7 +29,8 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await run(email, password);
+      const data = await run(email, password);
+      setUser(data.user);
       router.push("/dashboard");
     } catch {
       // error state is handled by useAsyncAction
@@ -36,7 +39,8 @@ export default function LoginPage() {
 
   const handleDemo = async () => {
     try {
-      await runDemo(DEMO_EMAIL, DEMO_PASSWORD);
+      const data = await runDemo(DEMO_EMAIL, DEMO_PASSWORD);
+      setUser(data.user);
       router.push("/dashboard");
     } catch {
       // error state is handled by useAsyncAction

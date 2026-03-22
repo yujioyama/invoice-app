@@ -6,11 +6,12 @@ import { usePathname } from "next/navigation";
 import { logout } from "@/lib/apiAuth";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Header() {
   const { t, i18n } = useTranslation();
   const router = useRouter();
-  const [user, setUser] = useState<{ id?: string; name?: string }>({});
+  const { user, setUser } = useAuth();
   const [profileOpen, setProfileOpen] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
 
@@ -32,22 +33,13 @@ export default function Header() {
     localStorage.setItem("lang", nextLang);
   };
 
-  useEffect(() => {
-    if (noAuthPages.includes(pathname)) return;
-
-    async function fetchUser() {
-      const data = await getMe();
-      if (data?.user) {
-        setUser(data.user);
-      }
-    }
-    fetchUser();
-  }, [pathname, noAuthPages]);
-
   // プロフィールドロップダウンを外クリックで閉じる
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
+      if (
+        profileRef.current &&
+        !profileRef.current.contains(e.target as Node)
+      ) {
         setProfileOpen(false);
       }
     }
@@ -133,7 +125,11 @@ export default function Header() {
                   stroke="currentColor"
                   strokeWidth={2.5}
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M19 9l-7 7-7-7"
+                  />
                 </svg>
               </button>
 
@@ -165,7 +161,16 @@ export default function Header() {
                     }}
                     className="flex w-full items-center gap-2.5 px-3.5 py-2 text-sm text-rose-600 transition-colors hover:bg-rose-50"
                   >
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg
+                      width="15"
+                      height="15"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
                       <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                       <polyline points="16 17 21 12 16 7" />
                       <line x1="21" y1="12" x2="9" y2="12" />

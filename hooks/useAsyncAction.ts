@@ -28,6 +28,10 @@ export function useAsyncAction<TResult, TArgs extends unknown[] = []>(
     onErrorRef.current = onError;
   }, [onError]);
 
+  // Used to track the latest request for UI state management only.
+  // Incremented on each run or reset to ensure that only the most recent async action can update UI state or trigger callbacks.
+  // Prevents race conditions in the UI by ignoring results from outdated requests.
+  // Note: This does NOT prevent duplicate API requests or server-side duplication—only UI updates are controlled.
   const requestIdRef = useRef(0);
 
   const run = useCallback(
