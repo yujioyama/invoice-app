@@ -22,7 +22,7 @@ async function bootstrap() {
   // allowing cross-origin requests from any origin and enabling credentials (like cookies) to be included in cross-origin requests.
   // This is important for frontend applications that need to communicate with this backend server from a different domain.
   app.enableCors({
-    origin: true,
+    origin: process.env.FRONTEND_URL,
     credentials: true,
   });
 
