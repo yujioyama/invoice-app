@@ -3,6 +3,7 @@ import { PrismaModule } from "./prisma/prisma.module";
 import { InvoicesModule } from "./invoices/invoices.module";
 import { ClientsModule } from "./clients/clients.module";
 import { AuthModule } from "./auth/auth.module";
+import { HealthModule } from "./health/health.module";
 import { LoggerMiddleware } from "./middleware/logger.middleware";
 import { ThrottlerModule } from "@nestjs/throttler";
 
@@ -15,6 +16,7 @@ import { ThrottlerModule } from "@nestjs/throttler";
       },
     ]),
     PrismaModule,
+    HealthModule,
     InvoicesModule,
     ClientsModule,
     AuthModule,
