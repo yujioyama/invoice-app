@@ -196,7 +196,7 @@ invoice-app/
 
 #### Prerequisites
 
-- Node.js 20+
+- Node.js 20+ 
 - Docker (for local PostgreSQL)
 
 #### 1. Start PostgreSQL
