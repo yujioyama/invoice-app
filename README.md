@@ -69,39 +69,56 @@ invoice-app/
 #### 事前準備
 
 - Node.js 20 以上
-- Docker（ローカルのPostgreSQL用）
+- Docker（ローカルの PostgreSQL 用）
 
-#### 1. PostgreSQL の起動
-
-```bash
-docker run --name invoice-postgres \
-  -e POSTGRES_PASSWORD=postgres \
-  -e POSTGRES_DB=invoice_db \
-  -p 5432:5432 -d postgres:15
-```
-
-#### 2. バックエンド
+#### 初回セットアップ
 
 ```bash
-cd backend
+# 依存関係のインストール
 npm install
-# .env.example を .env にコピーして DATABASE_URL を設定
+npm install --prefix backend
+
+# 環境変数（backend/.env と .env.local を設定）
+# backend/.env — DATABASE_URL, JWT_SECRET など（下記「環境変数」参照）
+# .env.local — NEXT_PUBLIC_API_URL=http://localhost:3001
+
+cd backend
 npm run prisma:generate
 npm run prisma:push
-npm run prisma:seed   # 任意: デモデータの投入
-npm run start:dev
+npx prisma db seed   # 任意: デモデータの投入
+cd ..
 ```
 
-バックエンドは `http://localhost:3001` で起動します。
+#### 開発サーバーの起動（一括）
 
-#### 3. フロントエンド
+DB・バックエンド・フロントエンドをまとめて起動します。
 
 ```bash
-npm install
-npm run dev
+npm run dev:all
 ```
 
-フロントエンドは `http://localhost:3000` で起動します。
+| サービス | URL |
+|---|---|
+| フロントエンド | http://localhost:3000 |
+| バックエンド | http://localhost:3001 |
+| PostgreSQL | localhost:5432 |
+
+`Ctrl+C` でバックエンド・フロントエンドを停止します。PostgreSQL コンテナはバックグラウンドで動き続けるため、停止する場合は `docker compose down` を実行してください。
+
+DB のみ起動する場合: `npm run dev:db`
+
+#### 個別に起動する場合
+
+```bash
+# 1. PostgreSQL
+docker compose up postgres -d --wait
+
+# 2. バックエンド
+cd backend && npm run start:dev
+
+# 3. フロントエンド（別ターミナル、リポジトリルート）
+npm run dev
+```
 
 ---
 
@@ -196,40 +213,57 @@ invoice-app/
 
 #### Prerequisites
 
-- Node.js 20+ 
+- Node.js 20+
 - Docker (for local PostgreSQL)
 
-#### 1. Start PostgreSQL
+#### First-time setup
 
 ```bash
-docker run --name invoice-postgres \
-  -e POSTGRES_PASSWORD=postgres \
-  -e POSTGRES_DB=invoice_db \
-  -p 5432:5432 -d postgres:15
-```
-
-#### 2. Backend
-
-```bash
-cd backend
+# Install dependencies
 npm install
-# copy .env.example to .env and set DATABASE_URL
+npm install --prefix backend
+
+# Environment variables (configure backend/.env and .env.local)
+# backend/.env — DATABASE_URL, JWT_SECRET, etc. (see Environment Variables below)
+# .env.local — NEXT_PUBLIC_API_URL=http://localhost:3001
+
+cd backend
 npm run prisma:generate
 npm run prisma:push
-npm run prisma:seed   # optional: seed demo data
-npm run start:dev
+npx prisma db seed   # optional: seed demo data
+cd ..
 ```
 
-Backend runs on `http://localhost:3001`.
+#### Start all dev servers
 
-#### 3. Frontend
+Starts the database, backend, and frontend together.
 
 ```bash
-npm install
-npm run dev
+npm run dev:all
 ```
 
-Frontend runs on `http://localhost:3000`.
+| Service | URL |
+|---|---|
+| Frontend | http://localhost:3000 |
+| Backend | http://localhost:3001 |
+| PostgreSQL | localhost:5432 |
+
+Press `Ctrl+C` to stop the backend and frontend. The PostgreSQL container keeps running in the background; run `docker compose down` to stop it.
+
+Start the database only: `npm run dev:db`
+
+#### Start services individually
+
+```bash
+# 1. PostgreSQL
+docker compose up postgres -d --wait
+
+# 2. Backend
+cd backend && npm run start:dev
+
+# 3. Frontend (separate terminal, repo root)
+npm run dev
+```
 
 ---
 
