@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
 import type { Task } from "@/shared/types/Invoice";
 import { useInvoiceDetail } from "@/hooks/useInvoiceDetail";
+import LoadingPage from "@/components/ui/LoadingPage";
 
 export default function InvoiceDetailPage({
   params,
@@ -65,13 +66,7 @@ export default function InvoiceDetailPage({
   };
 
   if (loading) {
-    return (
-      <div className="page">
-        <div className="container">
-          <p className="text-slate-700">{t("invoiceDetail.loading")}</p>
-        </div>
-      </div>
-    );
+    return <LoadingPage message={t("invoiceDetail.loading")} />;
   }
 
   if (!invoice) {

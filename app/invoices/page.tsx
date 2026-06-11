@@ -8,6 +8,8 @@ import { deleteInvoice } from "@/lib/apiInvoices";
 import { useTranslation } from "react-i18next";
 import { useAsyncLoad } from "@/hooks/useAsyncLoad";
 import { useAsyncAction } from "@/hooks/useAsyncAction";
+import LoadingPage from "@/components/ui/LoadingPage";
+import EmptyState from "@/components/ui/EmptyState";
 
 export default function InvoicesListPage() {
   const { t, i18n } = useTranslation();
@@ -70,13 +72,7 @@ export default function InvoicesListPage() {
   }, [loadInvoices]);
 
   if (loading) {
-    return (
-      <div className="page">
-        <div className="container">
-          <p className="text-slate-700">{t("invoices.loading")}</p>
-        </div>
-      </div>
-    );
+    return <LoadingPage message={t("invoices.loading")} />;
   }
 
   return (
@@ -144,12 +140,11 @@ export default function InvoicesListPage() {
                 </table>
               </div>
             ) : (
-              <div className="text-center py-10">
-                <p className="text-slate-700 mb-4">{t("invoices.empty")}</p>
-                <button onClick={handleNewInvoice} className="btn btn-primary">
-                  {t("invoices.create")}
-                </button>
-              </div>
+              <EmptyState
+                message={t("invoices.empty")}
+                actionLabel={t("invoices.create")}
+                onAction={handleNewInvoice}
+              />
             )}
           </div>
         </div>

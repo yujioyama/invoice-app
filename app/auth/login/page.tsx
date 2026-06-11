@@ -6,6 +6,9 @@ import { login } from "@/lib/apiAuth";
 import { useTranslation } from "react-i18next";
 import { useAsyncAction } from "@/hooks/useAsyncAction";
 import { useAuth } from "@/contexts/AuthContext";
+import FormField from "@/components/ui/FormField";
+import Alert from "@/components/ui/Alert";
+import Divider from "@/components/ui/Divider";
 
 const DEMO_EMAIL = "test.carey@example.com";
 const DEMO_PASSWORD = "test";
@@ -52,7 +55,6 @@ export default function LoginPage() {
       <div className="card w-full max-w-sm p-8">
         <h1 className="title mb-7 text-center">{t("auth.login.title")}</h1>
 
-        {/* デモボタン */}
         <button
           type="button"
           onClick={handleDemo}
@@ -62,48 +64,30 @@ export default function LoginPage() {
           {demoLoading ? t("landing.demo.logging") : t("auth.login.demo")}
         </button>
 
-        <div className="relative mb-5 flex items-center gap-3">
-          <div className="h-px flex-1 bg-slate-200" />
-          <span className="text-xs text-slate-400">
-            {t("auth.login.demoOr")}
-          </span>
-          <div className="h-px flex-1 bg-slate-200" />
-        </div>
+        <Divider label={t("auth.login.demoOr")} className="mb-5" />
 
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="label" htmlFor="email">
-              {t("auth.login.email")}
-            </label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="input"
-              required
-              autoComplete="email"
-            />
-          </div>
-          <div className="mb-6">
-            <label className="label" htmlFor="password">
-              {t("auth.login.password")}
-            </label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="input"
-              required
-              autoComplete="current-password"
-            />
-          </div>
-          {errorMessage && (
-            <div className="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600">
-              {errorMessage}
-            </div>
-          )}
+          <FormField
+            wrapperClass="mb-4"
+            label={t("auth.login.email")}
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            autoComplete="email"
+          />
+          <FormField
+            wrapperClass="mb-6"
+            label={t("auth.login.password")}
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            autoComplete="current-password"
+          />
+          {errorMessage && <Alert message={errorMessage} />}
           <button
             type="submit"
             className="btn btn-primary w-full"

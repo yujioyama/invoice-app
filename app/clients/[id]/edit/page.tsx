@@ -6,6 +6,8 @@ import { getClientById, updateClient } from "@/lib/apiClients";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import FormField from "@/components/ui/FormField";
+import FormActions from "@/components/ui/FormActions";
 
 type ClientFormData = {
   name: string;
@@ -85,104 +87,52 @@ export default function EditClientPage({
             <p className="subtitle">{t("clients.subtitle")}</p>
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="card-body">
-            {/* Name */}
-            <div className="mb-6">
-              <label className="label">{t("clients.name")}</label>
-              <input
-                type="text"
-                {...register("name", { required: "名前は必須です" })}
-                placeholder={t("clients.namePlaceholder")}
-                className="input"
-              />
-              {errors.name && (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.name.message}
-                </p>
-              )}
-            </div>
-
-            {/* Address */}
-            <div className="mb-6">
-              <label className="label">{t("clients.address")}</label>
-              <input
-                type="text"
-                {...register("address", { required: "住所は必須です" })}
-                placeholder={t("clients.addressPlaceholder")}
-                className="input"
-              />
-              {errors.address && (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.address.message}
-                </p>
-              )}
-            </div>
-
-            {/* Country */}
-            <div className="mb-6">
-              <label className="label">{t("clients.country")}</label>
-              <input
-                type="text"
-                {...register("country")}
-                placeholder={t("clients.countryPlaceholder")}
-                className="input"
-              />
-            </div>
-
-            {/* Email */}
-            <div className="mb-6">
-              <label className="label">{t("clients.email")}</label>
-              <input
-                type="email"
-                {...register("email", {
-                  pattern: {
-                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                    message: "正しいメールアドレスを入力してください",
-                  },
-                })}
-                placeholder={t("clients.emailPlaceholder")}
-                className="input"
-              />
-              {errors.email && (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.email.message}
-                </p>
-              )}
-            </div>
-
-            {/* Phone */}
-            <div className="mb-6">
-              <label className="label">{t("clients.phone")}</label>
-              <input
-                type="text"
-                {...register("phone")}
-                placeholder={t("clients.phonePlaceholder")}
-                className="input"
-              />
-              {errors.phone && (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.phone.message}
-                </p>
-              )}
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex gap-4 pb-9">
-              <button
-                type="submit"
-                disabled={saving}
-                className="btn btn-primary"
-              >
-                {saving ? t("clients.saving") : t("clients.saveChanges")}
-              </button>
-              <button
-                type="button"
-                onClick={() => router.push("/clients")}
-                className="btn btn-ghost"
-              >
-                {t("clients.list")}
-              </button>
-            </div>
+          <form onSubmit={handleSubmit(onSubmit)} className="card-body space-y-6">
+            <FormField
+              label={t("clients.name")}
+              type="text"
+              {...register("name", { required: "名前は必須です" })}
+              placeholder={t("clients.namePlaceholder")}
+              error={errors.name?.message}
+            />
+            <FormField
+              label={t("clients.address")}
+              type="text"
+              {...register("address", { required: "住所は必須です" })}
+              placeholder={t("clients.addressPlaceholder")}
+              error={errors.address?.message}
+            />
+            <FormField
+              label={t("clients.country")}
+              type="text"
+              {...register("country")}
+              placeholder={t("clients.countryPlaceholder")}
+            />
+            <FormField
+              label={t("clients.email")}
+              type="email"
+              {...register("email", {
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: "正しいメールアドレスを入力してください",
+                },
+              })}
+              placeholder={t("clients.emailPlaceholder")}
+              error={errors.email?.message}
+            />
+            <FormField
+              label={t("clients.phone")}
+              type="text"
+              {...register("phone")}
+              placeholder={t("clients.phonePlaceholder")}
+              error={errors.phone?.message}
+            />
+            <FormActions
+              primaryLabel={saving ? t("clients.saving") : t("clients.saveChanges")}
+              primaryDisabled={saving}
+              secondaryLabel={t("clients.list")}
+              onSecondary={() => router.push("/clients")}
+            />
           </form>
         </div>
       </div>

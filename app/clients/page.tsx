@@ -8,6 +8,8 @@ import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import { useAsyncLoad } from "@/hooks/useAsyncLoad";
 import { useAsyncAction } from "@/hooks/useAsyncAction";
+import LoadingPage from "@/components/ui/LoadingPage";
+import EmptyState from "@/components/ui/EmptyState";
 
 export default function InvoicesListPage() {
   const { t } = useTranslation();
@@ -59,13 +61,7 @@ export default function InvoicesListPage() {
   }, [loadClients]);
 
   if (loading) {
-    return (
-      <div className="page">
-        <div className="container">
-          <p className="text-slate-700">{t("clients.loading")}</p>
-        </div>
-      </div>
-    );
+    return <LoadingPage message={t("clients.loading")} />;
   }
 
   return (
@@ -129,12 +125,11 @@ export default function InvoicesListPage() {
                 </table>
               </div>
             ) : (
-              <div className="text-center py-10">
-                <p className="text-slate-700 mb-4">{t("clients.empty")}</p>
-                <button onClick={handleNewClient} className="btn btn-primary">
-                  {t("clients.create")}
-                </button>
-              </div>
+              <EmptyState
+                message={t("clients.empty")}
+                actionLabel={t("clients.create")}
+                onAction={handleNewClient}
+              />
             )}
           </div>
         </div>

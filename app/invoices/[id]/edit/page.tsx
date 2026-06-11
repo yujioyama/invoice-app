@@ -12,6 +12,7 @@ import type { Currency, InvoiceLanguage } from "@/shared/types/Invoice";
 import { useInvoiceTasks, type InvoiceTask } from "@/hooks/useInvoiceTasks";
 import { useAsyncAction } from "@/hooks/useAsyncAction";
 import { useInvoiceEditData } from "@/hooks/useInvoiceEditData";
+import LoadingPage from "@/components/ui/LoadingPage";
 
 function formatInvoiceTasksForEdit(invoice: {
   tasks: Array<{ name: string; rate: number; hours: number }>;
@@ -245,13 +246,7 @@ export default function EditInvoicePage({
   }, [data, loading, router, t]);
 
   if (loading) {
-    return (
-      <div className="page">
-        <div className="container">
-          <p className="text-slate-700">{t("invoiceDetail.loading")}</p>
-        </div>
-      </div>
-    );
+    return <LoadingPage message={t("invoiceDetail.loading")} />;
   }
 
   if (!data) return null;
