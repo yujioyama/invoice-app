@@ -40,6 +40,7 @@
 | バックエンド | NestJS 11 |
 | ORM | Prisma 5 |
 | データベース（本番） | PostgreSQL（Supabase） |
+| コンポーネントカタログ | Storybook v10 |
 | デプロイ | Vercel（フロントエンド） |
 
 ---
@@ -122,6 +123,25 @@ npm run dev
 
 ---
 
+### Storybook（UIコンポーネント開発）
+
+`components/ui/` 配下のコンポーネントを独立した環境で確認・開発できます。
+
+```bash
+npm run storybook
+```
+
+起動後、http://localhost:6006 で以下のコンポーネントを参照できます。
+
+- Alert / Divider / EmptyState / FormActions / FormField / LoadingPage / PasswordInput
+
+```bash
+# 静的ビルド（storybook-static/ に出力）
+npm run build-storybook
+```
+
+---
+
 ### 環境変数
 
 **backend/.env**
@@ -185,6 +205,7 @@ A full-stack invoice management web app built to automate invoicing for a freela
 | Backend framework | NestJS 11 |
 | ORM | Prisma 5 |
 | Database (production) | PostgreSQL (Supabase) |
+| Component catalogue | Storybook v10 |
 | Deployment | Vercel (frontend) |
 
 ---
@@ -263,6 +284,25 @@ cd backend && npm run start:dev
 
 # 3. Frontend (separate terminal, repo root)
 npm run dev
+```
+
+---
+
+### Storybook (UI Component Development)
+
+Develop and review UI components in isolation.
+
+```bash
+npm run storybook
+```
+
+Opens at http://localhost:6006. Covers all components under `components/ui/`:
+
+- Alert / Divider / EmptyState / FormActions / FormField / LoadingPage / PasswordInput
+
+```bash
+# Static build (outputs to storybook-static/)
+npm run build-storybook
 ```
 
 ---
