@@ -20,8 +20,12 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const { setUser } = useAuth();
 
-  const { run, loading, error } = useAsyncAction(login);
-  const { run: runDemo, loading: demoLoading } = useAsyncAction(login);
+  const { run, loading, error } = useAsyncAction(login, {
+    onSuccess: (data) => {
+      setUser(data.user);
+      router.push("/dashboard");
+    },
+  });
 
   const errorMessage = useMemo(() => {
     if (!error) return "";
@@ -29,25 +33,13 @@ export default function LoginPage() {
     return t("auth.login.failed");
   }, [error, t]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const data = await run(email, password);
-      setUser(data.user);
-      router.push("/dashboard");
-    } catch {
-      // error state is handled by useAsyncAction
-    }
+    run(email, password).catch(() => {});
   };
 
-  const handleDemo = async () => {
-    try {
-      const data = await runDemo(DEMO_EMAIL, DEMO_PASSWORD);
-      setUser(data.user);
-      router.push("/dashboard");
-    } catch {
-      // error state is handled by useAsyncAction
-    }
+  const handleDemo = () => {
+    run(DEMO_EMAIL, DEMO_PASSWORD).catch(() => {});
   };
 
   return (
@@ -58,10 +50,10 @@ export default function LoginPage() {
         <button
           type="button"
           onClick={handleDemo}
-          disabled={demoLoading || loading}
+          disabled={loading}
           className="btn btn-secondary w-full mb-5"
         >
-          {demoLoading ? t("landing.demo.logging") : t("auth.login.demo")}
+          {loading ? t("landing.demo.logging") : t("auth.login.demo")}
         </button>
 
         <Divider label={t("auth.login.demoOr")} className="mb-5" />
@@ -91,7 +83,7 @@ export default function LoginPage() {
           <button
             type="submit"
             className="btn btn-primary w-full"
-            disabled={loading || demoLoading}
+            disabled={loading}
           >
             {loading ? t("auth.login.submitting") : t("auth.login.submit")}
           </button>
